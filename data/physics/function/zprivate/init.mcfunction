@@ -49,10 +49,16 @@ scoreboard objectives add Physics.Object.InverseInertiaTensorGlobal.7 dummy
 scoreboard objectives add Physics.Object.InverseInertiaTensorGlobal.8 dummy
 
 # Set global variables
-#LinearDamping (Hardcoded, not using a score)
-#AngularDamping (Hardcoded, not using a score)
-scoreboard players set #Physics.Global.Default.Gravity Physics.Value 4905000
+scoreboard players set #Physics.Global.LinearDamping Physics.Value 95
+scoreboard players set #Physics.Global.AngularDamping Physics.Value 95
 
 # Set value constants (You can't multiply or divide by numbers without defining them first using scoreboards)
 scoreboard players set #Physics.Constants.12 Physics.Value 12
 scoreboard players set #Physics.Constants.100 Physics.Value 100
+scoreboard players set #Physics.Constants.1000 Physics.Value 1000
+scoreboard players set #Physics.Constants.100000 Physics.Value 100000
+
+# Setup starting values for data storages
+data modify storage physics:temp data.Integration set value {Pos:[0d,0d,0d],start_interpolation:0}
+data modify storage physics:temp data.Integration.Pos set value [0d,0d,0d]
+data modify storage physics:maths processing.Distance set value [0f,0f,0f,0f,0f,0f,0f,0f,0f,0f,0f,0f,0f,0f,0f,1f]

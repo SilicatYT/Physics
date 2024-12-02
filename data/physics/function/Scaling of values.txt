@@ -1,7 +1,9 @@
 # THIS SHEET IS UPDATED WHENEVER A NEW CALCULATION REQUIRES ME TO DOWNSCALE, OR WHEN A HIGHER SCALE DOESN'T MAKE SENSE BECAUSE THE PRECISION IS LOST ANYWAY BECAUSE OF INTERMEDIATE CALCULATIONS
 - Position is scaled by 1,000x
-- Velocity is scaled by 10,000,000x and given in blocks/tick
-- Acceleration is scaled by 10,000,000x and given in blocks/tick^2 (Includes gravity and its default value)
+- Velocity is scaled by 1,000x and given in blocks/tick
+- Acceleration is scaled by 1,000x and given in blocks/tick^2 (Includes gravity and its default value)
 - InverseMass is scaled by 100,000,000/x and calculated with in 1/kg (x=1 would be 100g)
 - InverseInertiaTensorLocal is scaled by 1,000,000,000/x (x is a regularly scaled tensor value, like 166 for a cube) (Could reach values like 1,000,000,000/668,333 = 1496, or also 60,000,000)
 - Dimension is scaled by 10,000x
+- Force is scaled by 1,000x
+- Damping is 100x

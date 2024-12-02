@@ -55,4 +55,5 @@ scoreboard objectives remove Physics.Object.InverseInertiaTensorGlobal.7
 scoreboard objectives remove Physics.Object.InverseInertiaTensorGlobal.8
 
 # Remove data storages
-data remove storage physics:object data
+data remove storage physics:maths processing
+data remove storage physics:temp data
