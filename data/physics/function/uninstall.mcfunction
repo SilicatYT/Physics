@@ -39,11 +39,28 @@ scoreboard objectives remove Physics.Object.AngularAcceleration.z
 scoreboard objectives remove Physics.Object.InverseInertiaTensorLocal.0
 scoreboard objectives remove Physics.Object.InverseInertiaTensorLocal.4
 scoreboard objectives remove Physics.Object.InverseInertiaTensorLocal.8
-
 scoreboard objectives remove Physics.Object.Dimension.x
 scoreboard objectives remove Physics.Object.Dimension.y
 scoreboard objectives remove Physics.Object.Dimension.z
 
+scoreboard objectives remove Physics.Object.RotationMatrix.0
+scoreboard objectives remove Physics.Object.RotationMatrix.1
+scoreboard objectives remove Physics.Object.RotationMatrix.2
+scoreboard objectives remove Physics.Object.RotationMatrix.3
+scoreboard objectives remove Physics.Object.RotationMatrix.4
+scoreboard objectives remove Physics.Object.RotationMatrix.5
+scoreboard objectives remove Physics.Object.RotationMatrix.6
+scoreboard objectives remove Physics.Object.RotationMatrix.7
+scoreboard objectives remove Physics.Object.RotationMatrix.8
+scoreboard objectives remove Physics.Object.RotationMatrixTranspose.0
+scoreboard objectives remove Physics.Object.RotationMatrixTranspose.1
+scoreboard objectives remove Physics.Object.RotationMatrixTranspose.2
+scoreboard objectives remove Physics.Object.RotationMatrixTranspose.3
+scoreboard objectives remove Physics.Object.RotationMatrixTranspose.4
+scoreboard objectives remove Physics.Object.RotationMatrixTranspose.5
+scoreboard objectives remove Physics.Object.RotationMatrixTranspose.6
+scoreboard objectives remove Physics.Object.RotationMatrixTranspose.7
+scoreboard objectives remove Physics.Object.RotationMatrixTranspose.8
 scoreboard objectives remove Physics.Object.InverseInertiaTensorGlobal.0
 scoreboard objectives remove Physics.Object.InverseInertiaTensorGlobal.1
 scoreboard objectives remove Physics.Object.InverseInertiaTensorGlobal.2

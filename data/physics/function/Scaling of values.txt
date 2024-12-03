@@ -7,3 +7,8 @@
 - Dimension is scaled by 10,000x
 - Force is scaled by 1,000x
 - Damping is 100x
+- Orientation is 1,000x (Values from 0-1)
+- RotationMatrix is 1,000x (Important: After a ^2, I need to divide by 1000 to make sure it's not suddenly scaled by 1,000,000)
+
+Note: InverseMass of 1,000 is only barely movable by applying 200,000 force (so I can probably scale it down without problems. BUT I'LL WAIT UNTIL I'M DONE, THEN I CAN STILL SCALE IT IF I WANT)
+Note: Dimension makes sense as being scaled by 1000x or maybe even 100x

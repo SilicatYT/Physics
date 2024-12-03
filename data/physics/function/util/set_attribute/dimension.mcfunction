@@ -38,6 +38,10 @@ data modify entity @s {} merge from storage physics:temp data.Object
     # Hitbox offset
     execute on passengers store result entity @s height float -0.000001 run data get storage physics:temp data.InteractionSize.height 500000
 
+# Teleport to make sure the player doesn't see the transformation, so it doesn't play on repeat
+execute at @s run tp @s ~10000 ~ ~10000
+execute at @s run tp @s ~-10000 ~ ~-10000
+
 # Update the local inverse inertia tensor (Scaling: InverseMass scaled by 1,000,000/x instead of 100,000,000/x)
     # Calculate the inverted local inertia tensor
     scoreboard players operation #Physics.Maths.Temp.Value1 Physics.Value = @s Physics.Object.Dimension.y

@@ -38,6 +38,24 @@ scoreboard objectives add Physics.Object.Dimension.y dummy
 scoreboard objectives add Physics.Object.Dimension.z dummy
 
 # Add derived object attributes (Calculated from object attributes, but stored separately to prevent repeated calculations)
+scoreboard objectives add Physics.Object.RotationMatrix.0 dummy
+scoreboard objectives add Physics.Object.RotationMatrix.1 dummy
+scoreboard objectives add Physics.Object.RotationMatrix.2 dummy
+scoreboard objectives add Physics.Object.RotationMatrix.3 dummy
+scoreboard objectives add Physics.Object.RotationMatrix.4 dummy
+scoreboard objectives add Physics.Object.RotationMatrix.5 dummy
+scoreboard objectives add Physics.Object.RotationMatrix.6 dummy
+scoreboard objectives add Physics.Object.RotationMatrix.7 dummy
+scoreboard objectives add Physics.Object.RotationMatrix.8 dummy
+scoreboard objectives add Physics.Object.RotationMatrixTranspose.0 dummy
+scoreboard objectives add Physics.Object.RotationMatrixTranspose.1 dummy
+scoreboard objectives add Physics.Object.RotationMatrixTranspose.2 dummy
+scoreboard objectives add Physics.Object.RotationMatrixTranspose.3 dummy
+scoreboard objectives add Physics.Object.RotationMatrixTranspose.4 dummy
+scoreboard objectives add Physics.Object.RotationMatrixTranspose.5 dummy
+scoreboard objectives add Physics.Object.RotationMatrixTranspose.6 dummy
+scoreboard objectives add Physics.Object.RotationMatrixTranspose.7 dummy
+scoreboard objectives add Physics.Object.RotationMatrixTranspose.8 dummy
 scoreboard objectives add Physics.Object.InverseInertiaTensorGlobal.0 dummy
 scoreboard objectives add Physics.Object.InverseInertiaTensorGlobal.1 dummy
 scoreboard objectives add Physics.Object.InverseInertiaTensorGlobal.2 dummy
@@ -55,6 +73,7 @@ scoreboard players set #Physics.Global.AngularDamping Physics.Value 95
 # Set value constants (You can't multiply or divide by numbers without defining them first using scoreboards)
 scoreboard players set #Physics.Constants.12 Physics.Value 12
 scoreboard players set #Physics.Constants.100 Physics.Value 100
+scoreboard players set #Physics.Constants.500 Physics.Value 500
 scoreboard players set #Physics.Constants.1000 Physics.Value 1000
 scoreboard players set #Physics.Constants.100000 Physics.Value 100000
 

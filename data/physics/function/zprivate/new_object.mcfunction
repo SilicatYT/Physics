@@ -8,6 +8,10 @@ scoreboard players set @s Physics.Object.Dimension.x 10000
 scoreboard players set @s Physics.Object.Dimension.y 10000
 scoreboard players set @s Physics.Object.Dimension.z 10000
 scoreboard players set @s Physics.Object.Gravity 490
+scoreboard players set @s Physics.Object.Orientation.x 0
+scoreboard players set @s Physics.Object.Orientation.y 0
+scoreboard players set @s Physics.Object.Orientation.z 0
+scoreboard players set @s Physics.Object.Orientation.a 1000
 scoreboard players set @s Physics.Object.InverseInertiaTensorLocal.0 6024096
 scoreboard players set @s Physics.Object.InverseInertiaTensorLocal.4 6024096
 scoreboard players set @s Physics.Object.InverseInertiaTensorLocal.8 6024096
