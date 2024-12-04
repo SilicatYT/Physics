@@ -17,10 +17,10 @@ execute if score #Physics.Maths.Temp.Max Physics.Value < #Physics.SetAttribute.D
 execute store result storage physics:temp data.Object.width float 0.00015 store result storage physics:temp data.Object.height float 0.00015 run scoreboard players get #Physics.Maths.Temp.Max Physics.Value
 
 # Update the entity's scale & translation
-data modify storage physics:temp data.Object.transformation set value {scale:[0f,0f,0f],translation:[0f,0f,0f]}
-execute store result storage physics:temp data.Object.transformation.scale[0] float 0.0001 store result storage physics:temp data.Object.transformation.translation[0] float -0.00005 run scoreboard players get #Physics.SetAttribute.Dimension.x Physics.Value
-execute store result storage physics:temp data.Object.transformation.scale[1] float 0.0001 store result storage physics:temp data.Object.transformation.translation[1] float -0.00005 run scoreboard players get #Physics.SetAttribute.Dimension.y Physics.Value
-execute store result storage physics:temp data.Object.transformation.scale[2] float 0.0001 store result storage physics:temp data.Object.transformation.translation[2] float -0.00005 run scoreboard players get #Physics.SetAttribute.Dimension.z Physics.Value
+data modify storage physics:temp data.Object.transformation set value {scale:[0f,0f,0f]}
+execute store result storage physics:temp data.Object.transformation.scale[0] float 0.0001 run scoreboard players get #Physics.SetAttribute.Dimension.x Physics.Value
+execute store result storage physics:temp data.Object.transformation.scale[1] float 0.0001 run scoreboard players get #Physics.SetAttribute.Dimension.y Physics.Value
+execute store result storage physics:temp data.Object.transformation.scale[2] float 0.0001 run scoreboard players get #Physics.SetAttribute.Dimension.z Physics.Value
 data modify entity @s {} merge from storage physics:temp data.Object
 
 # Update the interaction hitbox's size
@@ -37,10 +37,6 @@ data modify entity @s {} merge from storage physics:temp data.Object
 
     # Hitbox offset
     execute on passengers store result entity @s height float -0.000001 run data get storage physics:temp data.InteractionSize.height 500000
-
-# Teleport to make sure the player doesn't see the transformation, so it doesn't play on repeat
-execute at @s run tp @s ~10000 ~ ~10000
-execute at @s run tp @s ~-10000 ~ ~-10000
 
 # Update the local inverse inertia tensor (Scaling: InverseMass scaled by 1,000,000/x instead of 100,000,000/x)
     # Calculate the inverted local inertia tensor

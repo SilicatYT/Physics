@@ -1,3 +1,5 @@
+# TODO: If no forces, impulses or torque has been added, don't run this function
+
 # Update velocity & apply linear damping
     # (Important) Scale: InverseMass /= 1,000 -> Need to scale down the acceleration by 1/100,000x so the end result is scaled by 1,000x
 scoreboard players operation #Physics.Maths.Temp.Value1 Physics.Value = @s Physics.Object.InverseMass
@@ -31,9 +33,83 @@ execute store result storage physics:temp data.Integration.Pos[0] double 0.001 r
 execute store result storage physics:temp data.Integration.Pos[1] double 0.001 run scoreboard players operation @s Physics.Object.Pos.y += @s Physics.Object.Velocity.y
 execute store result storage physics:temp data.Integration.Pos[2] double 0.001 run scoreboard players operation @s Physics.Object.Pos.z += @s Physics.Object.Velocity.z
 
-# Update angular velocity
+# Update angular velocity (TODO)
+scoreboard players operation @s Physics.Object.AngularVelocity.x *= #Physics.Global.AngularDamping Physics.Value
+scoreboard players operation @s Physics.Object.AngularVelocity.x /= #Physics.Constants.100 Physics.Value
+scoreboard players operation @s Physics.Object.AngularVelocity.y *= #Physics.Global.AngularDamping Physics.Value
+scoreboard players operation @s Physics.Object.AngularVelocity.y /= #Physics.Constants.100 Physics.Value
+scoreboard players operation @s Physics.Object.AngularVelocity.z *= #Physics.Global.AngularDamping Physics.Value
+scoreboard players operation @s Physics.Object.AngularVelocity.z /= #Physics.Constants.100 Physics.Value
+execute if score @s Physics.Object.AngularVelocity.x matches ..-1 run scoreboard players add @s Physics.Object.AngularVelocity.x 1
+execute if score @s Physics.Object.AngularVelocity.y matches ..-1 run scoreboard players add @s Physics.Object.AngularVelocity.y 1
+execute if score @s Physics.Object.AngularVelocity.z matches ..-1 run scoreboard players add @s Physics.Object.AngularVelocity.z 1
 
 # Update orientation
+    # Calculate new quaternions (q' = q + (1/2 * AngularVelocity * q)
+    # (Important): Need to divide each component by 1,000 after they're multiplied together, so the end result is still only scaled by 1,000x
+    scoreboard players operation #Physics.Maths.Temp.Value1 Physics.Value = @s Physics.Object.AngularVelocity.x
+    scoreboard players operation #Physics.Maths.Temp.Value1 Physics.Value *= @s Physics.Object.Orientation.a
+    scoreboard players operation #Physics.Maths.Temp.Value2 Physics.Value = @s Physics.Object.AngularVelocity.y
+    scoreboard players operation #Physics.Maths.Temp.Value2 Physics.Value *= @s Physics.Object.Orientation.z
+    scoreboard players operation #Physics.Maths.Temp.Value1 Physics.Value += #Physics.Maths.Temp.Value2 Physics.Value
+    scoreboard players operation #Physics.Maths.Temp.Value2 Physics.Value = @s Physics.Object.AngularVelocity.z
+    scoreboard players operation #Physics.Maths.Temp.Value2 Physics.Value *= @s Physics.Object.Orientation.y
+    scoreboard players operation #Physics.Maths.Temp.Value1 Physics.Value -= #Physics.Maths.Temp.Value2 Physics.Value
+    scoreboard players operation #Physics.Maths.Temp.Value1 Physics.Value /= #Physics.Constants.2000 Physics.Value
+    execute store result score #Physics.Maths.SquareRoot.Input Physics.Value run scoreboard players operation @s Physics.Object.Orientation.x += #Physics.Maths.Temp.Value1 Physics.Value
+
+    scoreboard players operation #Physics.Maths.Temp.Value1 Physics.Value = @s Physics.Object.AngularVelocity.y
+    scoreboard players operation #Physics.Maths.Temp.Value1 Physics.Value *= @s Physics.Object.Orientation.a
+    scoreboard players operation #Physics.Maths.Temp.Value2 Physics.Value = @s Physics.Object.AngularVelocity.z
+    scoreboard players operation #Physics.Maths.Temp.Value2 Physics.Value *= @s Physics.Object.Orientation.x
+    scoreboard players operation #Physics.Maths.Temp.Value1 Physics.Value += #Physics.Maths.Temp.Value2 Physics.Value
+    scoreboard players operation #Physics.Maths.Temp.Value2 Physics.Value = @s Physics.Object.AngularVelocity.x
+    scoreboard players operation #Physics.Maths.Temp.Value2 Physics.Value *= @s Physics.Object.Orientation.z
+    scoreboard players operation #Physics.Maths.Temp.Value1 Physics.Value -= #Physics.Maths.Temp.Value2 Physics.Value
+    scoreboard players operation #Physics.Maths.Temp.Value1 Physics.Value /= #Physics.Constants.2000 Physics.Value
+    execute store result score #Physics.Maths.Temp.Value3 Physics.Value run scoreboard players operation @s Physics.Object.Orientation.y += #Physics.Maths.Temp.Value1 Physics.Value
+
+    scoreboard players operation #Physics.Maths.Temp.Value1 Physics.Value = @s Physics.Object.AngularVelocity.z
+    scoreboard players operation #Physics.Maths.Temp.Value1 Physics.Value *= @s Physics.Object.Orientation.a
+    scoreboard players operation #Physics.Maths.Temp.Value2 Physics.Value = @s Physics.Object.AngularVelocity.x
+    scoreboard players operation #Physics.Maths.Temp.Value2 Physics.Value *= @s Physics.Object.Orientation.y
+    scoreboard players operation #Physics.Maths.Temp.Value1 Physics.Value += #Physics.Maths.Temp.Value2 Physics.Value
+    scoreboard players operation #Physics.Maths.Temp.Value2 Physics.Value = @s Physics.Object.AngularVelocity.y
+    scoreboard players operation #Physics.Maths.Temp.Value2 Physics.Value *= @s Physics.Object.Orientation.x
+    scoreboard players operation #Physics.Maths.Temp.Value1 Physics.Value -= #Physics.Maths.Temp.Value2 Physics.Value
+    scoreboard players operation #Physics.Maths.Temp.Value1 Physics.Value /= #Physics.Constants.2000 Physics.Value
+    execute store result score #Physics.Maths.Temp.Value4 Physics.Value run scoreboard players operation @s Physics.Object.Orientation.z += #Physics.Maths.Temp.Value1 Physics.Value
+
+    scoreboard players operation #Physics.Maths.Temp.Value1 Physics.Value = @s Physics.Object.AngularVelocity.x
+    scoreboard players operation #Physics.Maths.Temp.Value1 Physics.Value *= @s Physics.Object.Orientation.x
+    scoreboard players operation #Physics.Maths.Temp.Value2 Physics.Value = @s Physics.Object.AngularVelocity.y
+    scoreboard players operation #Physics.Maths.Temp.Value2 Physics.Value *= @s Physics.Object.Orientation.y
+    scoreboard players operation #Physics.Maths.Temp.Value1 Physics.Value += #Physics.Maths.Temp.Value2 Physics.Value
+    scoreboard players operation #Physics.Maths.Temp.Value2 Physics.Value = @s Physics.Object.AngularVelocity.z
+    scoreboard players operation #Physics.Maths.Temp.Value2 Physics.Value *= @s Physics.Object.Orientation.z
+    scoreboard players operation #Physics.Maths.Temp.Value1 Physics.Value += #Physics.Maths.Temp.Value2 Physics.Value
+    scoreboard players operation #Physics.Maths.Temp.Value1 Physics.Value /= #Physics.Constants.2000 Physics.Value
+    execute store result score #Physics.Maths.Temp.Value5 Physics.Value run scoreboard players operation @s Physics.Object.Orientation.a -= #Physics.Maths.Temp.Value1 Physics.Value
+
+    # Re-normalize the quaternions
+    # (Important): Because of the squaring, the result is scaled too much, or rather dividing by the square root would get rid of the scaling. So I need to multiply the quaternions by 1,000x first.
+    scoreboard players operation #Physics.Maths.SquareRoot.Input Physics.Value *= #Physics.Maths.SquareRoot.Input Physics.Value
+    scoreboard players operation #Physics.Maths.Temp.Value3 Physics.Value *= #Physics.Maths.Temp.Value3 Physics.Value
+    scoreboard players operation #Physics.Maths.SquareRoot.Input Physics.Value += #Physics.Maths.Temp.Value3 Physics.Value
+    scoreboard players operation #Physics.Maths.Temp.Value4 Physics.Value *= #Physics.Maths.Temp.Value4 Physics.Value
+    scoreboard players operation #Physics.Maths.SquareRoot.Input Physics.Value += #Physics.Maths.Temp.Value4 Physics.Value
+    scoreboard players operation #Physics.Maths.Temp.Value5 Physics.Value *= #Physics.Maths.Temp.Value5 Physics.Value
+    scoreboard players operation #Physics.Maths.SquareRoot.Input Physics.Value += #Physics.Maths.Temp.Value5 Physics.Value
+    function physics:zprivate/maths/get_square_root
+
+    scoreboard players operation @s Physics.Object.Orientation.x *= #Physics.Constants.1000 Physics.Value
+    scoreboard players operation @s Physics.Object.Orientation.y *= #Physics.Constants.1000 Physics.Value
+    scoreboard players operation @s Physics.Object.Orientation.z *= #Physics.Constants.1000 Physics.Value
+    scoreboard players operation @s Physics.Object.Orientation.a *= #Physics.Constants.1000 Physics.Value
+    execute store result storage physics:temp data.Integration.transformation.left_rotation[0] float 0.001 run scoreboard players operation @s Physics.Object.Orientation.x /= #Physics.Maths.SquareRoot.Output Physics.Value
+    execute store result storage physics:temp data.Integration.transformation.left_rotation[1] float 0.001 run scoreboard players operation @s Physics.Object.Orientation.y /= #Physics.Maths.SquareRoot.Output Physics.Value
+    execute store result storage physics:temp data.Integration.transformation.left_rotation[2] float 0.001 run scoreboard players operation @s Physics.Object.Orientation.z /= #Physics.Maths.SquareRoot.Output Physics.Value
+    execute store result storage physics:temp data.Integration.transformation.left_rotation[3] float 0.001 run scoreboard players operation @s Physics.Object.Orientation.a /= #Physics.Maths.SquareRoot.Output Physics.Value
 
 # Update derived data
     # Rotation Matrix (from quaternions) & Transpose
@@ -125,5 +201,4 @@ scoreboard players set @s Physics.Object.AccumulatedTorque.y 0
 scoreboard players set @s Physics.Object.AccumulatedTorque.z 0
 
 # Update NBT if it changed
-    # (Important) (TODO): Only apply this if the data has changed. Otherwise it loops the transformation indefinitely, creating an ugly jitter
 data modify entity @s {} merge from storage physics:temp data.Integration
