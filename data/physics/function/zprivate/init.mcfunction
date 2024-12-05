@@ -72,6 +72,7 @@ scoreboard players set #Physics.Global.AngularDamping Physics.Value 95
 
 # Set value constants (You can't multiply or divide by numbers without defining them first using scoreboards)
 scoreboard players set #Physics.Constants.2 Physics.Value 2
+scoreboard players set #Physics.Constants.10 Physics.Value 10
 scoreboard players set #Physics.Constants.12 Physics.Value 12
 scoreboard players set #Physics.Constants.100 Physics.Value 100
 scoreboard players set #Physics.Constants.141 Physics.Value 141
@@ -84,4 +85,5 @@ scoreboard players set #Physics.Constants.100000 Physics.Value 100000
 # Setup starting values for data storages
 data modify storage physics:temp data.Integration set value {Pos:[0d,0d,0d],start_interpolation:0,transformation:{left_rotation:[0f,0f,0f,0f]}}
 data modify storage physics:temp data.Integration.Pos set value [0d,0d,0d]
+data modify storage physics:temp data.IntersectionPos set value [0d,0d,0d]
 data modify storage physics:maths processing.Distance set value [0f,0f,0f,0f,0f,0f,0f,0f,0f,0f,0f,0f,0f,0f,0f,1f]

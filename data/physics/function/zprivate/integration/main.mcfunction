@@ -45,7 +45,7 @@ execute if score @s Physics.Object.AngularVelocity.y matches ..-1 run scoreboard
 execute if score @s Physics.Object.AngularVelocity.z matches ..-1 run scoreboard players add @s Physics.Object.AngularVelocity.z 1
 
 # Update orientation
-    # Calculate new quaternions (q' = q + (1/2 * AngularVelocity * q)
+    # Calculate new quaternions: q' = q + (1/2 * AngularVelocity * q)
     # (Important): Need to divide each component by 1,000 after they're multiplied together, so the end result is still only scaled by 1,000x
     scoreboard players operation #Physics.Maths.Temp.Value1 Physics.Value = @s Physics.Object.AngularVelocity.x
     scoreboard players operation #Physics.Maths.Temp.Value1 Physics.Value *= @s Physics.Object.Orientation.a
