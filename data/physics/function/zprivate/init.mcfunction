@@ -26,9 +26,6 @@ scoreboard objectives add Physics.Object.Orientation.a dummy
 scoreboard objectives add Physics.Object.AngularVelocity.x dummy
 scoreboard objectives add Physics.Object.AngularVelocity.y dummy
 scoreboard objectives add Physics.Object.AngularVelocity.z dummy
-scoreboard objectives add Physics.Object.AngularAcceleration.x dummy
-scoreboard objectives add Physics.Object.AngularAcceleration.y dummy
-scoreboard objectives add Physics.Object.AngularAcceleration.z dummy
 scoreboard objectives add Physics.Object.InverseInertiaTensorLocal.0 dummy
 scoreboard objectives add Physics.Object.InverseInertiaTensorLocal.4 dummy
 scoreboard objectives add Physics.Object.InverseInertiaTensorLocal.8 dummy
@@ -80,10 +77,11 @@ scoreboard players set #Physics.Constants.500 Physics.Value 500
 scoreboard players set #Physics.Constants.1000 Physics.Value 1000
 scoreboard players set #Physics.Constants.2000 Physics.Value 2000
 scoreboard players set #Physics.Constants.7775 Physics.Value 7775
+scoreboard players set #Physics.Constants.10000 Physics.Value 10000
 scoreboard players set #Physics.Constants.100000 Physics.Value 100000
 
 # Setup starting values for data storages
 data modify storage physics:temp data.Integration set value {Pos:[0d,0d,0d],start_interpolation:0,transformation:{left_rotation:[0f,0f,0f,0f]}}
 data modify storage physics:temp data.Integration.Pos set value [0d,0d,0d]
-data modify storage physics:temp data.IntersectionPos set value [0d,0d,0d]
+data modify storage physics:temp data.IntersectionPosGlobal set value [0d,0d,0d]
 data modify storage physics:maths processing.Distance set value [0f,0f,0f,0f,0f,0f,0f,0f,0f,0f,0f,0f,0f,0f,0f,1f]
