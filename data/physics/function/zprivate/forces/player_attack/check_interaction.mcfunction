@@ -1,3 +1,6 @@
+# IDEA: Take the player's reach into account (Currently they can hit any point of the object as long as they can hit the interaction entity at all)
+# IDEA: Also check hits for other display entities whose interaction hitbox are in the path of the player's reach
+
 # Check if this is the interaction entity that was hit
 execute if score #Physics.Found Physics.Value matches 1 run return 0
 execute on attacker if entity @s[tag=Physics.This] run scoreboard players set #Physics.Found Physics.Value 1

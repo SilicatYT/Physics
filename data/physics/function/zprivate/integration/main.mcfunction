@@ -232,52 +232,107 @@ execute store result storage physics:temp data.Integration.Pos[2] double 0.001 r
         scoreboard players operation #Physics.Maths.Temp.Value1 Physics.Value /= #Physics.Constants.500 Physics.Value
         execute store result score @s Physics.Object.RotationMatrix.8 store result score @s Physics.Object.RotationMatrixTranspose.8 run scoreboard players remove #Physics.Maths.Temp.Value1 Physics.Value 1000
 
-    # Inverse global inertia tensor
+    # Inverse global inertia tensor: R * I * R_transpose
     # (Important): InverseInertiaTensorLocal is scaled by 1,000,000,000x and RotationMatrix is scaled by 1,000x. The rotation matrix can have values from -1,000 to 1,000. So to avoid overflow, I first divide the local inertia tensor by 1,000, then multiply it by the rotation matrix. Then I divide it by 10,000 again so I can actually calculate with it. Now it's scaled by 100,000x.
-    execute store result score @s Physics.Object.InverseInertiaTensorGlobal.3 store result score @s Physics.Object.InverseInertiaTensorGlobal.6 run scoreboard players operation @s Physics.Object.InverseInertiaTensorGlobal.0 = @s Physics.Object.InverseInertiaTensorLocal.0
-    execute store result score @s Physics.Object.InverseInertiaTensorGlobal.4 store result score @s Physics.Object.InverseInertiaTensorGlobal.7 run scoreboard players operation @s Physics.Object.InverseInertiaTensorGlobal.1 = @s Physics.Object.InverseInertiaTensorLocal.4
-    execute store result score @s Physics.Object.InverseInertiaTensorGlobal.5 store result score @s Physics.Object.InverseInertiaTensorGlobal.8 run scoreboard players operation @s Physics.Object.InverseInertiaTensorGlobal.2 = @s Physics.Object.InverseInertiaTensorLocal.8
+        # temp = R * I_local
+        execute store result score @s Physics.Object.InverseInertiaTensorGlobal.3 store result score @s Physics.Object.InverseInertiaTensorGlobal.6 run scoreboard players operation @s Physics.Object.InverseInertiaTensorGlobal.0 = @s Physics.Object.InverseInertiaTensorLocal.0
+        execute store result score @s Physics.Object.InverseInertiaTensorGlobal.4 store result score @s Physics.Object.InverseInertiaTensorGlobal.7 run scoreboard players operation @s Physics.Object.InverseInertiaTensorGlobal.1 = @s Physics.Object.InverseInertiaTensorLocal.4
+        execute store result score @s Physics.Object.InverseInertiaTensorGlobal.5 store result score @s Physics.Object.InverseInertiaTensorGlobal.8 run scoreboard players operation @s Physics.Object.InverseInertiaTensorGlobal.2 = @s Physics.Object.InverseInertiaTensorLocal.8
 
-    scoreboard players operation @s Physics.Object.InverseInertiaTensorGlobal.0 /= #Physics.Constants.1000 Physics.Value
-    scoreboard players operation @s Physics.Object.InverseInertiaTensorGlobal.1 /= #Physics.Constants.1000 Physics.Value
-    scoreboard players operation @s Physics.Object.InverseInertiaTensorGlobal.2 /= #Physics.Constants.1000 Physics.Value
-    scoreboard players operation @s Physics.Object.InverseInertiaTensorGlobal.3 /= #Physics.Constants.1000 Physics.Value
-    scoreboard players operation @s Physics.Object.InverseInertiaTensorGlobal.4 /= #Physics.Constants.1000 Physics.Value
-    scoreboard players operation @s Physics.Object.InverseInertiaTensorGlobal.5 /= #Physics.Constants.1000 Physics.Value
-    scoreboard players operation @s Physics.Object.InverseInertiaTensorGlobal.6 /= #Physics.Constants.1000 Physics.Value
-    scoreboard players operation @s Physics.Object.InverseInertiaTensorGlobal.7 /= #Physics.Constants.1000 Physics.Value
-    scoreboard players operation @s Physics.Object.InverseInertiaTensorGlobal.8 /= #Physics.Constants.1000 Physics.Value
+        scoreboard players operation @s Physics.Object.InverseInertiaTensorGlobal.0 /= #Physics.Constants.1000 Physics.Value
+        scoreboard players operation @s Physics.Object.InverseInertiaTensorGlobal.1 /= #Physics.Constants.1000 Physics.Value
+        scoreboard players operation @s Physics.Object.InverseInertiaTensorGlobal.2 /= #Physics.Constants.1000 Physics.Value
+        scoreboard players operation @s Physics.Object.InverseInertiaTensorGlobal.3 /= #Physics.Constants.1000 Physics.Value
+        scoreboard players operation @s Physics.Object.InverseInertiaTensorGlobal.4 /= #Physics.Constants.1000 Physics.Value
+        scoreboard players operation @s Physics.Object.InverseInertiaTensorGlobal.5 /= #Physics.Constants.1000 Physics.Value
+        scoreboard players operation @s Physics.Object.InverseInertiaTensorGlobal.6 /= #Physics.Constants.1000 Physics.Value
+        scoreboard players operation @s Physics.Object.InverseInertiaTensorGlobal.7 /= #Physics.Constants.1000 Physics.Value
+        scoreboard players operation @s Physics.Object.InverseInertiaTensorGlobal.8 /= #Physics.Constants.1000 Physics.Value
 
-    scoreboard players operation @s Physics.Object.InverseInertiaTensorGlobal.0 *= @s Physics.Object.RotationMatrix.0
-    scoreboard players operation @s Physics.Object.InverseInertiaTensorGlobal.1 *= @s Physics.Object.RotationMatrix.1
-    scoreboard players operation @s Physics.Object.InverseInertiaTensorGlobal.2 *= @s Physics.Object.RotationMatrix.2
-    scoreboard players operation @s Physics.Object.InverseInertiaTensorGlobal.3 *= @s Physics.Object.RotationMatrix.3
-    scoreboard players operation @s Physics.Object.InverseInertiaTensorGlobal.4 *= @s Physics.Object.RotationMatrix.4
-    scoreboard players operation @s Physics.Object.InverseInertiaTensorGlobal.5 *= @s Physics.Object.RotationMatrix.5
-    scoreboard players operation @s Physics.Object.InverseInertiaTensorGlobal.6 *= @s Physics.Object.RotationMatrix.6
-    scoreboard players operation @s Physics.Object.InverseInertiaTensorGlobal.7 *= @s Physics.Object.RotationMatrix.7
-    scoreboard players operation @s Physics.Object.InverseInertiaTensorGlobal.8 *= @s Physics.Object.RotationMatrix.8
+        scoreboard players operation @s Physics.Object.InverseInertiaTensorGlobal.0 *= @s Physics.Object.RotationMatrix.0
+        scoreboard players operation @s Physics.Object.InverseInertiaTensorGlobal.1 *= @s Physics.Object.RotationMatrix.1
+        scoreboard players operation @s Physics.Object.InverseInertiaTensorGlobal.2 *= @s Physics.Object.RotationMatrix.2
+        scoreboard players operation @s Physics.Object.InverseInertiaTensorGlobal.3 *= @s Physics.Object.RotationMatrix.3
+        scoreboard players operation @s Physics.Object.InverseInertiaTensorGlobal.4 *= @s Physics.Object.RotationMatrix.4
+        scoreboard players operation @s Physics.Object.InverseInertiaTensorGlobal.5 *= @s Physics.Object.RotationMatrix.5
+        scoreboard players operation @s Physics.Object.InverseInertiaTensorGlobal.6 *= @s Physics.Object.RotationMatrix.6
+        scoreboard players operation @s Physics.Object.InverseInertiaTensorGlobal.7 *= @s Physics.Object.RotationMatrix.7
+        scoreboard players operation @s Physics.Object.InverseInertiaTensorGlobal.8 *= @s Physics.Object.RotationMatrix.8
 
-#TEMPORARY. FOR SOME REASON, THE TORQUE CALCULATION ONLY WORKS IF I USE THE LOCAL TENSOR. SOMETHING IS IN THE WRONG COORDINATE SYSTEM, BUT I DONT KNOW WHAT
-scoreboard players operation @s Physics.Object.InverseInertiaTensorGlobal.0 = @s Physics.Object.InverseInertiaTensorLocal.0
-scoreboard players operation @s Physics.Object.InverseInertiaTensorGlobal.1 = @s Physics.Object.InverseInertiaTensorLocal.1
-scoreboard players operation @s Physics.Object.InverseInertiaTensorGlobal.2 = @s Physics.Object.InverseInertiaTensorLocal.2
-scoreboard players operation @s Physics.Object.InverseInertiaTensorGlobal.3 = @s Physics.Object.InverseInertiaTensorLocal.3
-scoreboard players operation @s Physics.Object.InverseInertiaTensorGlobal.4 = @s Physics.Object.InverseInertiaTensorLocal.4
-scoreboard players operation @s Physics.Object.InverseInertiaTensorGlobal.5 = @s Physics.Object.InverseInertiaTensorLocal.5
-scoreboard players operation @s Physics.Object.InverseInertiaTensorGlobal.6 = @s Physics.Object.InverseInertiaTensorLocal.6
-scoreboard players operation @s Physics.Object.InverseInertiaTensorGlobal.7 = @s Physics.Object.InverseInertiaTensorLocal.7
-scoreboard players operation @s Physics.Object.InverseInertiaTensorGlobal.8 = @s Physics.Object.InverseInertiaTensorLocal.8
+        execute store result score #Physics.Maths.Temp.Value3 Physics.Value store result score #Physics.Maths.Temp.Value5 Physics.Value run scoreboard players operation @s Physics.Object.InverseInertiaTensorGlobal.0 /= #Physics.Constants.1000 Physics.Value
+        execute store result score #Physics.Maths.Temp.Value1 Physics.Value store result score #Physics.Maths.Temp.Value6 Physics.Value run scoreboard players operation @s Physics.Object.InverseInertiaTensorGlobal.1 /= #Physics.Constants.1000 Physics.Value
+        execute store result score #Physics.Maths.Temp.Value2 Physics.Value store result score #Physics.Maths.Temp.Value4 Physics.Value run scoreboard players operation @s Physics.Object.InverseInertiaTensorGlobal.2 /= #Physics.Constants.1000 Physics.Value
+        execute store result score #Physics.Maths.Temp.Value9 Physics.Value store result score #Physics.Maths.Temp.Value11 Physics.Value run scoreboard players operation @s Physics.Object.InverseInertiaTensorGlobal.3 /= #Physics.Constants.1000 Physics.Value
+        execute store result score #Physics.Maths.Temp.Value7 Physics.Value store result score #Physics.Maths.Temp.Value12 Physics.Value run scoreboard players operation @s Physics.Object.InverseInertiaTensorGlobal.4 /= #Physics.Constants.1000 Physics.Value
+        execute store result score #Physics.Maths.Temp.Value8 Physics.Value store result score #Physics.Maths.Temp.Value10 Physics.Value run scoreboard players operation @s Physics.Object.InverseInertiaTensorGlobal.5 /= #Physics.Constants.1000 Physics.Value
+        execute store result score #Physics.Maths.Temp.Value15 Physics.Value store result score #Physics.Maths.Temp.Value17 Physics.Value run scoreboard players operation @s Physics.Object.InverseInertiaTensorGlobal.6 /= #Physics.Constants.1000 Physics.Value
+        execute store result score #Physics.Maths.Temp.Value13 Physics.Value store result score #Physics.Maths.Temp.Value18 Physics.Value run scoreboard players operation @s Physics.Object.InverseInertiaTensorGlobal.7 /= #Physics.Constants.1000 Physics.Value
+        execute store result score #Physics.Maths.Temp.Value14 Physics.Value store result score #Physics.Maths.Temp.Value16 Physics.Value run scoreboard players operation @s Physics.Object.InverseInertiaTensorGlobal.8 /= #Physics.Constants.1000 Physics.Value
 
-    scoreboard players operation @s Physics.Object.InverseInertiaTensorGlobal.0 /= #Physics.Constants.10000 Physics.Value
-    scoreboard players operation @s Physics.Object.InverseInertiaTensorGlobal.1 /= #Physics.Constants.10000 Physics.Value
-    scoreboard players operation @s Physics.Object.InverseInertiaTensorGlobal.2 /= #Physics.Constants.10000 Physics.Value
-    scoreboard players operation @s Physics.Object.InverseInertiaTensorGlobal.3 /= #Physics.Constants.10000 Physics.Value
-    scoreboard players operation @s Physics.Object.InverseInertiaTensorGlobal.4 /= #Physics.Constants.10000 Physics.Value
-    scoreboard players operation @s Physics.Object.InverseInertiaTensorGlobal.5 /= #Physics.Constants.10000 Physics.Value
-    scoreboard players operation @s Physics.Object.InverseInertiaTensorGlobal.6 /= #Physics.Constants.10000 Physics.Value
-    scoreboard players operation @s Physics.Object.InverseInertiaTensorGlobal.7 /= #Physics.Constants.10000 Physics.Value
-    scoreboard players operation @s Physics.Object.InverseInertiaTensorGlobal.8 /= #Physics.Constants.10000 Physics.Value
+        # I_global = temp * R_transpose
+        scoreboard players operation @s Physics.Object.InverseInertiaTensorGlobal.0 *= @s Physics.Object.RotationMatrixTranspose.0
+        scoreboard players operation #Physics.Maths.Temp.Value1 Physics.Value *= @s Physics.Object.RotationMatrixTranspose.3
+        scoreboard players operation #Physics.Maths.Temp.Value2 Physics.Value *= @s Physics.Object.RotationMatrixTranspose.6
+        scoreboard players operation @s Physics.Object.InverseInertiaTensorGlobal.0 += #Physics.Maths.Temp.Value1 Physics.Value
+        scoreboard players operation @s Physics.Object.InverseInertiaTensorGlobal.0 += #Physics.Maths.Temp.Value2 Physics.Value
+
+        scoreboard players operation #Physics.Maths.Temp.Value3 Physics.Value *= @s Physics.Object.RotationMatrixTranspose.1
+        scoreboard players operation @s Physics.Object.InverseInertiaTensorGlobal.1 *= @s Physics.Object.RotationMatrixTranspose.4
+        scoreboard players operation #Physics.Maths.Temp.Value4 Physics.Value *= @s Physics.Object.RotationMatrixTranspose.7
+        scoreboard players operation @s Physics.Object.InverseInertiaTensorGlobal.1 += #Physics.Maths.Temp.Value3 Physics.Value
+        scoreboard players operation @s Physics.Object.InverseInertiaTensorGlobal.1 += #Physics.Maths.Temp.Value4 Physics.Value
+
+        scoreboard players operation #Physics.Maths.Temp.Value5 Physics.Value *= @s Physics.Object.RotationMatrixTranspose.2
+        scoreboard players operation #Physics.Maths.Temp.Value6 Physics.Value *= @s Physics.Object.RotationMatrixTranspose.5
+        scoreboard players operation @s Physics.Object.InverseInertiaTensorGlobal.2 *= @s Physics.Object.RotationMatrixTranspose.8
+        scoreboard players operation @s Physics.Object.InverseInertiaTensorGlobal.2 += #Physics.Maths.Temp.Value5 Physics.Value
+        scoreboard players operation @s Physics.Object.InverseInertiaTensorGlobal.2 += #Physics.Maths.Temp.Value6 Physics.Value
+
+        scoreboard players operation @s Physics.Object.InverseInertiaTensorGlobal.3 *= @s Physics.Object.RotationMatrixTranspose.0
+        scoreboard players operation #Physics.Maths.Temp.Value7 Physics.Value *= @s Physics.Object.RotationMatrixTranspose.3
+        scoreboard players operation #Physics.Maths.Temp.Value8 Physics.Value *= @s Physics.Object.RotationMatrixTranspose.6
+        scoreboard players operation @s Physics.Object.InverseInertiaTensorGlobal.3 += #Physics.Maths.Temp.Value7 Physics.Value
+        scoreboard players operation @s Physics.Object.InverseInertiaTensorGlobal.3 += #Physics.Maths.Temp.Value8 Physics.Value
+
+        scoreboard players operation #Physics.Maths.Temp.Value9 Physics.Value *= @s Physics.Object.RotationMatrixTranspose.1
+        scoreboard players operation @s Physics.Object.InverseInertiaTensorGlobal.4 *= @s Physics.Object.RotationMatrixTranspose.4
+        scoreboard players operation #Physics.Maths.Temp.Value10 Physics.Value *= @s Physics.Object.RotationMatrixTranspose.7
+        scoreboard players operation @s Physics.Object.InverseInertiaTensorGlobal.4 += #Physics.Maths.Temp.Value9 Physics.Value
+        scoreboard players operation @s Physics.Object.InverseInertiaTensorGlobal.4 += #Physics.Maths.Temp.Value10 Physics.Value
+
+        scoreboard players operation #Physics.Maths.Temp.Value11 Physics.Value *= @s Physics.Object.RotationMatrixTranspose.2
+        scoreboard players operation #Physics.Maths.Temp.Value12 Physics.Value *= @s Physics.Object.RotationMatrixTranspose.5
+        scoreboard players operation @s Physics.Object.InverseInertiaTensorGlobal.5 *= @s Physics.Object.RotationMatrixTranspose.8
+        scoreboard players operation @s Physics.Object.InverseInertiaTensorGlobal.5 += #Physics.Maths.Temp.Value11 Physics.Value
+        scoreboard players operation @s Physics.Object.InverseInertiaTensorGlobal.5 += #Physics.Maths.Temp.Value12 Physics.Value
+
+        scoreboard players operation @s Physics.Object.InverseInertiaTensorGlobal.6 *= @s Physics.Object.RotationMatrixTranspose.0
+        scoreboard players operation #Physics.Maths.Temp.Value13 Physics.Value *= @s Physics.Object.RotationMatrixTranspose.3
+        scoreboard players operation #Physics.Maths.Temp.Value14 Physics.Value *= @s Physics.Object.RotationMatrixTranspose.6
+        scoreboard players operation @s Physics.Object.InverseInertiaTensorGlobal.6 += #Physics.Maths.Temp.Value13 Physics.Value
+        scoreboard players operation @s Physics.Object.InverseInertiaTensorGlobal.6 += #Physics.Maths.Temp.Value14 Physics.Value
+
+        scoreboard players operation #Physics.Maths.Temp.Value15 Physics.Value *= @s Physics.Object.RotationMatrixTranspose.1
+        scoreboard players operation @s Physics.Object.InverseInertiaTensorGlobal.7 *= @s Physics.Object.RotationMatrixTranspose.4
+        scoreboard players operation #Physics.Maths.Temp.Value16 Physics.Value *= @s Physics.Object.RotationMatrixTranspose.7
+        scoreboard players operation @s Physics.Object.InverseInertiaTensorGlobal.7 += #Physics.Maths.Temp.Value15 Physics.Value
+        scoreboard players operation @s Physics.Object.InverseInertiaTensorGlobal.7 += #Physics.Maths.Temp.Value16 Physics.Value
+
+        scoreboard players operation #Physics.Maths.Temp.Value17 Physics.Value *= @s Physics.Object.RotationMatrixTranspose.2
+        scoreboard players operation #Physics.Maths.Temp.Value18 Physics.Value *= @s Physics.Object.RotationMatrixTranspose.5
+        scoreboard players operation @s Physics.Object.InverseInertiaTensorGlobal.8 *= @s Physics.Object.RotationMatrixTranspose.8
+        scoreboard players operation @s Physics.Object.InverseInertiaTensorGlobal.8 += #Physics.Maths.Temp.Value17 Physics.Value
+        scoreboard players operation @s Physics.Object.InverseInertiaTensorGlobal.8 += #Physics.Maths.Temp.Value18 Physics.Value
+
+        scoreboard players operation @s Physics.Object.InverseInertiaTensorGlobal.0 /= #Physics.Constants.10000 Physics.Value
+        scoreboard players operation @s Physics.Object.InverseInertiaTensorGlobal.1 /= #Physics.Constants.10000 Physics.Value
+        scoreboard players operation @s Physics.Object.InverseInertiaTensorGlobal.2 /= #Physics.Constants.10000 Physics.Value
+        scoreboard players operation @s Physics.Object.InverseInertiaTensorGlobal.3 /= #Physics.Constants.10000 Physics.Value
+        scoreboard players operation @s Physics.Object.InverseInertiaTensorGlobal.4 /= #Physics.Constants.10000 Physics.Value
+        scoreboard players operation @s Physics.Object.InverseInertiaTensorGlobal.5 /= #Physics.Constants.10000 Physics.Value
+        scoreboard players operation @s Physics.Object.InverseInertiaTensorGlobal.6 /= #Physics.Constants.10000 Physics.Value
+        scoreboard players operation @s Physics.Object.InverseInertiaTensorGlobal.7 /= #Physics.Constants.10000 Physics.Value
+        scoreboard players operation @s Physics.Object.InverseInertiaTensorGlobal.8 /= #Physics.Constants.10000 Physics.Value
 
 # Clear accumulators
 scoreboard players set @s Physics.Object.AccumulatedForce.x 0
