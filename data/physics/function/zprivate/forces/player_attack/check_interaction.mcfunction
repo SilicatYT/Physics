@@ -192,6 +192,34 @@ data remove entity @s attack
             execute on vehicle on vehicle run scoreboard players operation @s Physics.Object.AccumulatedTorque.z += #Physics.Maths.Temp.Value1 Physics.Value
 
         # Force
-        execute on vehicle on vehicle run scoreboard players operation @s Physics.Object.AccumulatedForce.x += #Physics.Maths.RayDirection.x Physics.Value
-        execute on vehicle on vehicle run scoreboard players operation @s Physics.Object.AccumulatedForce.y += #Physics.Maths.RayDirection.y Physics.Value
-        execute on vehicle on vehicle run scoreboard players operation @s Physics.Object.AccumulatedForce.z += #Physics.Maths.RayDirection.z Physics.Value
+            # Get the surface normal (Rotated by the rotation matrix)
+            execute if score #Physics.Maths.RayIntersection.t0 Physics.Value = #Physics.Maths.RayIntersection.Earliest Physics.Value on vehicle on vehicle run function physics:zprivate/forces/player_attack/get_surface_normal/0
+            execute if score #Physics.Maths.RayIntersection.t1 Physics.Value = #Physics.Maths.RayIntersection.Earliest Physics.Value on vehicle on vehicle run function physics:zprivate/forces/player_attack/get_surface_normal/1
+            execute if score #Physics.Maths.RayIntersection.t2 Physics.Value = #Physics.Maths.RayIntersection.Earliest Physics.Value on vehicle on vehicle run function physics:zprivate/forces/player_attack/get_surface_normal/2
+            execute if score #Physics.Maths.RayIntersection.t3 Physics.Value = #Physics.Maths.RayIntersection.Earliest Physics.Value on vehicle on vehicle run function physics:zprivate/forces/player_attack/get_surface_normal/3
+            execute if score #Physics.Maths.RayIntersection.t4 Physics.Value = #Physics.Maths.RayIntersection.Earliest Physics.Value on vehicle on vehicle run function physics:zprivate/forces/player_attack/get_surface_normal/4
+            execute if score #Physics.Maths.RayIntersection.t5 Physics.Value = #Physics.Maths.RayIntersection.Earliest Physics.Value on vehicle on vehicle run function physics:zprivate/forces/player_attack/get_surface_normal/5
+
+            # Calculate the effective force that goes into translational movement: F_effective = (RayDirection * n) * n
+                # Scalar product
+                # (Important): Divide the result by 1,000 to keep the same scaling factor
+                scoreboard players operation #Physics.Maths.RayDirection.x Physics.Value *= #Physics.Maths.SurfaceNormal.x Physics.Value
+                scoreboard players operation #Physics.Maths.RayDirection.y Physics.Value *= #Physics.Maths.SurfaceNormal.y Physics.Value
+                scoreboard players operation #Physics.Maths.RayDirection.z Physics.Value *= #Physics.Maths.SurfaceNormal.z Physics.Value
+                scoreboard players operation #Physics.Maths.RayDirection.x Physics.Value += #Physics.Maths.RayDirection.y Physics.Value
+                scoreboard players operation #Physics.Maths.RayDirection.x Physics.Value += #Physics.Maths.RayDirection.z Physics.Value
+                scoreboard players operation #Physics.Maths.RayDirection.x Physics.Value /= #Physics.Constants.1000 Physics.Value
+
+                # Scale the normal vector by the scalar product
+                # (Important): Divide the result by 1,000 to keep the same scaling factor
+                scoreboard players operation #Physics.Maths.SurfaceNormal.x Physics.Value *= #Physics.Maths.RayDirection.x Physics.Value
+                scoreboard players operation #Physics.Maths.SurfaceNormal.y Physics.Value *= #Physics.Maths.RayDirection.x Physics.Value
+                scoreboard players operation #Physics.Maths.SurfaceNormal.z Physics.Value *= #Physics.Maths.RayDirection.x Physics.Value
+                scoreboard players operation #Physics.Maths.SurfaceNormal.x Physics.Value /= #Physics.Constants.1000 Physics.Value
+                scoreboard players operation #Physics.Maths.SurfaceNormal.y Physics.Value /= #Physics.Constants.1000 Physics.Value
+                scoreboard players operation #Physics.Maths.SurfaceNormal.z Physics.Value /= #Physics.Constants.1000 Physics.Value
+
+            # Apply
+            execute on vehicle on vehicle run scoreboard players operation @s Physics.Object.AccumulatedForce.x += #Physics.Maths.SurfaceNormal.x Physics.Value
+            execute on vehicle on vehicle run scoreboard players operation @s Physics.Object.AccumulatedForce.y += #Physics.Maths.SurfaceNormal.y Physics.Value
+            execute on vehicle on vehicle run scoreboard players operation @s Physics.Object.AccumulatedForce.z += #Physics.Maths.SurfaceNormal.z Physics.Value
