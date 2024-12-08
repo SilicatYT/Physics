@@ -151,6 +151,11 @@ data remove entity @s attack
     execute in minecraft:overworld run tp 0-0-0-0-0 0.0 0.0 0.0
 
     # Calculate the physics of the attack
+    # (Important): I now scale the RayDirection to match the force the player punched with. Now it's the force that's applied on the hit point.
+    scoreboard players operation #Physics.Maths.RayDirection.x Physics.Value *= #Physics.Global.PlayerAttackForceMagnitude Physics.Value
+    scoreboard players operation #Physics.Maths.RayDirection.y Physics.Value *= #Physics.Global.PlayerAttackForceMagnitude Physics.Value
+    scoreboard players operation #Physics.Maths.RayDirection.z Physics.Value *= #Physics.Global.PlayerAttackForceMagnitude Physics.Value
+
         # Torque
             # Get the relative coordinates of the intersection (intersection_pos - object_pos). In other words, the vector from the object's center of mass to the intersection point that I hit, in global coordinates.
             scoreboard players operation #Physics.Maths.RayPosCopy.x Physics.Value /= #Physics.Constants.1000 Physics.Value
@@ -185,3 +190,8 @@ data remove entity @s attack
             scoreboard players operation #Physics.Maths.Temp.Value1 Physics.Value -= #Physics.Maths.Temp.Value2 Physics.Value
             scoreboard players operation #Physics.Maths.Temp.Value1 Physics.Value /= #Physics.Constants.1000 Physics.Value
             execute on vehicle on vehicle run scoreboard players operation @s Physics.Object.AccumulatedTorque.z += #Physics.Maths.Temp.Value1 Physics.Value
+
+        # Force
+        execute on vehicle on vehicle run scoreboard players operation @s Physics.Object.AccumulatedForce.x += #Physics.Maths.RayDirection.x Physics.Value
+        execute on vehicle on vehicle run scoreboard players operation @s Physics.Object.AccumulatedForce.y += #Physics.Maths.RayDirection.y Physics.Value
+        execute on vehicle on vehicle run scoreboard players operation @s Physics.Object.AccumulatedForce.z += #Physics.Maths.RayDirection.z Physics.Value

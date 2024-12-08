@@ -37,8 +37,6 @@ execute store result storage physics:temp data.Integration.Pos[2] double 0.001 r
 # Update angular velocity
     # AngularAcceleration = InverseGlobalInertiaTensor * AccumulatedTorque
     # (Important): InverseGlobalInertiaTensor is scaled by 100,000x and AccumulatedTorque is scaled by 1,000x.
-    # (Important): DIVISION BY 1000 AT THE END IS TEMPORARY, I HAVE NO IDEA WHAT THE CORRECT SCALE IS. I THOUGHT IT SHOULD BE 100,000, BUT THAT SEEMS TOO HIGH FOR THE ACTUAL VALUES.
-    # TODO: Actually, I think a division by 100,000 would be correct, but my force I'm inputting is just too weak for now. I need to change this later.
     scoreboard players operation #Physics.Maths.AngularAcceleration.x Physics.Value = @s Physics.Object.InverseInertiaTensorGlobal.0
     scoreboard players operation #Physics.Maths.AngularAcceleration.x Physics.Value *= @s Physics.Object.AccumulatedTorque.x
     scoreboard players operation #Physics.Maths.Temp.Value1 Physics.Value = @s Physics.Object.InverseInertiaTensorGlobal.1
@@ -47,7 +45,7 @@ execute store result storage physics:temp data.Integration.Pos[2] double 0.001 r
     scoreboard players operation #Physics.Maths.Temp.Value1 Physics.Value = @s Physics.Object.InverseInertiaTensorGlobal.2
     scoreboard players operation #Physics.Maths.Temp.Value1 Physics.Value *= @s Physics.Object.AccumulatedTorque.z
     scoreboard players operation #Physics.Maths.AngularAcceleration.x Physics.Value += #Physics.Maths.Temp.Value1 Physics.Value
-    scoreboard players operation #Physics.Maths.AngularAcceleration.x Physics.Value /= #Physics.Constants.1000 Physics.Value
+    scoreboard players operation #Physics.Maths.AngularAcceleration.x Physics.Value /= #Physics.Constants.100000 Physics.Value
 
     scoreboard players operation #Physics.Maths.AngularAcceleration.y Physics.Value = @s Physics.Object.InverseInertiaTensorGlobal.3
     scoreboard players operation #Physics.Maths.AngularAcceleration.y Physics.Value *= @s Physics.Object.AccumulatedTorque.x
@@ -57,7 +55,7 @@ execute store result storage physics:temp data.Integration.Pos[2] double 0.001 r
     scoreboard players operation #Physics.Maths.Temp.Value1 Physics.Value = @s Physics.Object.InverseInertiaTensorGlobal.5
     scoreboard players operation #Physics.Maths.Temp.Value1 Physics.Value *= @s Physics.Object.AccumulatedTorque.z
     scoreboard players operation #Physics.Maths.AngularAcceleration.y Physics.Value += #Physics.Maths.Temp.Value1 Physics.Value
-    scoreboard players operation #Physics.Maths.AngularAcceleration.y Physics.Value /= #Physics.Constants.1000 Physics.Value
+    scoreboard players operation #Physics.Maths.AngularAcceleration.y Physics.Value /= #Physics.Constants.100000 Physics.Value
 
     scoreboard players operation #Physics.Maths.AngularAcceleration.z Physics.Value = @s Physics.Object.InverseInertiaTensorGlobal.6
     scoreboard players operation #Physics.Maths.AngularAcceleration.z Physics.Value *= @s Physics.Object.AccumulatedTorque.x
@@ -67,7 +65,7 @@ execute store result storage physics:temp data.Integration.Pos[2] double 0.001 r
     scoreboard players operation #Physics.Maths.Temp.Value1 Physics.Value = @s Physics.Object.InverseInertiaTensorGlobal.8
     scoreboard players operation #Physics.Maths.Temp.Value1 Physics.Value *= @s Physics.Object.AccumulatedTorque.z
     scoreboard players operation #Physics.Maths.AngularAcceleration.z Physics.Value += #Physics.Maths.Temp.Value1 Physics.Value
-    scoreboard players operation #Physics.Maths.AngularAcceleration.z Physics.Value /= #Physics.Constants.1000 Physics.Value
+    scoreboard players operation #Physics.Maths.AngularAcceleration.z Physics.Value /= #Physics.Constants.100000 Physics.Value
 
     # Add angular acceleration to angular velocity
     scoreboard players operation @s Physics.Object.AngularVelocity.x += #Physics.Maths.AngularAcceleration.x Physics.Value

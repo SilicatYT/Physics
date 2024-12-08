@@ -64,8 +64,9 @@ scoreboard objectives add Physics.Object.InverseInertiaTensorGlobal.7 dummy
 scoreboard objectives add Physics.Object.InverseInertiaTensorGlobal.8 dummy
 
 # Set global variables
-scoreboard players set #Physics.Global.LinearDamping Physics.Value 95
-scoreboard players set #Physics.Global.AngularDamping Physics.Value 97
+scoreboard players set #Physics.Global.LinearDamping Physics.Value 96
+scoreboard players set #Physics.Global.AngularDamping Physics.Value 98
+scoreboard players set #Physics.Global.PlayerAttackForceMagnitude Physics.Value 300
 
 # Set value constants (You can't multiply or divide by numbers without defining them first using scoreboards)
 scoreboard players set #Physics.Constants.2 Physics.Value 2
