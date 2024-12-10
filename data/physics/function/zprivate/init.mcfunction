@@ -13,6 +13,7 @@ scoreboard objectives add Physics.Object.Velocity.y dummy
 scoreboard objectives add Physics.Object.Velocity.z dummy
 scoreboard objectives add Physics.Object.InverseMass dummy
 scoreboard objectives add Physics.Object.Gravity dummy
+scoreboard objectives add Physics.Object.FrictionCoefficient dummy
 scoreboard objectives add Physics.Object.AccumulatedForce.x dummy
 scoreboard objectives add Physics.Object.AccumulatedForce.y dummy
 scoreboard objectives add Physics.Object.AccumulatedForce.z dummy
@@ -67,6 +68,7 @@ scoreboard objectives add Physics.Object.InverseInertiaTensorGlobal.8 dummy
 scoreboard players set #Physics.Global.LinearDamping Physics.Value 96
 scoreboard players set #Physics.Global.AngularDamping Physics.Value 98
 scoreboard players set #Physics.Global.PlayerAttackForceMagnitude Physics.Value 300
+scoreboard players set #Physics.Global.PlayerAttackFrictionCoefficient Physics.Value 53
 
 # Set value constants (You can't multiply or divide by numbers without defining them first using scoreboards)
 scoreboard players set #Physics.Constants.2 Physics.Value 2

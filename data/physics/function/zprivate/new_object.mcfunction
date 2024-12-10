@@ -8,6 +8,7 @@ scoreboard players set @s Physics.Object.Dimension.x 10000
 scoreboard players set @s Physics.Object.Dimension.y 10000
 scoreboard players set @s Physics.Object.Dimension.z 10000
 scoreboard players set @s Physics.Object.Gravity 490
+scoreboard players set @s Physics.Object.FrictionCoefficient 75
 scoreboard players set @s Physics.Object.Orientation.x 0
 scoreboard players set @s Physics.Object.Orientation.y 0
 scoreboard players set @s Physics.Object.Orientation.z 0

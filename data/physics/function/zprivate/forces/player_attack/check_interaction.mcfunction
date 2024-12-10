@@ -1,5 +1,6 @@
 # IDEA: Take the player's reach into account (Currently they can hit any point of the object as long as they can hit the interaction entity at all)
 # IDEA: Also check hits for other display entities whose interaction hitbox are in the path of the player's reach
+# IDEA: Create a lookup table for materials and make it possible to assign a material to the object instead of dynamically setting the FrictionCoefficient score (Which makes no sense)
 
 # Check if this is the interaction entity that was hit
 execute if score #Physics.Found Physics.Value matches 1 run return 0
@@ -152,55 +153,20 @@ data remove entity @s attack
 
     # Calculate the physics of the attack
     # (Important): I now scale the RayDirection to match the force the player punched with. Now it's the force that's applied on the hit point.
-    scoreboard players operation #Physics.Maths.RayDirection.x Physics.Value *= #Physics.Global.PlayerAttackForceMagnitude Physics.Value
-    scoreboard players operation #Physics.Maths.RayDirection.y Physics.Value *= #Physics.Global.PlayerAttackForceMagnitude Physics.Value
-    scoreboard players operation #Physics.Maths.RayDirection.z Physics.Value *= #Physics.Global.PlayerAttackForceMagnitude Physics.Value
+    execute store result score #Physics.Maths.ForceTangential.x Physics.Value run scoreboard players operation #Physics.Maths.RayDirection.x Physics.Value *= #Physics.Global.PlayerAttackForceMagnitude Physics.Value
+    execute store result score #Physics.Maths.ForceTangential.y Physics.Value run scoreboard players operation #Physics.Maths.RayDirection.y Physics.Value *= #Physics.Global.PlayerAttackForceMagnitude Physics.Value
+    execute store result score #Physics.Maths.ForceTangential.z Physics.Value run scoreboard players operation #Physics.Maths.RayDirection.z Physics.Value *= #Physics.Global.PlayerAttackForceMagnitude Physics.Value
 
-        # Torque
-            # Get the relative coordinates of the intersection (intersection_pos - object_pos). In other words, the vector from the object's center of mass to the intersection point that I hit, in global coordinates.
-            scoreboard players operation #Physics.Maths.RayPosCopy.x Physics.Value /= #Physics.Constants.1000 Physics.Value
-            scoreboard players operation #Physics.Maths.RayPosCopy.y Physics.Value /= #Physics.Constants.1000 Physics.Value
-            scoreboard players operation #Physics.Maths.RayPosCopy.z Physics.Value /= #Physics.Constants.1000 Physics.Value
-            execute on vehicle on vehicle run scoreboard players operation #Physics.Maths.RayPosCopy.x Physics.Value -= @s Physics.Object.Pos.x
-            execute on vehicle on vehicle run scoreboard players operation #Physics.Maths.RayPosCopy.y Physics.Value -= @s Physics.Object.Pos.y
-            execute on vehicle on vehicle run scoreboard players operation #Physics.Maths.RayPosCopy.z Physics.Value -= @s Physics.Object.Pos.z
+        # Calculate the contact force that's used for translational and angular movement
+            # Normal force = (Ray Direction * n) * n
+                # Get the surface normal (Rotated by the rotation matrix)
+                execute if score #Physics.Maths.RayIntersection.t0 Physics.Value = #Physics.Maths.RayIntersection.Earliest Physics.Value on vehicle on vehicle run function physics:zprivate/forces/player_attack/get_surface_normal/0
+                execute if score #Physics.Maths.RayIntersection.t1 Physics.Value = #Physics.Maths.RayIntersection.Earliest Physics.Value on vehicle on vehicle run function physics:zprivate/forces/player_attack/get_surface_normal/1
+                execute if score #Physics.Maths.RayIntersection.t2 Physics.Value = #Physics.Maths.RayIntersection.Earliest Physics.Value on vehicle on vehicle run function physics:zprivate/forces/player_attack/get_surface_normal/2
+                execute if score #Physics.Maths.RayIntersection.t3 Physics.Value = #Physics.Maths.RayIntersection.Earliest Physics.Value on vehicle on vehicle run function physics:zprivate/forces/player_attack/get_surface_normal/3
+                execute if score #Physics.Maths.RayIntersection.t4 Physics.Value = #Physics.Maths.RayIntersection.Earliest Physics.Value on vehicle on vehicle run function physics:zprivate/forces/player_attack/get_surface_normal/4
+                execute if score #Physics.Maths.RayIntersection.t5 Physics.Value = #Physics.Maths.RayIntersection.Earliest Physics.Value on vehicle on vehicle run function physics:zprivate/forces/player_attack/get_surface_normal/5
 
-            # Torque = IntersectionPointLocal x force (Note: In this case, I define the force as a unit vector in the player's facing direction. So I'll re-use the ray direction. The application point of the force is local, while the force must be global. The resulting torque is global as well.)
-            # (Important): Because both Pos and Direction are scaled by 1,000x, this means their product is scaled by 1,000,000x. So I have to divide the result by 1,000x before adding it to the accumulated torque.
-            scoreboard players operation #Physics.Maths.Temp.Value1 Physics.Value = #Physics.Maths.RayPosCopy.y Physics.Value
-            scoreboard players operation #Physics.Maths.Temp.Value1 Physics.Value *= #Physics.Maths.RayDirection.z Physics.Value
-            scoreboard players operation #Physics.Maths.Temp.Value2 Physics.Value = #Physics.Maths.RayPosCopy.z Physics.Value
-            scoreboard players operation #Physics.Maths.Temp.Value2 Physics.Value *= #Physics.Maths.RayDirection.y Physics.Value
-            scoreboard players operation #Physics.Maths.Temp.Value1 Physics.Value -= #Physics.Maths.Temp.Value2 Physics.Value
-            scoreboard players operation #Physics.Maths.Temp.Value1 Physics.Value /= #Physics.Constants.1000 Physics.Value
-            execute on vehicle on vehicle run scoreboard players operation @s Physics.Object.AccumulatedTorque.x += #Physics.Maths.Temp.Value1 Physics.Value
-
-            scoreboard players operation #Physics.Maths.Temp.Value1 Physics.Value = #Physics.Maths.RayPosCopy.z Physics.Value
-            scoreboard players operation #Physics.Maths.Temp.Value1 Physics.Value *= #Physics.Maths.RayDirection.x Physics.Value
-            scoreboard players operation #Physics.Maths.Temp.Value2 Physics.Value = #Physics.Maths.RayPosCopy.x Physics.Value
-            scoreboard players operation #Physics.Maths.Temp.Value2 Physics.Value *= #Physics.Maths.RayDirection.z Physics.Value
-            scoreboard players operation #Physics.Maths.Temp.Value1 Physics.Value -= #Physics.Maths.Temp.Value2 Physics.Value
-            scoreboard players operation #Physics.Maths.Temp.Value1 Physics.Value /= #Physics.Constants.1000 Physics.Value
-            execute on vehicle on vehicle run scoreboard players operation @s Physics.Object.AccumulatedTorque.y += #Physics.Maths.Temp.Value1 Physics.Value
-
-            scoreboard players operation #Physics.Maths.Temp.Value1 Physics.Value = #Physics.Maths.RayPosCopy.x Physics.Value
-            scoreboard players operation #Physics.Maths.Temp.Value1 Physics.Value *= #Physics.Maths.RayDirection.y Physics.Value
-            scoreboard players operation #Physics.Maths.Temp.Value2 Physics.Value = #Physics.Maths.RayPosCopy.y Physics.Value
-            scoreboard players operation #Physics.Maths.Temp.Value2 Physics.Value *= #Physics.Maths.RayDirection.x Physics.Value
-            scoreboard players operation #Physics.Maths.Temp.Value1 Physics.Value -= #Physics.Maths.Temp.Value2 Physics.Value
-            scoreboard players operation #Physics.Maths.Temp.Value1 Physics.Value /= #Physics.Constants.1000 Physics.Value
-            execute on vehicle on vehicle run scoreboard players operation @s Physics.Object.AccumulatedTorque.z += #Physics.Maths.Temp.Value1 Physics.Value
-
-        # Force
-            # Get the surface normal (Rotated by the rotation matrix)
-            execute if score #Physics.Maths.RayIntersection.t0 Physics.Value = #Physics.Maths.RayIntersection.Earliest Physics.Value on vehicle on vehicle run function physics:zprivate/forces/player_attack/get_surface_normal/0
-            execute if score #Physics.Maths.RayIntersection.t1 Physics.Value = #Physics.Maths.RayIntersection.Earliest Physics.Value on vehicle on vehicle run function physics:zprivate/forces/player_attack/get_surface_normal/1
-            execute if score #Physics.Maths.RayIntersection.t2 Physics.Value = #Physics.Maths.RayIntersection.Earliest Physics.Value on vehicle on vehicle run function physics:zprivate/forces/player_attack/get_surface_normal/2
-            execute if score #Physics.Maths.RayIntersection.t3 Physics.Value = #Physics.Maths.RayIntersection.Earliest Physics.Value on vehicle on vehicle run function physics:zprivate/forces/player_attack/get_surface_normal/3
-            execute if score #Physics.Maths.RayIntersection.t4 Physics.Value = #Physics.Maths.RayIntersection.Earliest Physics.Value on vehicle on vehicle run function physics:zprivate/forces/player_attack/get_surface_normal/4
-            execute if score #Physics.Maths.RayIntersection.t5 Physics.Value = #Physics.Maths.RayIntersection.Earliest Physics.Value on vehicle on vehicle run function physics:zprivate/forces/player_attack/get_surface_normal/5
-
-            # Calculate the effective force that goes into translational movement: F_effective = (RayDirection * n) * n
                 # Scalar product
                 # (Important): Divide the result by 1,000 to keep the same scaling factor
                 scoreboard players operation #Physics.Maths.RayDirection.x Physics.Value *= #Physics.Maths.SurfaceNormal.x Physics.Value
@@ -219,7 +185,63 @@ data remove entity @s attack
                 scoreboard players operation #Physics.Maths.SurfaceNormal.y Physics.Value /= #Physics.Constants.1000 Physics.Value
                 scoreboard players operation #Physics.Maths.SurfaceNormal.z Physics.Value /= #Physics.Constants.1000 Physics.Value
 
-            # Apply
-            execute on vehicle on vehicle run scoreboard players operation @s Physics.Object.AccumulatedForce.x += #Physics.Maths.SurfaceNormal.x Physics.Value
-            execute on vehicle on vehicle run scoreboard players operation @s Physics.Object.AccumulatedForce.y += #Physics.Maths.SurfaceNormal.y Physics.Value
-            execute on vehicle on vehicle run scoreboard players operation @s Physics.Object.AccumulatedForce.z += #Physics.Maths.SurfaceNormal.z Physics.Value
+            # Tangential force = F - F_normal
+            execute store result score #Physics.Maths.ForceContact.x Physics.Value run scoreboard players operation #Physics.Maths.ForceTangential.x Physics.Value -= #Physics.Maths.SurfaceNormal.x Physics.Value
+            execute store result score #Physics.Maths.ForceContact.y Physics.Value run scoreboard players operation #Physics.Maths.ForceTangential.y Physics.Value -= #Physics.Maths.SurfaceNormal.y Physics.Value
+            execute store result score #Physics.Maths.ForceContact.z Physics.Value run scoreboard players operation #Physics.Maths.ForceTangential.z Physics.Value -= #Physics.Maths.SurfaceNormal.z Physics.Value
+
+            # Contact force = F_normal + F_tangential * FrictionCoefficient (Note: The friction coefficient normally exists only for pairs of materials. Here, I approximate it by taking the average of the two, because a lookup table would be too much effort for now)
+            scoreboard players operation #Physics.Maths.FrictionCoefficient Physics.Value = @s Physics.Object.FrictionCoefficient
+            scoreboard players operation #Physics.Maths.FrictionCoefficient Physics.Value += #Physics.Global.PlayerAttackFrictionCoefficient Physics.Value
+            scoreboard players operation #Physics.Maths.FrictionCoefficient Physics.Value /= #Physics.Constants.2 Physics.Value
+
+            scoreboard players operation #Physics.Maths.ForceContact.x Physics.Value /= #Physics.Constants.100 Physics.Value
+            scoreboard players operation #Physics.Maths.ForceContact.y Physics.Value /= #Physics.Constants.100 Physics.Value
+            scoreboard players operation #Physics.Maths.ForceContact.z Physics.Value /= #Physics.Constants.100 Physics.Value
+            scoreboard players operation #Physics.Maths.ForceContact.x Physics.Value *= #Physics.Maths.FrictionCoefficient Physics.Value
+            scoreboard players operation #Physics.Maths.ForceContact.y Physics.Value *= #Physics.Maths.FrictionCoefficient Physics.Value
+            scoreboard players operation #Physics.Maths.ForceContact.z Physics.Value *= #Physics.Maths.FrictionCoefficient Physics.Value
+
+            scoreboard players operation #Physics.Maths.ForceContact.x Physics.Value += #Physics.Maths.SurfaceNormal.x Physics.Value
+            scoreboard players operation #Physics.Maths.ForceContact.y Physics.Value += #Physics.Maths.SurfaceNormal.y Physics.Value
+            scoreboard players operation #Physics.Maths.ForceContact.z Physics.Value += #Physics.Maths.SurfaceNormal.z Physics.Value
+
+        # Torque
+            # Get the relative coordinates of the intersection (intersection_pos - object_pos). In other words, the vector from the object's center of mass to the intersection point that I hit, in global coordinates.
+            scoreboard players operation #Physics.Maths.RayPosCopy.x Physics.Value /= #Physics.Constants.1000 Physics.Value
+            scoreboard players operation #Physics.Maths.RayPosCopy.y Physics.Value /= #Physics.Constants.1000 Physics.Value
+            scoreboard players operation #Physics.Maths.RayPosCopy.z Physics.Value /= #Physics.Constants.1000 Physics.Value
+            execute on vehicle on vehicle run scoreboard players operation #Physics.Maths.RayPosCopy.x Physics.Value -= @s Physics.Object.Pos.x
+            execute on vehicle on vehicle run scoreboard players operation #Physics.Maths.RayPosCopy.y Physics.Value -= @s Physics.Object.Pos.y
+            execute on vehicle on vehicle run scoreboard players operation #Physics.Maths.RayPosCopy.z Physics.Value -= @s Physics.Object.Pos.z
+
+            # Torque = r x force (With r being the vector from the object origin to the global point that was hit)
+            # (Important): Because both Pos and Direction are scaled by 1,000x, this means their product is scaled by 1,000,000x. So I have to divide the result by 1,000x before adding it to the accumulated torque.
+            scoreboard players operation #Physics.Maths.Temp.Value1 Physics.Value = #Physics.Maths.RayPosCopy.y Physics.Value
+            scoreboard players operation #Physics.Maths.Temp.Value1 Physics.Value *= #Physics.Maths.ForceContact.z Physics.Value
+            scoreboard players operation #Physics.Maths.Temp.Value2 Physics.Value = #Physics.Maths.RayPosCopy.z Physics.Value
+            scoreboard players operation #Physics.Maths.Temp.Value2 Physics.Value *= #Physics.Maths.ForceContact.y Physics.Value
+            scoreboard players operation #Physics.Maths.Temp.Value1 Physics.Value -= #Physics.Maths.Temp.Value2 Physics.Value
+            scoreboard players operation #Physics.Maths.Temp.Value1 Physics.Value /= #Physics.Constants.1000 Physics.Value
+            execute on vehicle on vehicle run scoreboard players operation @s Physics.Object.AccumulatedTorque.x += #Physics.Maths.Temp.Value1 Physics.Value
+
+            scoreboard players operation #Physics.Maths.Temp.Value1 Physics.Value = #Physics.Maths.RayPosCopy.z Physics.Value
+            scoreboard players operation #Physics.Maths.Temp.Value1 Physics.Value *= #Physics.Maths.ForceContact.x Physics.Value
+            scoreboard players operation #Physics.Maths.Temp.Value2 Physics.Value = #Physics.Maths.RayPosCopy.x Physics.Value
+            scoreboard players operation #Physics.Maths.Temp.Value2 Physics.Value *= #Physics.Maths.ForceContact.z Physics.Value
+            scoreboard players operation #Physics.Maths.Temp.Value1 Physics.Value -= #Physics.Maths.Temp.Value2 Physics.Value
+            scoreboard players operation #Physics.Maths.Temp.Value1 Physics.Value /= #Physics.Constants.1000 Physics.Value
+            execute on vehicle on vehicle run scoreboard players operation @s Physics.Object.AccumulatedTorque.y += #Physics.Maths.Temp.Value1 Physics.Value
+
+            scoreboard players operation #Physics.Maths.Temp.Value1 Physics.Value = #Physics.Maths.RayPosCopy.x Physics.Value
+            scoreboard players operation #Physics.Maths.Temp.Value1 Physics.Value *= #Physics.Maths.ForceContact.y Physics.Value
+            scoreboard players operation #Physics.Maths.Temp.Value2 Physics.Value = #Physics.Maths.RayPosCopy.y Physics.Value
+            scoreboard players operation #Physics.Maths.Temp.Value2 Physics.Value *= #Physics.Maths.ForceContact.x Physics.Value
+            scoreboard players operation #Physics.Maths.Temp.Value1 Physics.Value -= #Physics.Maths.Temp.Value2 Physics.Value
+            scoreboard players operation #Physics.Maths.Temp.Value1 Physics.Value /= #Physics.Constants.1000 Physics.Value
+            execute on vehicle on vehicle run scoreboard players operation @s Physics.Object.AccumulatedTorque.z += #Physics.Maths.Temp.Value1 Physics.Value
+
+        # Linear force
+        execute on vehicle on vehicle run scoreboard players operation @s Physics.Object.AccumulatedForce.x += #Physics.Maths.ForceContact.x Physics.Value
+        execute on vehicle on vehicle run scoreboard players operation @s Physics.Object.AccumulatedForce.y += #Physics.Maths.ForceContact.y Physics.Value
+        execute on vehicle on vehicle run scoreboard players operation @s Physics.Object.AccumulatedForce.z += #Physics.Maths.ForceContact.z Physics.Value
