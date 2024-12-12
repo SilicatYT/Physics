@@ -5,6 +5,7 @@ tellraw @a ["",{"text":"Physics >> ","color":"#99EAD6"},"Installed Physics (v0.1
 scoreboard objectives add Physics.Value dummy
 
 # Add object attributes
+scoreboard objectives add Physics.Object.ID dummy
 scoreboard objectives add Physics.Object.Pos.x dummy
 scoreboard objectives add Physics.Object.Pos.y dummy
 scoreboard objectives add Physics.Object.Pos.z dummy
@@ -29,10 +30,10 @@ scoreboard objectives add Physics.Object.AngularVelocity.z dummy
 scoreboard objectives add Physics.Object.InverseInertiaTensorLocal.0 dummy
 scoreboard objectives add Physics.Object.InverseInertiaTensorLocal.4 dummy
 scoreboard objectives add Physics.Object.InverseInertiaTensorLocal.8 dummy
-
 scoreboard objectives add Physics.Object.Dimension.x dummy
 scoreboard objectives add Physics.Object.Dimension.y dummy
 scoreboard objectives add Physics.Object.Dimension.z dummy
+scoreboard objectives add Physics.Object.HitboxRadiusSquared dummy
 
 # Add derived object attributes (Calculated from object attributes, but stored separately to prevent repeated calculations)
 scoreboard objectives add Physics.Object.RotationMatrix.0 dummy
@@ -64,11 +65,13 @@ scoreboard objectives add Physics.Object.InverseInertiaTensorGlobal.7 dummy
 scoreboard objectives add Physics.Object.InverseInertiaTensorGlobal.8 dummy
 
 # Set global variables
+scoreboard players set #Physics.Global.DefaultGravity Physics.Value 490
 scoreboard players set #Physics.Global.LinearDamping Physics.Value 96
 scoreboard players set #Physics.Global.AngularDamping Physics.Value 98
 scoreboard players set #Physics.Global.PlayerAttackForceMagnitude Physics.Value 300
 
 # Set value constants (You can't multiply or divide by numbers without defining them first using scoreboards)
+scoreboard players set #Physics.Constants.-1 Physics.Value -1
 scoreboard players set #Physics.Constants.2 Physics.Value 2
 scoreboard players set #Physics.Constants.10 Physics.Value 10
 scoreboard players set #Physics.Constants.12 Physics.Value 12

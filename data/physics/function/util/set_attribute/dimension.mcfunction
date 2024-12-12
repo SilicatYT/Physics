@@ -1,10 +1,15 @@
 # Set the object's x, y and z dimensions (width, height and length)
+# (Important): Because of the rough hitbox check (I want to save 3 divisions per entity combination that's checked), the max sidelength for a single dimension is restricted to 13.5 blocks
 scoreboard players add #Physics.SetAttribute.Dimension.x Physics.Value 0
 scoreboard players add #Physics.SetAttribute.Dimension.y Physics.Value 0
 scoreboard players add #Physics.SetAttribute.Dimension.z Physics.Value 0
 execute if score #Physics.SetAttribute.Dimension.x Physics.Value matches ..0 run scoreboard players set #Physics.SetAttribute.Dimension.x Physics.Value 1
 execute if score #Physics.SetAttribute.Dimension.y Physics.Value matches ..0 run scoreboard players set #Physics.SetAttribute.Dimension.y Physics.Value 1
 execute if score #Physics.SetAttribute.Dimension.z Physics.Value matches ..0 run scoreboard players set #Physics.SetAttribute.Dimension.z Physics.Value 1
+execute if score #Physics.SetAttribute.Dimension.x Physics.Value matches ..132501 run scoreboard players set #Physics.SetAttribute.Dimension.x Physics.Value 132500
+execute if score #Physics.SetAttribute.Dimension.y Physics.Value matches ..132501 run scoreboard players set #Physics.SetAttribute.Dimension.y Physics.Value 132500
+execute if score #Physics.SetAttribute.Dimension.z Physics.Value matches ..132501 run scoreboard players set #Physics.SetAttribute.Dimension.z Physics.Value 132500
+
 scoreboard players operation @s Physics.Object.Dimension.x = #Physics.SetAttribute.Dimension.x Physics.Value
 scoreboard players operation @s Physics.Object.Dimension.y = #Physics.SetAttribute.Dimension.y Physics.Value
 scoreboard players operation @s Physics.Object.Dimension.z = #Physics.SetAttribute.Dimension.z Physics.Value
@@ -37,6 +42,9 @@ data modify entity @s {} merge from storage physics:temp data.Object
 
     # Hitbox offset
     execute on passengers store result entity @s height float -0.000001 run data get storage physics:temp data.InteractionSize.height 500000
+
+# Update the squared hitbox radius score
+execute store result score @s Physics.Object.HitboxRadiusSquared run data get storage physics:temp data.InteractionSize.height 1000000
 
 # Update the local inverse inertia tensor (Scaling: InverseMass scaled by 1,000,000/x instead of 100,000,000/x)
     # Calculate the inverted local inertia tensor

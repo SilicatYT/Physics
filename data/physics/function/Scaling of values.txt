@@ -12,7 +12,7 @@
 - RotationMatrix is 1,000x (Important: After a ^2, I need to divide by 1000 to make sure it's not suddenly scaled by 1,000,000)
 - AngularVelocity is 1,000x
 - Torque is 1,000x
-- FrictionCoefficient is scaled 100x
+- HitboxRadiusSquared is 1,000,000x (Not 1,000 because I save the division by 1,000 after squaring in the squared distance calculation. That's also why I restrict the max distance a collision can be detected from to 26.5 blocks)
 
 Note: InverseMass of 1,000 is only barely movable by applying 200,000 force (so I can probably scale it down without problems. BUT I'LL WAIT UNTIL I'M DONE, THEN I CAN STILL SCALE IT IF I WANT)
 Note: Dimension makes sense as being scaled by 1000x or maybe even 100x

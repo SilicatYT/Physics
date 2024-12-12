@@ -1,4 +1,6 @@
 # Set default attributes
+execute store result score @s Physics.Object.ID run scoreboard players add #Physics.ObjectID Physics.Value 1
+
 data modify storage physics:temp data.Object set from entity @s
 execute store result score @s Physics.Object.Pos.x run data get storage physics:temp data.Object.Pos[0] 1000
 execute store result score @s Physics.Object.Pos.y run data get storage physics:temp data.Object.Pos[1] 1000
@@ -7,8 +9,8 @@ scoreboard players set @s Physics.Object.InverseMass 100000
 scoreboard players set @s Physics.Object.Dimension.x 10000
 scoreboard players set @s Physics.Object.Dimension.y 10000
 scoreboard players set @s Physics.Object.Dimension.z 10000
-scoreboard players set @s Physics.Object.Gravity 490
-scoreboard players set @s Physics.Object.FrictionCoefficient 75
+scoreboard players set @s Physics.Object.HitboxRadiusSquared 1732050
+scoreboard players operation @s Physics.Object.Gravity = #Physics.Global.DefaultGravity Physics.Value
 scoreboard players set @s Physics.Object.Orientation.x 0
 scoreboard players set @s Physics.Object.Orientation.y 0
 scoreboard players set @s Physics.Object.Orientation.z 0
