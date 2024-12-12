@@ -23,4 +23,5 @@
     # Check if the squared distance is less than the combined HitboxRadiusSquared (Negative: They intersect)
     scoreboard players operation #Physics.Maths.Temp.SquaredDistance Physics.Value -= @s Physics.Object.HitboxRadiusSquared
     scoreboard players operation #Physics.Maths.Temp.SquaredDistance Physics.Value -= #Physics.OtherObject Physics.Object.HitboxRadiusSquared
-    execute if score #Physics.Maths.Temp.SquaredDistance Physics.Value matches ..-1 run tellraw @p ["",{"score":{"name":"@s","objective":"Physics.Object.ID"}}," intersects with ",{"score":{"name":"#Physics.OtherObject","objective":"Physics.Object.ID"}}]
+    execute if score #Physics.Maths.Temp.SquaredDistance Physics.Value matches ..-1 run particle minecraft:flame ~ ~ ~ 0.3 0.3 0.3 0 1
+

@@ -6,9 +6,9 @@ scoreboard players add #Physics.SetAttribute.Dimension.z Physics.Value 0
 execute if score #Physics.SetAttribute.Dimension.x Physics.Value matches ..0 run scoreboard players set #Physics.SetAttribute.Dimension.x Physics.Value 1
 execute if score #Physics.SetAttribute.Dimension.y Physics.Value matches ..0 run scoreboard players set #Physics.SetAttribute.Dimension.y Physics.Value 1
 execute if score #Physics.SetAttribute.Dimension.z Physics.Value matches ..0 run scoreboard players set #Physics.SetAttribute.Dimension.z Physics.Value 1
-execute if score #Physics.SetAttribute.Dimension.x Physics.Value matches ..132501 run scoreboard players set #Physics.SetAttribute.Dimension.x Physics.Value 132500
-execute if score #Physics.SetAttribute.Dimension.y Physics.Value matches ..132501 run scoreboard players set #Physics.SetAttribute.Dimension.y Physics.Value 132500
-execute if score #Physics.SetAttribute.Dimension.z Physics.Value matches ..132501 run scoreboard players set #Physics.SetAttribute.Dimension.z Physics.Value 132500
+execute if score #Physics.SetAttribute.Dimension.x Physics.Value matches 153001.. run scoreboard players set #Physics.SetAttribute.Dimension.x Physics.Value 153000
+execute if score #Physics.SetAttribute.Dimension.y Physics.Value matches 153001.. run scoreboard players set #Physics.SetAttribute.Dimension.y Physics.Value 153000
+execute if score #Physics.SetAttribute.Dimension.z Physics.Value matches 153001.. run scoreboard players set #Physics.SetAttribute.Dimension.z Physics.Value 153000
 
 scoreboard players operation @s Physics.Object.Dimension.x = #Physics.SetAttribute.Dimension.x Physics.Value
 scoreboard players operation @s Physics.Object.Dimension.y = #Physics.SetAttribute.Dimension.y Physics.Value
