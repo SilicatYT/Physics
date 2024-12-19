@@ -43,8 +43,12 @@ data modify entity @s {} merge from storage physics:temp data.Object
     # Hitbox offset
     execute on passengers store result entity @s height float -0.000001 run data get storage physics:temp data.InteractionSize.height 500000
 
-# Update the squared hitbox radius score
-execute store result score @s Physics.Object.HitboxRadiusSquared run data get storage physics:temp data.InteractionSize.height 1000000
+# Update the hitbox side length score, the hitbox radius & the HitboxStepCount = ceil(side_length of the AABB hitbox) = -floor(-side_length of the AABB hitbox)
+execute store result score @s Physics.Object.HitboxSideLength store result score @s Physics.Object.HitboxStepCount run data get storage physics:temp data.InteractionSize.height 1000000
+scoreboard players operation @s Physics.Object.HitboxStepCount /= #Physics.Constants.-1000000 Physics.Value
+scoreboard players operation @s Physics.Object.HitboxStepCount *= #Physics.Constants.-1 Physics.Value
+
+execute store result score @s Physics.Object.HitboxRadius run data get storage physics:temp data.InteractionSize.height 500
 
 # Update the local inverse inertia tensor (Scaling: InverseMass scaled by 1,000,000/x instead of 100,000,000/x)
     # Calculate the inverted local inertia tensor

@@ -20,8 +20,10 @@
 
     execute if score #Physics.Maths.Temp.SquaredDistance Physics.Value matches ..-1 run scoreboard players operation #Physics.Maths.Temp.SquaredDistance Physics.Value *= #Physics.Constants.-1 Physics.Value
 
-    # Check if the squared distance is less than the combined HitboxRadiusSquared (Negative: They intersect)
-    scoreboard players operation #Physics.Maths.Temp.SquaredDistance Physics.Value -= @s Physics.Object.HitboxRadiusSquared
-    scoreboard players operation #Physics.Maths.Temp.SquaredDistance Physics.Value -= #Physics.OtherObject Physics.Object.HitboxRadiusSquared
-    execute if score #Physics.Maths.Temp.SquaredDistance Physics.Value matches ..-1 run particle minecraft:flame ~ ~ ~ 0.3 0.3 0.3 0 1
+    # Check if the squared distance is less than (HitboxRadiusA + HitboxRadiusB)^2 (Negative: They intersect)
+    scoreboard players operation #Physics.Maths.Temp.SquaredRadius Physics.Value = @s Physics.Object.HitboxRadius
+    scoreboard players operation #Physics.Maths.Temp.SquaredRadius Physics.Value += #Physics.OtherObject Physics.Object.HitboxRadius
+    scoreboard players operation #Physics.Maths.Temp.SquaredRadius Physics.Value *= #Physics.Maths.Temp.SquaredRadius Physics.Value
+
+    execute if score #Physics.Maths.Temp.SquaredDistance Physics.Value < #Physics.Maths.Temp.SquaredRadius Physics.Value run particle minecraft:flame ~ ~ ~ 0.3 0.3 0.3 0 1
 

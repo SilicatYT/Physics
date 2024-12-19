@@ -33,7 +33,6 @@ scoreboard objectives add Physics.Object.InverseInertiaTensorLocal.8 dummy
 scoreboard objectives add Physics.Object.Dimension.x dummy
 scoreboard objectives add Physics.Object.Dimension.y dummy
 scoreboard objectives add Physics.Object.Dimension.z dummy
-scoreboard objectives add Physics.Object.HitboxRadiusSquared dummy
 
 # Add derived object attributes (Calculated from object attributes, but stored separately to prevent repeated calculations)
 scoreboard objectives add Physics.Object.RotationMatrix.0 dummy
@@ -63,6 +62,9 @@ scoreboard objectives add Physics.Object.InverseInertiaTensorGlobal.5 dummy
 scoreboard objectives add Physics.Object.InverseInertiaTensorGlobal.6 dummy
 scoreboard objectives add Physics.Object.InverseInertiaTensorGlobal.7 dummy
 scoreboard objectives add Physics.Object.InverseInertiaTensorGlobal.8 dummy
+scoreboard objectives add Physics.Object.HitboxSideLength dummy
+scoreboard objectives add Physics.Object.HitboxRadius dummy
+scoreboard objectives add Physics.Object.HitboxStepCount dummy
 
 # Set global variables
 scoreboard players set #Physics.Global.DefaultGravity Physics.Value 490
@@ -71,6 +73,7 @@ scoreboard players set #Physics.Global.AngularDamping Physics.Value 98
 scoreboard players set #Physics.Global.PlayerAttackForceMagnitude Physics.Value 300
 
 # Set value constants (You can't multiply or divide by numbers without defining them first using scoreboards)
+scoreboard players set #Physics.Constants.-1000 Physics.Value -1000
 scoreboard players set #Physics.Constants.-1 Physics.Value -1
 scoreboard players set #Physics.Constants.2 Physics.Value 2
 scoreboard players set #Physics.Constants.10 Physics.Value 10
@@ -83,6 +86,7 @@ scoreboard players set #Physics.Constants.2000 Physics.Value 2000
 scoreboard players set #Physics.Constants.7775 Physics.Value 7775
 scoreboard players set #Physics.Constants.10000 Physics.Value 10000
 scoreboard players set #Physics.Constants.100000 Physics.Value 100000
+scoreboard players set #Physics.Constants.-1000000 Physics.Value -1000000
 
 # Setup starting values for data storages
 data modify storage physics:temp data.Integration set value {Pos:[0d,0d,0d],start_interpolation:0,transformation:{left_rotation:[0f,0f,0f,0f]}}

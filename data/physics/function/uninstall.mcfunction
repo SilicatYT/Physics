@@ -70,6 +70,9 @@ scoreboard objectives remove Physics.Object.InverseInertiaTensorGlobal.5
 scoreboard objectives remove Physics.Object.InverseInertiaTensorGlobal.6
 scoreboard objectives remove Physics.Object.InverseInertiaTensorGlobal.7
 scoreboard objectives remove Physics.Object.InverseInertiaTensorGlobal.8
+scoreboard objectives remove Physics.Object.HitboxSideLength
+scoreboard objectives remove Physics.Object.HitboxRadius
+scoreboard objectives remove Physics.Object.HitboxStepCount
 
 # Remove data storages
 data remove storage physics:maths processing

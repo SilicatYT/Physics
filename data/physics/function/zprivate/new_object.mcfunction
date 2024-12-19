@@ -9,7 +9,9 @@ scoreboard players set @s Physics.Object.InverseMass 100000
 scoreboard players set @s Physics.Object.Dimension.x 10000
 scoreboard players set @s Physics.Object.Dimension.y 10000
 scoreboard players set @s Physics.Object.Dimension.z 10000
-scoreboard players set @s Physics.Object.HitboxRadiusSquared 1732050
+scoreboard players set @s Physics.Object.HitboxSideLength 1732050
+scoreboard players set @s Physics.Object.HitboxRadius 866
+scoreboard players set @s Physics.Object.HitboxStepCount 2
 scoreboard players operation @s Physics.Object.Gravity = #Physics.Global.DefaultGravity Physics.Value
 scoreboard players set @s Physics.Object.Orientation.x 0
 scoreboard players set @s Physics.Object.Orientation.y 0
