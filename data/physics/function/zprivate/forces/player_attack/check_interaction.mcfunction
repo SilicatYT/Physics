@@ -23,9 +23,6 @@ data remove entity @s attack
         execute on vehicle on vehicle run scoreboard players operation #Physics.Maths.RayPos.x Physics.Value -= @s Physics.Object.Pos.x
         execute on vehicle on vehicle run scoreboard players operation #Physics.Maths.RayPos.y Physics.Value -= @s Physics.Object.Pos.y
         execute on vehicle on vehicle run scoreboard players operation #Physics.Maths.RayPos.z Physics.Value -= @s Physics.Object.Pos.z
-        scoreboard players operation #Physics.Maths.RayPos.x Physics.Value *= #Physics.Constants.10 Physics.Value
-        scoreboard players operation #Physics.Maths.RayPos.y Physics.Value *= #Physics.Constants.10 Physics.Value
-        scoreboard players operation #Physics.Maths.RayPos.z Physics.Value *= #Physics.Constants.10 Physics.Value
 
         # Get ray direction
         execute store result score #Physics.Maths.RayDirection.x Physics.Value store result score #Physics.Maths.RayDirectionCopy.x Physics.Value run data get storage physics:temp data.PlayerAttack.RayDirection[0] 1000
@@ -34,7 +31,6 @@ data remove entity @s attack
 
         # Transform the relative ray origin with the transpose of the rotation matrix (Transpose because I convert from world to local coordinates)
         # (Important): Because of the multiplication, I need to divide the result by 1,000 to keep the 1,000x scaling. But the next step requires a multiplication by 2, so I only divide by 500 here.
-        # (Important): Because the dimensions of the cube are scaled by 10000, I'll actually originally get the RayPos and RayDirection with a scale of 10000 instead of 1000, so that the end result is still scaled by 1000.
         execute on vehicle on vehicle run scoreboard players operation #Physics.Maths.RayPosLocal.x Physics.Value = @s Physics.Object.RotationMatrixTranspose.0
         scoreboard players operation #Physics.Maths.RayPosLocal.x Physics.Value *= #Physics.Maths.RayPos.x Physics.Value
         execute on vehicle on vehicle run scoreboard players operation #Physics.Maths.Temp.Value1 Physics.Value = @s Physics.Object.RotationMatrixTranspose.1
@@ -64,7 +60,6 @@ data remove entity @s attack
 
         # Transform the ray direction with the transpose of the rotation matrix (Transpose because I convert from world to local coordinates)
         # (Important): Because of the multiplication, I need to divide the result by 1,000 to keep the 1,000x scaling. But the next step requires a multiplication by 2, so I only divide by 500 here.
-        # (Important): Because the dimensions of the cube are scaled by 10000, I'll actually originally get the RayPos and RayDirection with a scale of 10000 instead of 1000, so that the end result is still scaled by 1000.
         execute on vehicle on vehicle run scoreboard players operation #Physics.Maths.RayDirectionLocal.x Physics.Value = @s Physics.Object.RotationMatrixTranspose.0
         scoreboard players operation #Physics.Maths.RayDirectionLocal.x Physics.Value *= #Physics.Maths.RayDirection.x Physics.Value
         execute on vehicle on vehicle run scoreboard players operation #Physics.Maths.Temp.Value1 Physics.Value = @s Physics.Object.RotationMatrixTranspose.1
@@ -93,9 +88,6 @@ data remove entity @s attack
         scoreboard players operation #Physics.Maths.RayDirectionLocal.z Physics.Value += #Physics.Maths.Temp.Value1 Physics.Value
 
         # Compress the object's dimensions to a unit cube, and adjust the ray origin and direction accordingly
-        scoreboard players operation #Physics.Maths.RayDirectionLocal.x Physics.Value *= #Physics.Constants.10 Physics.Value
-        scoreboard players operation #Physics.Maths.RayDirectionLocal.y Physics.Value *= #Physics.Constants.10 Physics.Value
-        scoreboard players operation #Physics.Maths.RayDirectionLocal.z Physics.Value *= #Physics.Constants.10 Physics.Value
         execute on vehicle on vehicle run scoreboard players operation #Physics.Maths.RayPosLocal.x Physics.Value /= @s Physics.Object.Dimension.x
         execute on vehicle on vehicle run scoreboard players operation #Physics.Maths.RayPosLocal.y Physics.Value /= @s Physics.Object.Dimension.y
         execute on vehicle on vehicle run scoreboard players operation #Physics.Maths.RayPosLocal.z Physics.Value /= @s Physics.Object.Dimension.z

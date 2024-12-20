@@ -6,13 +6,10 @@ execute store result score @s Physics.Object.Pos.x run data get storage physics:
 execute store result score @s Physics.Object.Pos.y run data get storage physics:temp data.Object.Pos[1] 1000
 execute store result score @s Physics.Object.Pos.z run data get storage physics:temp data.Object.Pos[2] 1000
 scoreboard players set @s Physics.Object.InverseMass 100000
-scoreboard players set @s Physics.Object.Dimension.x 10000
-scoreboard players set @s Physics.Object.Dimension.y 10000
-scoreboard players set @s Physics.Object.Dimension.z 10000
-scoreboard players set @s Physics.Object.HitboxSideLength 1732050
-scoreboard players set @s Physics.Object.HitboxRadius 866
-scoreboard players set @s Physics.Object.HitboxStepCount 2
 scoreboard players operation @s Physics.Object.Gravity = #Physics.Global.DefaultGravity Physics.Value
+scoreboard players set @s Physics.Object.Dimension.x 1000
+scoreboard players set @s Physics.Object.Dimension.y 1000
+scoreboard players set @s Physics.Object.Dimension.z 1000
 scoreboard players set @s Physics.Object.Orientation.x 0
 scoreboard players set @s Physics.Object.Orientation.y 0
 scoreboard players set @s Physics.Object.Orientation.z 0
@@ -29,6 +26,15 @@ scoreboard players set @s Physics.Object.InverseInertiaTensorGlobal.5 0
 scoreboard players set @s Physics.Object.InverseInertiaTensorGlobal.6 0
 scoreboard players set @s Physics.Object.InverseInertiaTensorGlobal.7 0
 scoreboard players set @s Physics.Object.InverseInertiaTensorGlobal.8 6024096
+scoreboard players set @s Physics.Object.BoundingBoxHalvedNegative.x -500
+scoreboard players set @s Physics.Object.BoundingBoxHalvedPositive.x 500
+scoreboard players set @s Physics.Object.BoundingBoxHalvedNegative.y -500
+scoreboard players set @s Physics.Object.BoundingBoxHalvedPositive.y 500
+scoreboard players set @s Physics.Object.BoundingBoxHalvedNegative.z -500
+scoreboard players set @s Physics.Object.BoundingBoxHalvedPositive.z 500
+scoreboard players set @s Physics.Object.BoundingBoxStepCount.x 2
+scoreboard players set @s Physics.Object.BoundingBoxStepCount.y 2
+scoreboard players set @s Physics.Object.BoundingBoxStepCount.z 2
 
 # Summon interaction entity (Width and height is set so that the entire model is inside the hitbox, no matter the orientation. The interaction entity acts as a rough hitbox for punches and collision detection between objects, its width and height being the diagonal between the corners of the object.)
 summon minecraft:interaction ~ ~ ~ {Tags:["Physics.HitboxOffset","Physics.New"],height:-0.86602540378f,width:0f}

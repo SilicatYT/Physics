@@ -14,6 +14,9 @@ scoreboard objectives add Physics.Object.Velocity.y dummy
 scoreboard objectives add Physics.Object.Velocity.z dummy
 scoreboard objectives add Physics.Object.InverseMass dummy
 scoreboard objectives add Physics.Object.Gravity dummy
+scoreboard objectives add Physics.Object.Dimension.x dummy
+scoreboard objectives add Physics.Object.Dimension.y dummy
+scoreboard objectives add Physics.Object.Dimension.z dummy
 scoreboard objectives add Physics.Object.AccumulatedForce.x dummy
 scoreboard objectives add Physics.Object.AccumulatedForce.y dummy
 scoreboard objectives add Physics.Object.AccumulatedForce.z dummy
@@ -30,9 +33,6 @@ scoreboard objectives add Physics.Object.AngularVelocity.z dummy
 scoreboard objectives add Physics.Object.InverseInertiaTensorLocal.0 dummy
 scoreboard objectives add Physics.Object.InverseInertiaTensorLocal.4 dummy
 scoreboard objectives add Physics.Object.InverseInertiaTensorLocal.8 dummy
-scoreboard objectives add Physics.Object.Dimension.x dummy
-scoreboard objectives add Physics.Object.Dimension.y dummy
-scoreboard objectives add Physics.Object.Dimension.z dummy
 
 # Add derived object attributes (Calculated from object attributes, but stored separately to prevent repeated calculations)
 scoreboard objectives add Physics.Object.RotationMatrix.0 dummy
@@ -62,13 +62,49 @@ scoreboard objectives add Physics.Object.InverseInertiaTensorGlobal.5 dummy
 scoreboard objectives add Physics.Object.InverseInertiaTensorGlobal.6 dummy
 scoreboard objectives add Physics.Object.InverseInertiaTensorGlobal.7 dummy
 scoreboard objectives add Physics.Object.InverseInertiaTensorGlobal.8 dummy
-scoreboard objectives add Physics.Object.HitboxSideLength dummy
-scoreboard objectives add Physics.Object.HitboxRadius dummy
-scoreboard objectives add Physics.Object.HitboxStepCount dummy
+scoreboard objectives add Physics.Object.BoundingBoxHalvedPositive.x dummy
+scoreboard objectives add Physics.Object.BoundingBoxHalvedNegative.x dummy
+scoreboard objectives add Physics.Object.BoundingBoxHalvedPositive.y dummy
+scoreboard objectives add Physics.Object.BoundingBoxHalvedNegative.y dummy
+scoreboard objectives add Physics.Object.BoundingBoxHalvedPositive.z dummy
+scoreboard objectives add Physics.Object.BoundingBoxHalvedNegative.z dummy
+scoreboard objectives add Physics.Object.CornerPos.0.x dummy
+scoreboard objectives add Physics.Object.CornerPos.0.y dummy
+scoreboard objectives add Physics.Object.CornerPos.0.z dummy
+scoreboard objectives add Physics.Object.CornerPos.1.x dummy
+scoreboard objectives add Physics.Object.CornerPos.1.y dummy
+scoreboard objectives add Physics.Object.CornerPos.1.z dummy
+scoreboard objectives add Physics.Object.CornerPos.2.x dummy
+scoreboard objectives add Physics.Object.CornerPos.2.y dummy
+scoreboard objectives add Physics.Object.CornerPos.2.z dummy
+scoreboard objectives add Physics.Object.CornerPos.3.x dummy
+scoreboard objectives add Physics.Object.CornerPos.3.y dummy
+scoreboard objectives add Physics.Object.CornerPos.3.z dummy
+scoreboard objectives add Physics.Object.CornerPos.4.x dummy
+scoreboard objectives add Physics.Object.CornerPos.4.y dummy
+scoreboard objectives add Physics.Object.CornerPos.4.z dummy
+scoreboard objectives add Physics.Object.CornerPos.5.x dummy
+scoreboard objectives add Physics.Object.CornerPos.5.y dummy
+scoreboard objectives add Physics.Object.CornerPos.5.z dummy
+scoreboard objectives add Physics.Object.CornerPos.6.x dummy
+scoreboard objectives add Physics.Object.CornerPos.6.y dummy
+scoreboard objectives add Physics.Object.CornerPos.6.z dummy
+scoreboard objectives add Physics.Object.CornerPos.7.x dummy
+scoreboard objectives add Physics.Object.CornerPos.7.y dummy
+scoreboard objectives add Physics.Object.CornerPos.7.z dummy
+scoreboard objectives add Physics.Object.BoundingBoxMin.x dummy
+scoreboard objectives add Physics.Object.BoundingBoxMax.x dummy
+scoreboard objectives add Physics.Object.BoundingBoxMin.y dummy
+scoreboard objectives add Physics.Object.BoundingBoxMax.y dummy
+scoreboard objectives add Physics.Object.BoundingBoxMin.z dummy
+scoreboard objectives add Physics.Object.BoundingBoxMax.z dummy
+scoreboard objectives add Physics.Object.BoundingBoxStepCount.x dummy
+scoreboard objectives add Physics.Object.BoundingBoxStepCount.y dummy
+scoreboard objectives add Physics.Object.BoundingBoxStepCount.z dummy
 
 # Set global variables
 scoreboard players set #Physics.Global.DefaultGravity Physics.Value 490
-scoreboard players set #Physics.Global.LinearDamping Physics.Value 96
+scoreboard players set #Physics.Global.LinearDamping Physics.Value 98
 scoreboard players set #Physics.Global.AngularDamping Physics.Value 98
 scoreboard players set #Physics.Global.PlayerAttackForceMagnitude Physics.Value 300
 
@@ -78,6 +114,7 @@ scoreboard players set #Physics.Constants.-1 Physics.Value -1
 scoreboard players set #Physics.Constants.2 Physics.Value 2
 scoreboard players set #Physics.Constants.10 Physics.Value 10
 scoreboard players set #Physics.Constants.12 Physics.Value 12
+scoreboard players set #Physics.Constants.20 Physics.Value 20
 scoreboard players set #Physics.Constants.100 Physics.Value 100
 scoreboard players set #Physics.Constants.141 Physics.Value 141
 scoreboard players set #Physics.Constants.500 Physics.Value 500
@@ -86,7 +123,6 @@ scoreboard players set #Physics.Constants.2000 Physics.Value 2000
 scoreboard players set #Physics.Constants.7775 Physics.Value 7775
 scoreboard players set #Physics.Constants.10000 Physics.Value 10000
 scoreboard players set #Physics.Constants.100000 Physics.Value 100000
-scoreboard players set #Physics.Constants.-1000000 Physics.Value -1000000
 
 # Setup starting values for data storages
 data modify storage physics:temp data.Integration set value {Pos:[0d,0d,0d],start_interpolation:0,transformation:{left_rotation:[0f,0f,0f,0f]}}

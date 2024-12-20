@@ -1,5 +1,5 @@
 # Check if it's installed
-scoreboard objectives remove Physics.Uninstall
+scoreboard objectives add Physics.Uninstall dummy
 execute if score #Physics.Init Physics matches 1 run scoreboard players set #Physics.Init Physics.Uninstall 1
 execute unless score #Physics.Init Physics.Uninstall matches 1 run tellraw @a ["",{"text":"Physics >> ","color":"#99EAD6"},{"text":"⚠ Could not remove Physics.\nIs it installed?","color":"red"}]
 execute unless score #Physics.Init Physics.Uninstall matches 1 run return run scoreboard objectives remove Physics.Uninstall
@@ -33,9 +33,6 @@ scoreboard objectives remove Physics.Object.Orientation.a
 scoreboard objectives remove Physics.Object.AngularVelocity.x
 scoreboard objectives remove Physics.Object.AngularVelocity.y
 scoreboard objectives remove Physics.Object.AngularVelocity.z
-scoreboard objectives remove Physics.Object.AngularAcceleration.x
-scoreboard objectives remove Physics.Object.AngularAcceleration.y
-scoreboard objectives remove Physics.Object.AngularAcceleration.z
 scoreboard objectives remove Physics.Object.InverseInertiaTensorLocal.0
 scoreboard objectives remove Physics.Object.InverseInertiaTensorLocal.4
 scoreboard objectives remove Physics.Object.InverseInertiaTensorLocal.8
@@ -70,9 +67,45 @@ scoreboard objectives remove Physics.Object.InverseInertiaTensorGlobal.5
 scoreboard objectives remove Physics.Object.InverseInertiaTensorGlobal.6
 scoreboard objectives remove Physics.Object.InverseInertiaTensorGlobal.7
 scoreboard objectives remove Physics.Object.InverseInertiaTensorGlobal.8
-scoreboard objectives remove Physics.Object.HitboxSideLength
-scoreboard objectives remove Physics.Object.HitboxRadius
-scoreboard objectives remove Physics.Object.HitboxStepCount
+scoreboard objectives remove Physics.Object.BoundingBoxHalvedPositive.x
+scoreboard objectives remove Physics.Object.BoundingBoxHalvedNegative.x
+scoreboard objectives remove Physics.Object.BoundingBoxHalvedPositive.y
+scoreboard objectives remove Physics.Object.BoundingBoxHalvedNegative.y
+scoreboard objectives remove Physics.Object.BoundingBoxHalvedPositive.z
+scoreboard objectives remove Physics.Object.BoundingBoxHalvedNegative.z
+scoreboard objectives remove Physics.Object.CornerPos.0.x
+scoreboard objectives remove Physics.Object.CornerPos.0.y
+scoreboard objectives remove Physics.Object.CornerPos.0.z
+scoreboard objectives remove Physics.Object.CornerPos.1.x
+scoreboard objectives remove Physics.Object.CornerPos.1.y
+scoreboard objectives remove Physics.Object.CornerPos.1.z
+scoreboard objectives remove Physics.Object.CornerPos.2.x
+scoreboard objectives remove Physics.Object.CornerPos.2.y
+scoreboard objectives remove Physics.Object.CornerPos.2.z
+scoreboard objectives remove Physics.Object.CornerPos.3.x
+scoreboard objectives remove Physics.Object.CornerPos.3.y
+scoreboard objectives remove Physics.Object.CornerPos.3.z
+scoreboard objectives remove Physics.Object.CornerPos.4.x
+scoreboard objectives remove Physics.Object.CornerPos.4.y
+scoreboard objectives remove Physics.Object.CornerPos.4.z
+scoreboard objectives remove Physics.Object.CornerPos.5.x
+scoreboard objectives remove Physics.Object.CornerPos.5.y
+scoreboard objectives remove Physics.Object.CornerPos.5.z
+scoreboard objectives remove Physics.Object.CornerPos.6.x
+scoreboard objectives remove Physics.Object.CornerPos.6.y
+scoreboard objectives remove Physics.Object.CornerPos.6.z
+scoreboard objectives remove Physics.Object.CornerPos.7.x
+scoreboard objectives remove Physics.Object.CornerPos.7.y
+scoreboard objectives remove Physics.Object.CornerPos.7.z
+scoreboard objectives remove Physics.Object.BoundingBoxMin.x
+scoreboard objectives remove Physics.Object.BoundingBoxMax.x
+scoreboard objectives remove Physics.Object.BoundingBoxMin.y
+scoreboard objectives remove Physics.Object.BoundingBoxMax.y
+scoreboard objectives remove Physics.Object.BoundingBoxMin.z
+scoreboard objectives remove Physics.Object.BoundingBoxMax.z
+scoreboard objectives remove Physics.Object.BoundingBoxStepCount.x
+scoreboard objectives remove Physics.Object.BoundingBoxStepCount.y
+scoreboard objectives remove Physics.Object.BoundingBoxStepCount.z
 
 # Remove data storages
 data remove storage physics:maths processing
