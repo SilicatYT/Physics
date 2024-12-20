@@ -46,17 +46,17 @@ data modify entity @s {} merge from storage physics:temp data.Object
     execute on passengers store result entity @s height float -0.000001 run data get storage physics:temp data.InteractionSize.height 500000
 
 # Update the local bounding box
-scoreboard players operation @s Physics.Object.BoundingBoxHalvedPositive.x = #Physics.SetAttribute.Dimension.x Physics.Value
-execute store result score @s Physics.Object.BoundingBoxHalvedNegative.x run scoreboard players operation @s Physics.Object.BoundingBoxHalvedPositive.x /= #Physics.Constants.2 Physics.Value
-scoreboard players operation @s Physics.Object.BoundingBoxHalvedNegative.x *= #Physics.Constants.-1 Physics.Value
+scoreboard players operation @s Physics.Object.BoundingBoxLocalMax.x = #Physics.SetAttribute.Dimension.x Physics.Value
+execute store result score @s Physics.Object.BoundingBoxLocalMin.x run scoreboard players operation @s Physics.Object.BoundingBoxLocalMax.x /= #Physics.Constants.2 Physics.Value
+scoreboard players operation @s Physics.Object.BoundingBoxLocalMin.x *= #Physics.Constants.-1 Physics.Value
 
-scoreboard players operation @s Physics.Object.BoundingBoxHalvedPositive.y = #Physics.SetAttribute.Dimension.y Physics.Value
-execute store result score @s Physics.Object.BoundingBoxHalvedNegative.y run scoreboard players operation @s Physics.Object.BoundingBoxHalvedPositive.y /= #Physics.Constants.2 Physics.Value
-scoreboard players operation @s Physics.Object.BoundingBoxHalvedNegative.y *= #Physics.Constants.-1 Physics.Value
+scoreboard players operation @s Physics.Object.BoundingBoxLocalMax.y = #Physics.SetAttribute.Dimension.y Physics.Value
+execute store result score @s Physics.Object.BoundingBoxLocalMin.y run scoreboard players operation @s Physics.Object.BoundingBoxLocalMax.y /= #Physics.Constants.2 Physics.Value
+scoreboard players operation @s Physics.Object.BoundingBoxLocalMin.y *= #Physics.Constants.-1 Physics.Value
 
-scoreboard players operation @s Physics.Object.BoundingBoxHalvedPositive.z = #Physics.SetAttribute.Dimension.z Physics.Value
-execute store result score @s Physics.Object.BoundingBoxHalvedNegative.z run scoreboard players operation @s Physics.Object.BoundingBoxHalvedPositive.z /= #Physics.Constants.2 Physics.Value
-scoreboard players operation @s Physics.Object.BoundingBoxHalvedNegative.z *= #Physics.Constants.-1 Physics.Value
+scoreboard players operation @s Physics.Object.BoundingBoxLocalMax.z = #Physics.SetAttribute.Dimension.z Physics.Value
+execute store result score @s Physics.Object.BoundingBoxLocalMin.z run scoreboard players operation @s Physics.Object.BoundingBoxLocalMax.z /= #Physics.Constants.2 Physics.Value
+scoreboard players operation @s Physics.Object.BoundingBoxLocalMin.z *= #Physics.Constants.-1 Physics.Value
 
 # Update the step counts to traverse the bounding box for each axis
 scoreboard players operation @s Physics.Object.BoundingBoxStepCount.x = #Physics.SetAttribute.Dimension.x Physics.Value
