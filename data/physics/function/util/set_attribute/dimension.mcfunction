@@ -1,16 +1,16 @@
-# (Important) (TODO): Minor issue is that several scores like the bounding box min and max are not updated when changing dimensions or when summoning the object in the first place, so it can't properly detect collisions in the first tick afterwards.
+# (Important) (TODO): Minor issue is that several scores like the bounding box min and max (and the step counts) are not updated when changing dimensions or when summoning the object in the first place, so it can't properly detect collisions in the first tick afterwards.
 
 # Set the object's x, y and z dimensions (width, height and length)
-# (Important): Because of the rough hitbox check (I want to save 3 divisions per entity combination that's checked), the max sidelength for a single dimension is restricted to 15.3 blocks
+# (Important): Because of the AABB check between world geometry and the object, the max dimensions are currently restricted to 4 blocks along each axis (Because there's currently 1 function for every single bounding box, which would be 350MB of data even for just 8x8x8 cubes)
 scoreboard players add #Physics.SetAttribute.Dimension.x Physics.Value 0
 scoreboard players add #Physics.SetAttribute.Dimension.y Physics.Value 0
 scoreboard players add #Physics.SetAttribute.Dimension.z Physics.Value 0
 execute if score #Physics.SetAttribute.Dimension.x Physics.Value matches ..0 run scoreboard players set #Physics.SetAttribute.Dimension.x Physics.Value 1
 execute if score #Physics.SetAttribute.Dimension.y Physics.Value matches ..0 run scoreboard players set #Physics.SetAttribute.Dimension.y Physics.Value 1
 execute if score #Physics.SetAttribute.Dimension.z Physics.Value matches ..0 run scoreboard players set #Physics.SetAttribute.Dimension.z Physics.Value 1
-execute if score #Physics.SetAttribute.Dimension.x Physics.Value matches 15301.. run scoreboard players set #Physics.SetAttribute.Dimension.x Physics.Value 15300
-execute if score #Physics.SetAttribute.Dimension.y Physics.Value matches 15301.. run scoreboard players set #Physics.SetAttribute.Dimension.y Physics.Value 15300
-execute if score #Physics.SetAttribute.Dimension.z Physics.Value matches 15301.. run scoreboard players set #Physics.SetAttribute.Dimension.z Physics.Value 15300
+execute if score #Physics.SetAttribute.Dimension.x Physics.Value matches 4001.. run scoreboard players set #Physics.SetAttribute.Dimension.x Physics.Value 4000
+execute if score #Physics.SetAttribute.Dimension.y Physics.Value matches 4001.. run scoreboard players set #Physics.SetAttribute.Dimension.y Physics.Value 4000
+execute if score #Physics.SetAttribute.Dimension.z Physics.Value matches 4001.. run scoreboard players set #Physics.SetAttribute.Dimension.z Physics.Value 4000
 
 scoreboard players operation @s Physics.Object.Dimension.x = #Physics.SetAttribute.Dimension.x Physics.Value
 scoreboard players operation @s Physics.Object.Dimension.y = #Physics.SetAttribute.Dimension.y Physics.Value
@@ -58,33 +58,17 @@ scoreboard players operation @s Physics.Object.BoundingBoxLocalMax.z = #Physics.
 execute store result score @s Physics.Object.BoundingBoxLocalMin.z run scoreboard players operation @s Physics.Object.BoundingBoxLocalMax.z /= #Physics.Constants.2 Physics.Value
 scoreboard players operation @s Physics.Object.BoundingBoxLocalMin.z *= #Physics.Constants.-1 Physics.Value
 
-# Update the step counts to traverse the bounding box for each axis
-scoreboard players operation @s Physics.Object.BoundingBoxStepCount.x = #Physics.SetAttribute.Dimension.x Physics.Value
-scoreboard players operation @s Physics.Object.BoundingBoxStepCount.x /= #Physics.Constants.-1000 Physics.Value
-scoreboard players operation @s Physics.Object.BoundingBoxStepCount.x *= #Physics.Constants.-1 Physics.Value
-
-scoreboard players operation @s Physics.Object.BoundingBoxStepCount.y = #Physics.SetAttribute.Dimension.y Physics.Value
-scoreboard players operation @s Physics.Object.BoundingBoxStepCount.y /= #Physics.Constants.-1000 Physics.Value
-scoreboard players operation @s Physics.Object.BoundingBoxStepCount.y *= #Physics.Constants.-1 Physics.Value
-
-scoreboard players operation @s Physics.Object.BoundingBoxStepCount.z = #Physics.SetAttribute.Dimension.z Physics.Value
-scoreboard players operation @s Physics.Object.BoundingBoxStepCount.z /= #Physics.Constants.-1000 Physics.Value
-scoreboard players operation @s Physics.Object.BoundingBoxStepCount.z *= #Physics.Constants.-1 Physics.Value
-
 # Update the local inverse inertia tensor (Scaling: InverseMass scaled by 1,000,000/x instead of 100,000,000/x)
-# (Important): Dimension is scaled 10x bigger here. Might it make more sense to instead scale the inertia tensor smaller? Or would I lose too much accuracy?
+# (Important): To prevent an overflow when squaring the dimension, I calculate <added squared dimensions / inversemass> at a scale where the added squared dimensions are 100x too small, but then instead of dividing by 12 after the division, I multiply by 833 and then divide by 100, so that the end result is scaled the same.
     # Calculate the inverted local inertia tensor
-    scoreboard players operation @s Physics.Object.Dimension.x *= #Physics.Constants.10 Physics.Value
-    scoreboard players operation @s Physics.Object.Dimension.y *= #Physics.Constants.10 Physics.Value
-    scoreboard players operation @s Physics.Object.Dimension.z *= #Physics.Constants.10 Physics.Value
-
     scoreboard players operation #Physics.Maths.Temp.Value1 Physics.Value = @s Physics.Object.Dimension.y
     scoreboard players operation #Physics.Maths.Temp.Value1 Physics.Value *= #Physics.Maths.Temp.Value1 Physics.Value
     scoreboard players operation #Physics.Maths.Temp.Value2 Physics.Value = @s Physics.Object.Dimension.z
     scoreboard players operation #Physics.Maths.Temp.Value2 Physics.Value *= #Physics.Maths.Temp.Value2 Physics.Value
     scoreboard players operation #Physics.Maths.Temp.Value1 Physics.Value += #Physics.Maths.Temp.Value2 Physics.Value
     scoreboard players operation #Physics.Maths.Temp.Value1 Physics.Value /= @s Physics.Object.InverseMass
-    scoreboard players operation #Physics.Maths.Temp.Value1 Physics.Value /= #Physics.Constants.12 Physics.Value
+    scoreboard players operation #Physics.Maths.Temp.Value1 Physics.Value *= #Physics.Constants.833 Physics.Value
+    scoreboard players operation #Physics.Maths.Temp.Value1 Physics.Value /= #Physics.Constants.100 Physics.Value
     scoreboard players set @s Physics.Object.InverseInertiaTensorLocal.0 1000000000
     scoreboard players operation @s Physics.Object.InverseInertiaTensorLocal.0 /= #Physics.Maths.Temp.Value1 Physics.Value
 
@@ -94,7 +78,8 @@ scoreboard players operation @s Physics.Object.BoundingBoxStepCount.z *= #Physic
     scoreboard players operation #Physics.Maths.Temp.Value2 Physics.Value *= #Physics.Maths.Temp.Value2 Physics.Value
     scoreboard players operation #Physics.Maths.Temp.Value1 Physics.Value += #Physics.Maths.Temp.Value2 Physics.Value
     scoreboard players operation #Physics.Maths.Temp.Value1 Physics.Value /= @s Physics.Object.InverseMass
-    scoreboard players operation #Physics.Maths.Temp.Value1 Physics.Value /= #Physics.Constants.12 Physics.Value
+    scoreboard players operation #Physics.Maths.Temp.Value1 Physics.Value *= #Physics.Constants.833 Physics.Value
+    scoreboard players operation #Physics.Maths.Temp.Value1 Physics.Value /= #Physics.Constants.100 Physics.Value
     scoreboard players set @s Physics.Object.InverseInertiaTensorLocal.4 1000000000
     scoreboard players operation @s Physics.Object.InverseInertiaTensorLocal.4 /= #Physics.Maths.Temp.Value1 Physics.Value
 
@@ -104,10 +89,7 @@ scoreboard players operation @s Physics.Object.BoundingBoxStepCount.z *= #Physic
     scoreboard players operation #Physics.Maths.Temp.Value2 Physics.Value *= #Physics.Maths.Temp.Value2 Physics.Value
     scoreboard players operation #Physics.Maths.Temp.Value1 Physics.Value += #Physics.Maths.Temp.Value2 Physics.Value
     scoreboard players operation #Physics.Maths.Temp.Value1 Physics.Value /= @s Physics.Object.InverseMass
-    scoreboard players operation #Physics.Maths.Temp.Value1 Physics.Value /= #Physics.Constants.12 Physics.Value
+    scoreboard players operation #Physics.Maths.Temp.Value1 Physics.Value *= #Physics.Constants.833 Physics.Value
+    scoreboard players operation #Physics.Maths.Temp.Value1 Physics.Value /= #Physics.Constants.100 Physics.Value
     scoreboard players set @s Physics.Object.InverseInertiaTensorLocal.8 1000000000
     scoreboard players operation @s Physics.Object.InverseInertiaTensorLocal.8 /= #Physics.Maths.Temp.Value1 Physics.Value
-
-    scoreboard players operation @s Physics.Object.Dimension.x /= #Physics.Constants.10 Physics.Value
-    scoreboard players operation @s Physics.Object.Dimension.y /= #Physics.Constants.10 Physics.Value
-    scoreboard players operation @s Physics.Object.Dimension.z /= #Physics.Constants.10 Physics.Value

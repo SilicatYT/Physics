@@ -6,19 +6,16 @@ execute if score #Physics.SetAttribute.Mass Physics.Value matches ..0 run scoreb
 scoreboard players operation @s Physics.Object.InverseMass /= #Physics.SetAttribute.Mass Physics.Value
 
 # Update the local inverse inertia tensor (Scaling: InverseMass scaled by 1,000,000/x instead of 100,000,000/x)
-# (Important): Dimension is scaled 10x bigger here. Might it make more sense to instead scale the inertia tensor smaller? Or would I lose too much accuracy?
+# (Important): To prevent an overflow when squaring the dimension, I calculate <added squared dimensions / inversemass> at a scale where the added squared dimensions are 100x too small, but then instead of dividing by 12 after the division, I multiply by 833 and then divide by 100, so that the end result is scaled the same.
     # Calculate the inverted local inertia tensor
-    scoreboard players operation @s Physics.Object.Dimension.x *= #Physics.Constants.10 Physics.Value
-    scoreboard players operation @s Physics.Object.Dimension.y *= #Physics.Constants.10 Physics.Value
-    scoreboard players operation @s Physics.Object.Dimension.z *= #Physics.Constants.10 Physics.Value
-
     scoreboard players operation #Physics.Maths.Temp.Value1 Physics.Value = @s Physics.Object.Dimension.y
     scoreboard players operation #Physics.Maths.Temp.Value1 Physics.Value *= #Physics.Maths.Temp.Value1 Physics.Value
     scoreboard players operation #Physics.Maths.Temp.Value2 Physics.Value = @s Physics.Object.Dimension.z
     scoreboard players operation #Physics.Maths.Temp.Value2 Physics.Value *= #Physics.Maths.Temp.Value2 Physics.Value
     scoreboard players operation #Physics.Maths.Temp.Value1 Physics.Value += #Physics.Maths.Temp.Value2 Physics.Value
     scoreboard players operation #Physics.Maths.Temp.Value1 Physics.Value /= @s Physics.Object.InverseMass
-    scoreboard players operation #Physics.Maths.Temp.Value1 Physics.Value /= #Physics.Constants.12 Physics.Value
+    scoreboard players operation #Physics.Maths.Temp.Value1 Physics.Value *= #Physics.Constants.833 Physics.Value
+    scoreboard players operation #Physics.Maths.Temp.Value1 Physics.Value /= #Physics.Constants.100 Physics.Value
     scoreboard players set @s Physics.Object.InverseInertiaTensorLocal.0 1000000000
     scoreboard players operation @s Physics.Object.InverseInertiaTensorLocal.0 /= #Physics.Maths.Temp.Value1 Physics.Value
 
@@ -28,7 +25,8 @@ scoreboard players operation @s Physics.Object.InverseMass /= #Physics.SetAttrib
     scoreboard players operation #Physics.Maths.Temp.Value2 Physics.Value *= #Physics.Maths.Temp.Value2 Physics.Value
     scoreboard players operation #Physics.Maths.Temp.Value1 Physics.Value += #Physics.Maths.Temp.Value2 Physics.Value
     scoreboard players operation #Physics.Maths.Temp.Value1 Physics.Value /= @s Physics.Object.InverseMass
-    scoreboard players operation #Physics.Maths.Temp.Value1 Physics.Value /= #Physics.Constants.12 Physics.Value
+    scoreboard players operation #Physics.Maths.Temp.Value1 Physics.Value *= #Physics.Constants.833 Physics.Value
+    scoreboard players operation #Physics.Maths.Temp.Value1 Physics.Value /= #Physics.Constants.100 Physics.Value
     scoreboard players set @s Physics.Object.InverseInertiaTensorLocal.4 1000000000
     scoreboard players operation @s Physics.Object.InverseInertiaTensorLocal.4 /= #Physics.Maths.Temp.Value1 Physics.Value
 
@@ -38,10 +36,7 @@ scoreboard players operation @s Physics.Object.InverseMass /= #Physics.SetAttrib
     scoreboard players operation #Physics.Maths.Temp.Value2 Physics.Value *= #Physics.Maths.Temp.Value2 Physics.Value
     scoreboard players operation #Physics.Maths.Temp.Value1 Physics.Value += #Physics.Maths.Temp.Value2 Physics.Value
     scoreboard players operation #Physics.Maths.Temp.Value1 Physics.Value /= @s Physics.Object.InverseMass
-    scoreboard players operation #Physics.Maths.Temp.Value1 Physics.Value /= #Physics.Constants.12 Physics.Value
+    scoreboard players operation #Physics.Maths.Temp.Value1 Physics.Value *= #Physics.Constants.833 Physics.Value
+    scoreboard players operation #Physics.Maths.Temp.Value1 Physics.Value /= #Physics.Constants.100 Physics.Value
     scoreboard players set @s Physics.Object.InverseInertiaTensorLocal.8 1000000000
     scoreboard players operation @s Physics.Object.InverseInertiaTensorLocal.8 /= #Physics.Maths.Temp.Value1 Physics.Value
-
-    scoreboard players operation @s Physics.Object.Dimension.x /= #Physics.Constants.10 Physics.Value
-    scoreboard players operation @s Physics.Object.Dimension.y /= #Physics.Constants.10 Physics.Value
-    scoreboard players operation @s Physics.Object.Dimension.z /= #Physics.Constants.10 Physics.Value

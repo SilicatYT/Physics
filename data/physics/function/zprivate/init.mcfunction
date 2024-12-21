@@ -110,6 +110,7 @@ scoreboard players set #Physics.Global.PlayerAttackForceMagnitude Physics.Value 
 
 # Set value constants (You can't multiply or divide by numbers without defining them first using scoreboards)
 scoreboard players set #Physics.Constants.-1000 Physics.Value -1000
+scoreboard players set #Physics.Constants.-500 Physics.Value -500
 scoreboard players set #Physics.Constants.-1 Physics.Value -1
 scoreboard players set #Physics.Constants.2 Physics.Value 2
 scoreboard players set #Physics.Constants.10 Physics.Value 10
@@ -118,6 +119,7 @@ scoreboard players set #Physics.Constants.20 Physics.Value 20
 scoreboard players set #Physics.Constants.100 Physics.Value 100
 scoreboard players set #Physics.Constants.141 Physics.Value 141
 scoreboard players set #Physics.Constants.500 Physics.Value 500
+scoreboard players set #Physics.Constants.833 Physics.Value 833
 scoreboard players set #Physics.Constants.1000 Physics.Value 1000
 scoreboard players set #Physics.Constants.2000 Physics.Value 2000
 scoreboard players set #Physics.Constants.7775 Physics.Value 7775

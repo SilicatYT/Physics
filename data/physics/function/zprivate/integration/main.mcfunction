@@ -228,7 +228,7 @@ execute store result storage physics:temp data.Integration.Pos[2] double 0.001 r
         scoreboard players operation #Physics.Maths.Temp.Value2 Physics.Value *= #Physics.Maths.Temp.Value2 Physics.Value
         scoreboard players operation #Physics.Maths.Temp.Value1 Physics.Value += #Physics.Maths.Temp.Value2 Physics.Value
         scoreboard players operation #Physics.Maths.Temp.Value1 Physics.Value /= #Physics.Constants.500 Physics.Value
-        execute store result score @s Physics.Object.RotationMatrix.8 store result score @s Physics.Object.RotationMatrixTranspose.8 store result score #Physics.Maths.Temp.Value24 Physics.Value store result score #Physics.Maths.Temp.Value30 Physics.Value store result score #Physics.Maths.Temp.Value36 Physics.Value store result score #Physics.Maths.Temp.Value41 Physics.Value store result score #Physics.Maths.Temp.Value48 Physics.Value store result score #Physics.Maths.Temp.Value54 Physics.Value store result score #Physics.Maths.Temp.Value60 Physics.Value store result score #Physics.Maths.Temp.Value66 Physics.Value run scoreboard players remove #Physics.Maths.Temp.Value1 Physics.Value 1000
+        execute store result score @s Physics.Object.RotationMatrix.8 store result score @s Physics.Object.RotationMatrixTranspose.8 store result score #Physics.Maths.Temp.Value24 Physics.Value store result score #Physics.Maths.Temp.Value30 Physics.Value store result score #Physics.Maths.Temp.Value36 Physics.Value store result score #Physics.Maths.Temp.Value42 Physics.Value store result score #Physics.Maths.Temp.Value48 Physics.Value store result score #Physics.Maths.Temp.Value54 Physics.Value store result score #Physics.Maths.Temp.Value60 Physics.Value store result score #Physics.Maths.Temp.Value66 Physics.Value run scoreboard players remove #Physics.Maths.Temp.Value1 Physics.Value 1000
 
     # Inverse global inertia tensor: R * I * R_transpose
     # (Important): InverseInertiaTensorLocal is scaled by 1,000,000,000x and RotationMatrix is scaled by 1,000x. The rotation matrix can have values from -1,000 to 1,000. So to avoid overflow, I first divide the local inertia tensor by 1,000, then multiply it by the rotation matrix. Then I divide it by 10,000 again so I can actually calculate with it. Now it's scaled by 100,000x.
@@ -536,12 +536,21 @@ execute store result storage physics:temp data.Integration.Pos[2] double 0.001 r
     execute if score @s Physics.Object.CornerPos.6.z > @s Physics.Object.BoundingBoxGlobalMax.z run scoreboard players operation @s Physics.Object.BoundingBoxGlobalMax.z = @s Physics.Object.CornerPos.6.z
     execute if score @s Physics.Object.CornerPos.7.z > @s Physics.Object.BoundingBoxGlobalMax.z run scoreboard players operation @s Physics.Object.BoundingBoxGlobalMax.z = @s Physics.Object.CornerPos.7.z
 
-    scoreboard players operation @s Physics.Object.BoundingBoxGlobalMin.x = @s Physics.Object.BoundingBoxGlobalMax.x
+    execute store result score @s Physics.Object.BoundingBoxStepCount.x run scoreboard players operation @s Physics.Object.BoundingBoxGlobalMin.x = @s Physics.Object.BoundingBoxGlobalMax.x
     scoreboard players operation @s Physics.Object.BoundingBoxGlobalMin.x *= #Physics.Constants.-1 Physics.Value
-    scoreboard players operation @s Physics.Object.BoundingBoxGlobalMin.y = @s Physics.Object.BoundingBoxGlobalMax.y
+    execute store result score @s Physics.Object.BoundingBoxStepCount.y run scoreboard players operation @s Physics.Object.BoundingBoxGlobalMin.y = @s Physics.Object.BoundingBoxGlobalMax.y
     scoreboard players operation @s Physics.Object.BoundingBoxGlobalMin.y *= #Physics.Constants.-1 Physics.Value
-    scoreboard players operation @s Physics.Object.BoundingBoxGlobalMin.z = @s Physics.Object.BoundingBoxGlobalMax.z
+    execute store result score @s Physics.Object.BoundingBoxStepCount.z run scoreboard players operation @s Physics.Object.BoundingBoxGlobalMin.z = @s Physics.Object.BoundingBoxGlobalMax.z
     scoreboard players operation @s Physics.Object.BoundingBoxGlobalMin.z *= #Physics.Constants.-1 Physics.Value
+
+    # Update the StepCount to traverse the bounding box
+    # (Important): Note that I made the step count equal to half the bounding box length in the previous step. So in order to ceil() it, instead of dividing by -1000 and multiply by -1, I divide by -500 and multiply by -1
+    scoreboard players operation @s Physics.Object.BoundingBoxStepCount.x /= #Physics.Constants.-500 Physics.Value
+    scoreboard players operation @s Physics.Object.BoundingBoxStepCount.x *= #Physics.Constants.-1 Physics.Value
+    scoreboard players operation @s Physics.Object.BoundingBoxStepCount.y /= #Physics.Constants.-500 Physics.Value
+    scoreboard players operation @s Physics.Object.BoundingBoxStepCount.y *= #Physics.Constants.-1 Physics.Value
+    scoreboard players operation @s Physics.Object.BoundingBoxStepCount.z /= #Physics.Constants.-500 Physics.Value
+    scoreboard players operation @s Physics.Object.BoundingBoxStepCount.z *= #Physics.Constants.-1 Physics.Value
 
     # Turn the corner coordinates and the bounding box global (Instead of relative to the object center)
     # (Important):  If I need the relative bounding box, I'll need to change a few things
