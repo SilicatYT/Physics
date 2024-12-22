@@ -16,12 +16,12 @@ scoreboard players operation @s Physics.Object.Dimension.x = #Physics.SetAttribu
 scoreboard players operation @s Physics.Object.Dimension.y = #Physics.SetAttribute.Dimension.y Physics.Value
 scoreboard players operation @s Physics.Object.Dimension.z = #Physics.SetAttribute.Dimension.z Physics.Value
 
-# Update the entity's width and height NBT
+# Update the display entity's width and height NBT (Unused, because it doesn't work properly right now. I'll just use the default for now (= unlimited)
 data remove storage physics:temp data.Object
-scoreboard players operation #Physics.Maths.Temp.Max Physics.Value = #Physics.SetAttribute.Dimension.x Physics.Value
-execute if score #Physics.Maths.Temp.Max Physics.Value < #Physics.SetAttribute.Dimension.y Physics.Value run scoreboard players operation #Physics.Maths.Temp.Max Physics.Value = #Physics.SetAttribute.Dimension.y Physics.Value
-execute if score #Physics.Maths.Temp.Max Physics.Value < #Physics.SetAttribute.Dimension.z Physics.Value run scoreboard players operation #Physics.Maths.Temp.Max Physics.Value = #Physics.SetAttribute.Dimension.z Physics.Value
-execute store result storage physics:temp data.Object.width float 0.0015 store result storage physics:temp data.Object.height float 0.0015 run scoreboard players get #Physics.Maths.Temp.Max Physics.Value
+#scoreboard players operation #Physics.Maths.Temp.Max Physics.Value = #Physics.SetAttribute.Dimension.x Physics.Value
+#execute if score #Physics.Maths.Temp.Max Physics.Value < #Physics.SetAttribute.Dimension.y Physics.Value run scoreboard players operation #Physics.Maths.Temp.Max Physics.Value = #Physics.SetAttribute.Dimension.y Physics.Value
+#execute if score #Physics.Maths.Temp.Max Physics.Value < #Physics.SetAttribute.Dimension.z Physics.Value run scoreboard players operation #Physics.Maths.Temp.Max Physics.Value = #Physics.SetAttribute.Dimension.z Physics.Value
+#execute store result storage physics:temp data.Object.width float 0.0015 store result storage physics:temp data.Object.height float 0.0015 run scoreboard players get #Physics.Maths.Temp.Max Physics.Value
 
 # Update the entity's scale & translation
 data modify storage physics:temp data.Object.transformation set value {scale:[0f,0f,0f]}
