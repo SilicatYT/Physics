@@ -1,5 +1,6 @@
 # IDEA: Take the player's reach into account (Currently they can hit any point of the object as long as they can hit the interaction entity at all)
 # IDEA: Also check hits for other display entities whose interaction hitbox are in the path of the player's reach
+# IDEA: Use the iris library to check for blocks that would be in the way, so you can't hit through walls if the interaction entity hitbox sticks out
 # Note: These calculations assume a friction coefficient of 1 for simplicity. See the older commits (Dec 10, 2024) to see a rough implementation of the contact force.
 
 # Check if this is the interaction entity that was hit
