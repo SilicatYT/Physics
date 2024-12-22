@@ -1,4 +1,4 @@
-# Pre-calculate as much as possible for the SAT (especially for the voxel grid SAT)
+# Pre-calculate as much as possible for the voxel grid SAT
     # 9 cross products of the 3 axes of the object and the world-geometry voxel
     # (Important): Because for instance the x axis of the voxel (block) only has its x component set, this results in a cross product whose x component is not set. I make several of these implications directly and don't even set certain values if the solution is always the same value. Then I work with that value directly.
     # (Important): Just like in several other parts of the code, I use "execute store result" when a value is calculated to create copies, instead of manually running "scoreboard players operation ... = ...", because the former is faster.
@@ -282,425 +282,315 @@
             scoreboard players operation #Physics.Projection.Voxel.ObjectAxis.z.Min Physics *= #Physics.Constants.-1 Physics
 
         # Cross Product: x_block x x_object
-            # Corner 0 [-500, -500, -500]
+        # (Important): Cross product's x component is 0, so x can be ignored
+            # Corner 0 [-500, -500]
             scoreboard players set #Physics.Projection.VoxelCorner0.CrossProductAxis.xx Physics -500
-            execute store result score #Physics.Projection.VoxelCorner2.CrossProductAxis.xx Physics run scoreboard players operation #Physics.Projection.VoxelCorner0.CrossProductAxis.xx Physics *= #Physics.CrossProductAxis.xx.y Physics
+            execute store result score #Physics.Projection.VoxelCorner1.CrossProductAxis.xx Physics run scoreboard players operation #Physics.Projection.VoxelCorner0.CrossProductAxis.xx Physics *= #Physics.CrossProductAxis.xx.y Physics
 
             scoreboard players set #Physics.Maths.Value1 Physics -500
-            scoreboard players operation #Physics.Maths.Value1 Physics *= #Physics.CrossProductAxis.xx.x Physics
-            execute store result score #Physics.Projection.VoxelCorner1.CrossProductAxis.xx Physics run scoreboard players operation #Physics.Projection.VoxelCorner0.CrossProductAxis.xx Physics += #Physics.Maths.Value1 Physics
+            scoreboard players operation #Physics.Maths.Value1 Physics *= #Physics.CrossProductAxis.xx.z Physics
+            execute store result score #Physics.Projection.VoxelCorner5 Physics store result score #Physics.Projection.Voxel.CrossProductAxis.xx.Max Physics run scoreboard players operation #Physics.Projection.VoxelCorner0.CrossProductAxis.xx Physics += #Physics.Maths.Value1 Physics
 
-            scoreboard players set #Physics.Maths.Value2 Physics -500
-            scoreboard players operation #Physics.Maths.Value2 Physics *= #Physics.CrossProductAxis.xx.z Physics
-            execute store result score #Physics.Projection.VoxelCorner7 Physics store result score #Physics.Projection.Voxel.CrossProductAxis.xx.Max Physics run scoreboard players operation #Physics.Projection.VoxelCorner0.CrossProductAxis.xx Physics += #Physics.Maths.Value2 Physics
+            # Corner 1 [-500, 500]
+            execute store result score #Physics.Projection.VoxelCorner4.CrossProductAxis.xx Physics run scoreboard players operation #Physics.Projection.VoxelCorner1.CrossProductAxis.xx Physics -= #Physics.Maths.Value1 Physics
 
-            # Corner 1 [-500, -500, 500]
-            execute store result score #Physics.Projection.VoxelCorner6 Physics run scoreboard players operation #Physics.Projection.VoxelCorner1.CrossProductAxis.xx Physics -= #Physics.Maths.Value2 Physics
+            # Corner 2 [-500, -500] (Same as 0)
 
-            # Corner 2 [500, -500, -500]
-            scoreboard players operation #Physics.Projection.VoxelCorner2.CrossProductAxis.xx Physics *= #Physics.Constants.-1 Physics
-            execute store result score #Physics.Projection.VoxelCorner3.CrossProductAxis.xx Physics run scoreboard players operation #Physics.Projection.VoxelCorner2.CrossProductAxis.xx Physics += #Physics.Maths.Value1 Physics
-            execute store result score #Physics.Projection.VoxelCorner5 Physics run scoreboard players operation #Physics.Projection.VoxelCorner2.CrossProductAxis.xx Physics += #Physics.Maths.Value2 Physics
+            # Corner 3 [-500, 500] (Same as 1)
 
-            # Corner 3 [500, -500, 500]
-            execute store result score #Physics.Projection.VoxelCorner4 Physics run scoreboard players operation #Physics.Projection.VoxelCorner3.CrossProductAxis.xx Physics -= #Physics.Maths.Value2 Physics
-
-            # Corner 4 [-500, 500, -500] (-> Mirrored version of 3)
+            # Corner 4 [500, -500] (Mirrored version of 1)
             scoreboard players operation #Physics.Projection.VoxelCorner4.CrossProductAxis.xx Physics *= #Physics.Constants.-1 Physics
 
-            # Corner 5 [-500, 500, 500] (-> Mirrored version of 2)
+            # Corner 5 [500, 500] (Mirrored version of 0)
             scoreboard players operation #Physics.Projection.VoxelCorner5.CrossProductAxis.xx Physics *= #Physics.Constants.-1 Physics
 
-            # Corner 6 [500, 500, -500] (-> Mirrored version of 1)
-            scoreboard players operation #Physics.Projection.VoxelCorner6.CrossProductAxis.xx Physics *= #Physics.Constants.-1 Physics
+            # Corner 6 [500, -500] (Same as 4)
 
-            # Corner 7 [500, 500, 500] (-> Mirrored version of 0)
-            scoreboard players operation #Physics.Projection.VoxelCorner7.CrossProductAxis.xx Physics *= #Physics.Constants.-1 Physics
+            # Corner 7 [500, 500] (Same as 5)
 
             # Find min and max
             execute if score #Physics.Projection.VoxelCorner1.CrossProductAxis.xx Physics > #Physics.Projection.Voxel.CrossProductAxis.xx.Max Physics run scoreboard players operation #Physics.Projection.Voxel.CrossProductAxis.xx.Max Physics = #Physics.Projection.VoxelCorner1.CrossProductAxis.xx Physics
-            execute if score #Physics.Projection.VoxelCorner2.CrossProductAxis.xx Physics > #Physics.Projection.Voxel.CrossProductAxis.xx.Max Physics run scoreboard players operation #Physics.Projection.Voxel.CrossProductAxis.xx.Max Physics = #Physics.Projection.VoxelCorner2.CrossProductAxis.xx Physics
-            execute if score #Physics.Projection.VoxelCorner3.CrossProductAxis.xx Physics > #Physics.Projection.Voxel.CrossProductAxis.xx.Max Physics run scoreboard players operation #Physics.Projection.Voxel.CrossProductAxis.xx.Max Physics = #Physics.Projection.VoxelCorner3.CrossProductAxis.xx Physics
             execute if score #Physics.Projection.VoxelCorner4.CrossProductAxis.xx Physics > #Physics.Projection.Voxel.CrossProductAxis.xx.Max Physics run scoreboard players operation #Physics.Projection.Voxel.CrossProductAxis.xx.Max Physics = #Physics.Projection.VoxelCorner4.CrossProductAxis.xx Physics
             execute if score #Physics.Projection.VoxelCorner5.CrossProductAxis.xx Physics > #Physics.Projection.Voxel.CrossProductAxis.xx.Max Physics run scoreboard players operation #Physics.Projection.Voxel.CrossProductAxis.xx.Max Physics = #Physics.Projection.VoxelCorner5.CrossProductAxis.xx Physics
-            execute if score #Physics.Projection.VoxelCorner6.CrossProductAxis.xx Physics > #Physics.Projection.Voxel.CrossProductAxis.xx.Max Physics run scoreboard players operation #Physics.Projection.Voxel.CrossProductAxis.xx.Max Physics = #Physics.Projection.VoxelCorner6.CrossProductAxis.xx Physics
-            execute if score #Physics.Projection.VoxelCorner7.CrossProductAxis.xx Physics > #Physics.Projection.Voxel.CrossProductAxis.xx.Max Physics run scoreboard players operation #Physics.Projection.Voxel.CrossProductAxis.xx.Max Physics = #Physics.Projection.VoxelCorner7.CrossProductAxis.xx Physics
             scoreboard players operation #Physics.Projection.Voxel.CrossProductAxis.xx.Min Physics = #Physics.Projection.Voxel.CrossProductAxis.xx.Max Physics
             scoreboard players operation #Physics.Projection.Voxel.CrossProductAxis.xx.Min Physics *= #Physics.Constants.-1 Physics
 
         # Cross Product: x_block x y_object
-            # Corner 0 [-500, -500, -500]
+        # (Important): Cross product's x component is 0, so x can be ignored
+            # Corner 0 [-500, -500]
             scoreboard players set #Physics.Projection.VoxelCorner0.CrossProductAxis.xy Physics -500
-            execute store result score #Physics.Projection.VoxelCorner2.CrossProductAxis.xy Physics run scoreboard players operation #Physics.Projection.VoxelCorner0.CrossProductAxis.xy Physics *= #Physics.CrossProductAxis.xy.y Physics
+            execute store result score #Physics.Projection.VoxelCorner1.CrossProductAxis.xy Physics run scoreboard players operation #Physics.Projection.VoxelCorner0.CrossProductAxis.xy Physics *= #Physics.CrossProductAxis.xy.y Physics
 
             scoreboard players set #Physics.Maths.Value1 Physics -500
-            scoreboard players operation #Physics.Maths.Value1 Physics *= #Physics.CrossProductAxis.xy.x Physics
-            execute store result score #Physics.Projection.VoxelCorner1.CrossProductAxis.xy Physics run scoreboard players operation #Physics.Projection.VoxelCorner0.CrossProductAxis.xy Physics += #Physics.Maths.Value1 Physics
+            scoreboard players operation #Physics.Maths.Value1 Physics *= #Physics.CrossProductAxis.xy.z Physics
+            execute store result score #Physics.Projection.VoxelCorner5 Physics store result score #Physics.Projection.Voxel.CrossProductAxis.xy.Max Physics run scoreboard players operation #Physics.Projection.VoxelCorner0.CrossProductAxis.xy Physics += #Physics.Maths.Value1 Physics
 
-            scoreboard players set #Physics.Maths.Value2 Physics -500
-            scoreboard players operation #Physics.Maths.Value2 Physics *= #Physics.CrossProductAxis.xy.z Physics
-            execute store result score #Physics.Projection.VoxelCorner7 Physics store result score #Physics.Projection.Voxel.CrossProductAxis.xy.Max Physics run scoreboard players operation #Physics.Projection.VoxelCorner0.CrossProductAxis.xy Physics += #Physics.Maths.Value2 Physics
+            # Corner 1 [-500, 500]
+            execute store result score #Physics.Projection.VoxelCorner4.CrossProductAxis.xy Physics run scoreboard players operation #Physics.Projection.VoxelCorner1.CrossProductAxis.xy Physics -= #Physics.Maths.Value1 Physics
 
-            # Corner 1 [-500, -500, 500]
-            execute store result score #Physics.Projection.VoxelCorner6 Physics run scoreboard players operation #Physics.Projection.VoxelCorner1.CrossProductAxis.xy Physics -= #Physics.Maths.Value2 Physics
+            # Corner 2 [-500, -500] (Same as 0)
 
-            # Corner 2 [500, -500, -500]
-            scoreboard players operation #Physics.Projection.VoxelCorner2.CrossProductAxis.xy Physics *= #Physics.Constants.-1 Physics
-            execute store result score #Physics.Projection.VoxelCorner3.CrossProductAxis.xy Physics run scoreboard players operation #Physics.Projection.VoxelCorner2.CrossProductAxis.xy Physics += #Physics.Maths.Value1 Physics
-            execute store result score #Physics.Projection.VoxelCorner5 Physics run scoreboard players operation #Physics.Projection.VoxelCorner2.CrossProductAxis.xy Physics += #Physics.Maths.Value2 Physics
+            # Corner 3 [-500, 500] (Same as 1)
 
-            # Corner 3 [500, -500, 500]
-            execute store result score #Physics.Projection.VoxelCorner4 Physics run scoreboard players operation #Physics.Projection.VoxelCorner3.CrossProductAxis.xy Physics -= #Physics.Maths.Value2 Physics
-
-            # Corner 4 [-500, 500, -500] (-> Mirrored version of 3)
+            # Corner 4 [500, -500] (Mirrored version of 1)
             scoreboard players operation #Physics.Projection.VoxelCorner4.CrossProductAxis.xy Physics *= #Physics.Constants.-1 Physics
 
-            # Corner 5 [-500, 500, 500] (-> Mirrored version of 2)
+            # Corner 5 [500, 500] (Mirrored version of 0)
             scoreboard players operation #Physics.Projection.VoxelCorner5.CrossProductAxis.xy Physics *= #Physics.Constants.-1 Physics
 
-            # Corner 6 [500, 500, -500] (-> Mirrored version of 1)
-            scoreboard players operation #Physics.Projection.VoxelCorner6.CrossProductAxis.xy Physics *= #Physics.Constants.-1 Physics
+            # Corner 6 [500, -500] (Same as 4)
 
-            # Corner 7 [500, 500, 500] (-> Mirrored version of 0)
-            scoreboard players operation #Physics.Projection.VoxelCorner7.CrossProductAxis.xy Physics *= #Physics.Constants.-1 Physics
+            # Corner 7 [500, 500] (Same as 5)
 
             # Find min and max
             execute if score #Physics.Projection.VoxelCorner1.CrossProductAxis.xy Physics > #Physics.Projection.Voxel.CrossProductAxis.xy.Max Physics run scoreboard players operation #Physics.Projection.Voxel.CrossProductAxis.xy.Max Physics = #Physics.Projection.VoxelCorner1.CrossProductAxis.xy Physics
-            execute if score #Physics.Projection.VoxelCorner2.CrossProductAxis.xy Physics > #Physics.Projection.Voxel.CrossProductAxis.xy.Max Physics run scoreboard players operation #Physics.Projection.Voxel.CrossProductAxis.xy.Max Physics = #Physics.Projection.VoxelCorner2.CrossProductAxis.xy Physics
-            execute if score #Physics.Projection.VoxelCorner3.CrossProductAxis.xy Physics > #Physics.Projection.Voxel.CrossProductAxis.xy.Max Physics run scoreboard players operation #Physics.Projection.Voxel.CrossProductAxis.xy.Max Physics = #Physics.Projection.VoxelCorner3.CrossProductAxis.xy Physics
             execute if score #Physics.Projection.VoxelCorner4.CrossProductAxis.xy Physics > #Physics.Projection.Voxel.CrossProductAxis.xy.Max Physics run scoreboard players operation #Physics.Projection.Voxel.CrossProductAxis.xy.Max Physics = #Physics.Projection.VoxelCorner4.CrossProductAxis.xy Physics
             execute if score #Physics.Projection.VoxelCorner5.CrossProductAxis.xy Physics > #Physics.Projection.Voxel.CrossProductAxis.xy.Max Physics run scoreboard players operation #Physics.Projection.Voxel.CrossProductAxis.xy.Max Physics = #Physics.Projection.VoxelCorner5.CrossProductAxis.xy Physics
-            execute if score #Physics.Projection.VoxelCorner6.CrossProductAxis.xy Physics > #Physics.Projection.Voxel.CrossProductAxis.xy.Max Physics run scoreboard players operation #Physics.Projection.Voxel.CrossProductAxis.xy.Max Physics = #Physics.Projection.VoxelCorner6.CrossProductAxis.xy Physics
-            execute if score #Physics.Projection.VoxelCorner7.CrossProductAxis.xy Physics > #Physics.Projection.Voxel.CrossProductAxis.xy.Max Physics run scoreboard players operation #Physics.Projection.Voxel.CrossProductAxis.xy.Max Physics = #Physics.Projection.VoxelCorner7.CrossProductAxis.xy Physics
             scoreboard players operation #Physics.Projection.Voxel.CrossProductAxis.xy.Min Physics = #Physics.Projection.Voxel.CrossProductAxis.xy.Max Physics
             scoreboard players operation #Physics.Projection.Voxel.CrossProductAxis.xy.Min Physics *= #Physics.Constants.-1 Physics
 
         # Cross Product: x_block x z_object
-            # Corner 0 [-500, -500, -500]
+        # (Important): Cross product's x component is 0, so x can be ignored
+            # Corner 0 [-500, -500]
             scoreboard players set #Physics.Projection.VoxelCorner0.CrossProductAxis.xz Physics -500
-            execute store result score #Physics.Projection.VoxelCorner2.CrossProductAxis.xz Physics run scoreboard players operation #Physics.Projection.VoxelCorner0.CrossProductAxis.xz Physics *= #Physics.CrossProductAxis.xz.y Physics
+            execute store result score #Physics.Projection.VoxelCorner1.CrossProductAxis.xz Physics run scoreboard players operation #Physics.Projection.VoxelCorner0.CrossProductAxis.xz Physics *= #Physics.CrossProductAxis.xz.y Physics
 
             scoreboard players set #Physics.Maths.Value1 Physics -500
-            scoreboard players operation #Physics.Maths.Value1 Physics *= #Physics.CrossProductAxis.xz.x Physics
-            execute store result score #Physics.Projection.VoxelCorner1.CrossProductAxis.xz Physics run scoreboard players operation #Physics.Projection.VoxelCorner0.CrossProductAxis.xz Physics += #Physics.Maths.Value1 Physics
+            scoreboard players operation #Physics.Maths.Value1 Physics *= #Physics.CrossProductAxis.xz.z Physics
+            execute store result score #Physics.Projection.VoxelCorner5 Physics store result score #Physics.Projection.Voxel.CrossProductAxis.xz.Max Physics run scoreboard players operation #Physics.Projection.VoxelCorner0.CrossProductAxis.xz Physics += #Physics.Maths.Value1 Physics
 
-            scoreboard players set #Physics.Maths.Value2 Physics -500
-            scoreboard players operation #Physics.Maths.Value2 Physics *= #Physics.CrossProductAxis.xz.z Physics
-            execute store result score #Physics.Projection.VoxelCorner7 Physics store result score #Physics.Projection.Voxel.CrossProductAxis.xz.Max Physics run scoreboard players operation #Physics.Projection.VoxelCorner0.CrossProductAxis.xz Physics += #Physics.Maths.Value2 Physics
+            # Corner 1 [-500, 500]
+            execute store result score #Physics.Projection.VoxelCorner4.CrossProductAxis.xz Physics run scoreboard players operation #Physics.Projection.VoxelCorner1.CrossProductAxis.xz Physics -= #Physics.Maths.Value1 Physics
 
-            # Corner 1 [-500, -500, 500]
-            execute store result score #Physics.Projection.VoxelCorner6 Physics run scoreboard players operation #Physics.Projection.VoxelCorner1.CrossProductAxis.xz Physics -= #Physics.Maths.Value2 Physics
+            # Corner 2 [-500, -500] (Same as 0)
 
-            # Corner 2 [500, -500, -500]
-            scoreboard players operation #Physics.Projection.VoxelCorner2.CrossProductAxis.xz Physics *= #Physics.Constants.-1 Physics
-            execute store result score #Physics.Projection.VoxelCorner3.CrossProductAxis.xz Physics run scoreboard players operation #Physics.Projection.VoxelCorner2.CrossProductAxis.xz Physics += #Physics.Maths.Value1 Physics
-            execute store result score #Physics.Projection.VoxelCorner5 Physics run scoreboard players operation #Physics.Projection.VoxelCorner2.CrossProductAxis.xz Physics += #Physics.Maths.Value2 Physics
+            # Corner 3 [-500, 500] (Same as 1)
 
-            # Corner 3 [500, -500, 500]
-            execute store result score #Physics.Projection.VoxelCorner4 Physics run scoreboard players operation #Physics.Projection.VoxelCorner3.CrossProductAxis.xz Physics -= #Physics.Maths.Value2 Physics
-
-            # Corner 4 [-500, 500, -500] (-> Mirrored version of 3)
+            # Corner 4 [500, -500] (Mirrored version of 1)
             scoreboard players operation #Physics.Projection.VoxelCorner4.CrossProductAxis.xz Physics *= #Physics.Constants.-1 Physics
 
-            # Corner 5 [-500, 500, 500] (-> Mirrored version of 2)
+            # Corner 5 [500, 500] (Mirrored version of 0)
             scoreboard players operation #Physics.Projection.VoxelCorner5.CrossProductAxis.xz Physics *= #Physics.Constants.-1 Physics
 
-            # Corner 6 [500, 500, -500] (-> Mirrored version of 1)
-            scoreboard players operation #Physics.Projection.VoxelCorner6.CrossProductAxis.xz Physics *= #Physics.Constants.-1 Physics
+            # Corner 6 [500, -500] (Same as 4)
 
-            # Corner 7 [500, 500, 500] (-> Mirrored version of 0)
-            scoreboard players operation #Physics.Projection.VoxelCorner7.CrossProductAxis.xz Physics *= #Physics.Constants.-1 Physics
+            # Corner 7 [500, 500] (Same as 5)
 
             # Find min and max
             execute if score #Physics.Projection.VoxelCorner1.CrossProductAxis.xz Physics > #Physics.Projection.Voxel.CrossProductAxis.xz.Max Physics run scoreboard players operation #Physics.Projection.Voxel.CrossProductAxis.xz.Max Physics = #Physics.Projection.VoxelCorner1.CrossProductAxis.xz Physics
-            execute if score #Physics.Projection.VoxelCorner2.CrossProductAxis.xz Physics > #Physics.Projection.Voxel.CrossProductAxis.xz.Max Physics run scoreboard players operation #Physics.Projection.Voxel.CrossProductAxis.xz.Max Physics = #Physics.Projection.VoxelCorner2.CrossProductAxis.xz Physics
-            execute if score #Physics.Projection.VoxelCorner3.CrossProductAxis.xz Physics > #Physics.Projection.Voxel.CrossProductAxis.xz.Max Physics run scoreboard players operation #Physics.Projection.Voxel.CrossProductAxis.xz.Max Physics = #Physics.Projection.VoxelCorner3.CrossProductAxis.xz Physics
             execute if score #Physics.Projection.VoxelCorner4.CrossProductAxis.xz Physics > #Physics.Projection.Voxel.CrossProductAxis.xz.Max Physics run scoreboard players operation #Physics.Projection.Voxel.CrossProductAxis.xz.Max Physics = #Physics.Projection.VoxelCorner4.CrossProductAxis.xz Physics
             execute if score #Physics.Projection.VoxelCorner5.CrossProductAxis.xz Physics > #Physics.Projection.Voxel.CrossProductAxis.xz.Max Physics run scoreboard players operation #Physics.Projection.Voxel.CrossProductAxis.xz.Max Physics = #Physics.Projection.VoxelCorner5.CrossProductAxis.xz Physics
-            execute if score #Physics.Projection.VoxelCorner6.CrossProductAxis.xz Physics > #Physics.Projection.Voxel.CrossProductAxis.xz.Max Physics run scoreboard players operation #Physics.Projection.Voxel.CrossProductAxis.xz.Max Physics = #Physics.Projection.VoxelCorner6.CrossProductAxis.xz Physics
-            execute if score #Physics.Projection.VoxelCorner7.CrossProductAxis.xz Physics > #Physics.Projection.Voxel.CrossProductAxis.xz.Max Physics run scoreboard players operation #Physics.Projection.Voxel.CrossProductAxis.xz.Max Physics = #Physics.Projection.VoxelCorner7.CrossProductAxis.xz Physics
             scoreboard players operation #Physics.Projection.Voxel.CrossProductAxis.xz.Min Physics = #Physics.Projection.Voxel.CrossProductAxis.xz.Max Physics
             scoreboard players operation #Physics.Projection.Voxel.CrossProductAxis.xz.Min Physics *= #Physics.Constants.-1 Physics
 
         # Cross Product: y_block x x_object
-            # Corner 0 [-500, -500, -500]
+        # (Important): Cross product's y component is 0, so y can be ignored
+            # Corner 0 [-500, -500]
             scoreboard players set #Physics.Projection.VoxelCorner0.CrossProductAxis.yx Physics -500
-            execute store result score #Physics.Projection.VoxelCorner2.CrossProductAxis.yx Physics run scoreboard players operation #Physics.Projection.VoxelCorner0.CrossProductAxis.yx Physics *= #Physics.CrossProductAxis.yx.y Physics
+            execute store result score #Physics.Projection.VoxelCorner1.CrossProductAxis.yx Physics run scoreboard players operation #Physics.Projection.VoxelCorner0.CrossProductAxis.yx Physics *= #Physics.CrossProductAxis.yx.x Physics
 
             scoreboard players set #Physics.Maths.Value1 Physics -500
-            scoreboard players operation #Physics.Maths.Value1 Physics *= #Physics.CrossProductAxis.yx.x Physics
-            execute store result score #Physics.Projection.VoxelCorner1.CrossProductAxis.yx Physics run scoreboard players operation #Physics.Projection.VoxelCorner0.CrossProductAxis.yx Physics += #Physics.Maths.Value1 Physics
+            scoreboard players operation #Physics.Maths.Value1 Physics *= #Physics.CrossProductAxis.yx.z Physics
+            execute store result score #Physics.Projection.VoxelCorner3.CrossProductAxis.yx Physics store result score #Physics.Projection.Voxel.CrossProductAxis.yx.Max Physics run scoreboard players operation #Physics.Projection.VoxelCorner0.CrossProductAxis.yx Physics += #Physics.Maths.Value1 Physics
 
-            scoreboard players set #Physics.Maths.Value2 Physics -500
-            scoreboard players operation #Physics.Maths.Value2 Physics *= #Physics.CrossProductAxis.yx.z Physics
-            execute store result score #Physics.Projection.VoxelCorner7 Physics store result score #Physics.Projection.Voxel.CrossProductAxis.yx.Max Physics run scoreboard players operation #Physics.Projection.VoxelCorner0.CrossProductAxis.yx Physics += #Physics.Maths.Value2 Physics
+            # Corner 1 [-500, 500]
+            execute store result score #Physics.Projection.VoxelCorner2 Physics run scoreboard players operation #Physics.Projection.VoxelCorner1.CrossProductAxis.yx Physics -= #Physics.Maths.Value1 Physics
 
-            # Corner 1 [-500, -500, 500]
-            execute store result score #Physics.Projection.VoxelCorner6 Physics run scoreboard players operation #Physics.Projection.VoxelCorner1.CrossProductAxis.yx Physics -= #Physics.Maths.Value2 Physics
-
-            # Corner 2 [500, -500, -500]
+            # Corner 2 [500, -500] (Mirrored version of 1)
             scoreboard players operation #Physics.Projection.VoxelCorner2.CrossProductAxis.yx Physics *= #Physics.Constants.-1 Physics
-            execute store result score #Physics.Projection.VoxelCorner3.CrossProductAxis.yx Physics run scoreboard players operation #Physics.Projection.VoxelCorner2.CrossProductAxis.yx Physics += #Physics.Maths.Value1 Physics
-            execute store result score #Physics.Projection.VoxelCorner5 Physics run scoreboard players operation #Physics.Projection.VoxelCorner2.CrossProductAxis.yx Physics += #Physics.Maths.Value2 Physics
 
-            # Corner 3 [500, -500, 500]
-            execute store result score #Physics.Projection.VoxelCorner4 Physics run scoreboard players operation #Physics.Projection.VoxelCorner3.CrossProductAxis.yx Physics -= #Physics.Maths.Value2 Physics
+            # Corner 3 [500, 500] (Mirrored version of 0)
+            scoreboard players operation #Physics.Projection.VoxelCorner3.CrossProductAxis.yx Physics *= #Physics.Constants.-1 Physics
 
-            # Corner 4 [-500, 500, -500] (-> Mirrored version of 3)
-            scoreboard players operation #Physics.Projection.VoxelCorner4.CrossProductAxis.yx Physics *= #Physics.Constants.-1 Physics
+            # Corner 4 [-500, -500] (Same as 0)
 
-            # Corner 5 [-500, 500, 500] (-> Mirrored version of 2)
-            scoreboard players operation #Physics.Projection.VoxelCorner5.CrossProductAxis.yx Physics *= #Physics.Constants.-1 Physics
+            # Corner 5 [-500, 500] (Same as 1)
 
-            # Corner 6 [500, 500, -500] (-> Mirrored version of 1)
-            scoreboard players operation #Physics.Projection.VoxelCorner6.CrossProductAxis.yx Physics *= #Physics.Constants.-1 Physics
+            # Corner 6 [500, -500] (Same as 2)
 
-            # Corner 7 [500, 500, 500] (-> Mirrored version of 0)
-            scoreboard players operation #Physics.Projection.VoxelCorner7.CrossProductAxis.yx Physics *= #Physics.Constants.-1 Physics
+            # Corner 7 [500, 500] (Same as 3)
 
             # Find min and max
             execute if score #Physics.Projection.VoxelCorner1.CrossProductAxis.yx Physics > #Physics.Projection.Voxel.CrossProductAxis.yx.Max Physics run scoreboard players operation #Physics.Projection.Voxel.CrossProductAxis.yx.Max Physics = #Physics.Projection.VoxelCorner1.CrossProductAxis.yx Physics
             execute if score #Physics.Projection.VoxelCorner2.CrossProductAxis.yx Physics > #Physics.Projection.Voxel.CrossProductAxis.yx.Max Physics run scoreboard players operation #Physics.Projection.Voxel.CrossProductAxis.yx.Max Physics = #Physics.Projection.VoxelCorner2.CrossProductAxis.yx Physics
             execute if score #Physics.Projection.VoxelCorner3.CrossProductAxis.yx Physics > #Physics.Projection.Voxel.CrossProductAxis.yx.Max Physics run scoreboard players operation #Physics.Projection.Voxel.CrossProductAxis.yx.Max Physics = #Physics.Projection.VoxelCorner3.CrossProductAxis.yx Physics
-            execute if score #Physics.Projection.VoxelCorner4.CrossProductAxis.yx Physics > #Physics.Projection.Voxel.CrossProductAxis.yx.Max Physics run scoreboard players operation #Physics.Projection.Voxel.CrossProductAxis.yx.Max Physics = #Physics.Projection.VoxelCorner4.CrossProductAxis.yx Physics
-            execute if score #Physics.Projection.VoxelCorner5.CrossProductAxis.yx Physics > #Physics.Projection.Voxel.CrossProductAxis.yx.Max Physics run scoreboard players operation #Physics.Projection.Voxel.CrossProductAxis.yx.Max Physics = #Physics.Projection.VoxelCorner5.CrossProductAxis.yx Physics
-            execute if score #Physics.Projection.VoxelCorner6.CrossProductAxis.yx Physics > #Physics.Projection.Voxel.CrossProductAxis.yx.Max Physics run scoreboard players operation #Physics.Projection.Voxel.CrossProductAxis.yx.Max Physics = #Physics.Projection.VoxelCorner6.CrossProductAxis.yx Physics
-            execute if score #Physics.Projection.VoxelCorner7.CrossProductAxis.yx Physics > #Physics.Projection.Voxel.CrossProductAxis.yx.Max Physics run scoreboard players operation #Physics.Projection.Voxel.CrossProductAxis.yx.Max Physics = #Physics.Projection.VoxelCorner7.CrossProductAxis.yx Physics
             scoreboard players operation #Physics.Projection.Voxel.CrossProductAxis.yx.Min Physics = #Physics.Projection.Voxel.CrossProductAxis.yx.Max Physics
             scoreboard players operation #Physics.Projection.Voxel.CrossProductAxis.yx.Min Physics *= #Physics.Constants.-1 Physics
 
         # Cross Product: y_block x y_object
-            # Corner 0 [-500, -500, -500]
+        # (Important): Cross product's y component is 0, so y can be ignored
+            # Corner 0 [-500, -500]
             scoreboard players set #Physics.Projection.VoxelCorner0.CrossProductAxis.yy Physics -500
-            execute store result score #Physics.Projection.VoxelCorner2.CrossProductAxis.yy Physics run scoreboard players operation #Physics.Projection.VoxelCorner0.CrossProductAxis.yy Physics *= #Physics.CrossProductAxis.yy.y Physics
+            execute store result score #Physics.Projection.VoxelCorner1.CrossProductAxis.yy Physics run scoreboard players operation #Physics.Projection.VoxelCorner0.CrossProductAxis.yy Physics *= #Physics.CrossProductAxis.yy.x Physics
 
             scoreboard players set #Physics.Maths.Value1 Physics -500
-            scoreboard players operation #Physics.Maths.Value1 Physics *= #Physics.CrossProductAxis.yy.x Physics
-            execute store result score #Physics.Projection.VoxelCorner1.CrossProductAxis.yy Physics run scoreboard players operation #Physics.Projection.VoxelCorner0.CrossProductAxis.yy Physics += #Physics.Maths.Value1 Physics
+            scoreboard players operation #Physics.Maths.Value1 Physics *= #Physics.CrossProductAxis.yy.z Physics
+            execute store result score #Physics.Projection.VoxelCorner3.CrossProductAxis.yy Physics store result score #Physics.Projection.Voxel.CrossProductAxis.yy.Max Physics run scoreboard players operation #Physics.Projection.VoxelCorner0.CrossProductAxis.yy Physics += #Physics.Maths.Value1 Physics
 
-            scoreboard players set #Physics.Maths.Value2 Physics -500
-            scoreboard players operation #Physics.Maths.Value2 Physics *= #Physics.CrossProductAxis.yy.z Physics
-            execute store result score #Physics.Projection.VoxelCorner7 Physics store result score #Physics.Projection.Voxel.CrossProductAxis.yy.Max Physics run scoreboard players operation #Physics.Projection.VoxelCorner0.CrossProductAxis.yy Physics += #Physics.Maths.Value2 Physics
+            # Corner 1 [-500, 500]
+            execute store result score #Physics.Projection.VoxelCorner2 Physics run scoreboard players operation #Physics.Projection.VoxelCorner1.CrossProductAxis.yy Physics -= #Physics.Maths.Value1 Physics
 
-            # Corner 1 [-500, -500, 500]
-            execute store result score #Physics.Projection.VoxelCorner6 Physics run scoreboard players operation #Physics.Projection.VoxelCorner1.CrossProductAxis.yy Physics -= #Physics.Maths.Value2 Physics
-
-            # Corner 2 [500, -500, -500]
+            # Corner 2 [500, -500] (Mirrored version of 1)
             scoreboard players operation #Physics.Projection.VoxelCorner2.CrossProductAxis.yy Physics *= #Physics.Constants.-1 Physics
-            execute store result score #Physics.Projection.VoxelCorner3.CrossProductAxis.yy Physics run scoreboard players operation #Physics.Projection.VoxelCorner2.CrossProductAxis.yy Physics += #Physics.Maths.Value1 Physics
-            execute store result score #Physics.Projection.VoxelCorner5 Physics run scoreboard players operation #Physics.Projection.VoxelCorner2.CrossProductAxis.yy Physics += #Physics.Maths.Value2 Physics
 
-            # Corner 3 [500, -500, 500]
-            execute store result score #Physics.Projection.VoxelCorner4 Physics run scoreboard players operation #Physics.Projection.VoxelCorner3.CrossProductAxis.yy Physics -= #Physics.Maths.Value2 Physics
+            # Corner 3 [500, 500] (Mirrored version of 0)
+            scoreboard players operation #Physics.Projection.VoxelCorner3.CrossProductAxis.yy Physics *= #Physics.Constants.-1 Physics
 
-            # Corner 4 [-500, 500, -500] (-> Mirrored version of 3)
-            scoreboard players operation #Physics.Projection.VoxelCorner4.CrossProductAxis.yy Physics *= #Physics.Constants.-1 Physics
+            # Corner 4 [-500, -500] (Same as 0)
 
-            # Corner 5 [-500, 500, 500] (-> Mirrored version of 2)
-            scoreboard players operation #Physics.Projection.VoxelCorner5.CrossProductAxis.yy Physics *= #Physics.Constants.-1 Physics
+            # Corner 5 [-500, 500] (Same as 1)
 
-            # Corner 6 [500, 500, -500] (-> Mirrored version of 1)
-            scoreboard players operation #Physics.Projection.VoxelCorner6.CrossProductAxis.yy Physics *= #Physics.Constants.-1 Physics
+            # Corner 6 [500, -500] (Same as 2)
 
-            # Corner 7 [500, 500, 500] (-> Mirrored version of 0)
-            scoreboard players operation #Physics.Projection.VoxelCorner7.CrossProductAxis.yy Physics *= #Physics.Constants.-1 Physics
+            # Corner 7 [500, 500] (Same as 3)
 
             # Find min and max
             execute if score #Physics.Projection.VoxelCorner1.CrossProductAxis.yy Physics > #Physics.Projection.Voxel.CrossProductAxis.yy.Max Physics run scoreboard players operation #Physics.Projection.Voxel.CrossProductAxis.yy.Max Physics = #Physics.Projection.VoxelCorner1.CrossProductAxis.yy Physics
             execute if score #Physics.Projection.VoxelCorner2.CrossProductAxis.yy Physics > #Physics.Projection.Voxel.CrossProductAxis.yy.Max Physics run scoreboard players operation #Physics.Projection.Voxel.CrossProductAxis.yy.Max Physics = #Physics.Projection.VoxelCorner2.CrossProductAxis.yy Physics
             execute if score #Physics.Projection.VoxelCorner3.CrossProductAxis.yy Physics > #Physics.Projection.Voxel.CrossProductAxis.yy.Max Physics run scoreboard players operation #Physics.Projection.Voxel.CrossProductAxis.yy.Max Physics = #Physics.Projection.VoxelCorner3.CrossProductAxis.yy Physics
-            execute if score #Physics.Projection.VoxelCorner4.CrossProductAxis.yy Physics > #Physics.Projection.Voxel.CrossProductAxis.yy.Max Physics run scoreboard players operation #Physics.Projection.Voxel.CrossProductAxis.yy.Max Physics = #Physics.Projection.VoxelCorner4.CrossProductAxis.yy Physics
-            execute if score #Physics.Projection.VoxelCorner5.CrossProductAxis.yy Physics > #Physics.Projection.Voxel.CrossProductAxis.yy.Max Physics run scoreboard players operation #Physics.Projection.Voxel.CrossProductAxis.yy.Max Physics = #Physics.Projection.VoxelCorner5.CrossProductAxis.yy Physics
-            execute if score #Physics.Projection.VoxelCorner6.CrossProductAxis.yy Physics > #Physics.Projection.Voxel.CrossProductAxis.yy.Max Physics run scoreboard players operation #Physics.Projection.Voxel.CrossProductAxis.yy.Max Physics = #Physics.Projection.VoxelCorner6.CrossProductAxis.yy Physics
-            execute if score #Physics.Projection.VoxelCorner7.CrossProductAxis.yy Physics > #Physics.Projection.Voxel.CrossProductAxis.yy.Max Physics run scoreboard players operation #Physics.Projection.Voxel.CrossProductAxis.yy.Max Physics = #Physics.Projection.VoxelCorner7.CrossProductAxis.yy Physics
             scoreboard players operation #Physics.Projection.Voxel.CrossProductAxis.yy.Min Physics = #Physics.Projection.Voxel.CrossProductAxis.yy.Max Physics
             scoreboard players operation #Physics.Projection.Voxel.CrossProductAxis.yy.Min Physics *= #Physics.Constants.-1 Physics
 
         # Cross Product: y_block x z_object
-            # Corner 0 [-500, -500, -500]
+        # (Important): Cross product's y component is 0, so y can be ignored
+            # Corner 0 [-500, -500]
             scoreboard players set #Physics.Projection.VoxelCorner0.CrossProductAxis.yz Physics -500
-            execute store result score #Physics.Projection.VoxelCorner2.CrossProductAxis.yz Physics run scoreboard players operation #Physics.Projection.VoxelCorner0.CrossProductAxis.yz Physics *= #Physics.CrossProductAxis.yz.y Physics
+            execute store result score #Physics.Projection.VoxelCorner1.CrossProductAxis.yz Physics run scoreboard players operation #Physics.Projection.VoxelCorner0.CrossProductAxis.yz Physics *= #Physics.CrossProductAxis.yz.x Physics
 
             scoreboard players set #Physics.Maths.Value1 Physics -500
-            scoreboard players operation #Physics.Maths.Value1 Physics *= #Physics.CrossProductAxis.yz.x Physics
-            execute store result score #Physics.Projection.VoxelCorner1.CrossProductAxis.yz Physics run scoreboard players operation #Physics.Projection.VoxelCorner0.CrossProductAxis.yz Physics += #Physics.Maths.Value1 Physics
+            scoreboard players operation #Physics.Maths.Value1 Physics *= #Physics.CrossProductAxis.yz.z Physics
+            execute store result score #Physics.Projection.VoxelCorner3.CrossProductAxis.yz Physics store result score #Physics.Projection.Voxel.CrossProductAxis.yz.Max Physics run scoreboard players operation #Physics.Projection.VoxelCorner0.CrossProductAxis.yz Physics += #Physics.Maths.Value1 Physics
 
-            scoreboard players set #Physics.Maths.Value2 Physics -500
-            scoreboard players operation #Physics.Maths.Value2 Physics *= #Physics.CrossProductAxis.yz.z Physics
-            execute store result score #Physics.Projection.VoxelCorner7 Physics store result score #Physics.Projection.Voxel.CrossProductAxis.yz.Max Physics run scoreboard players operation #Physics.Projection.VoxelCorner0.CrossProductAxis.yz Physics += #Physics.Maths.Value2 Physics
+            # Corner 1 [-500, 500]
+            execute store result score #Physics.Projection.VoxelCorner2 Physics run scoreboard players operation #Physics.Projection.VoxelCorner1.CrossProductAxis.yz Physics -= #Physics.Maths.Value1 Physics
 
-            # Corner 1 [-500, -500, 500]
-            execute store result score #Physics.Projection.VoxelCorner6 Physics run scoreboard players operation #Physics.Projection.VoxelCorner1.CrossProductAxis.yz Physics -= #Physics.Maths.Value2 Physics
-
-            # Corner 2 [500, -500, -500]
+            # Corner 2 [500, -500] (Mirrored version of 1)
             scoreboard players operation #Physics.Projection.VoxelCorner2.CrossProductAxis.yz Physics *= #Physics.Constants.-1 Physics
-            execute store result score #Physics.Projection.VoxelCorner3.CrossProductAxis.yz Physics run scoreboard players operation #Physics.Projection.VoxelCorner2.CrossProductAxis.yz Physics += #Physics.Maths.Value1 Physics
-            execute store result score #Physics.Projection.VoxelCorner5 Physics run scoreboard players operation #Physics.Projection.VoxelCorner2.CrossProductAxis.yz Physics += #Physics.Maths.Value2 Physics
 
-            # Corner 3 [500, -500, 500]
-            execute store result score #Physics.Projection.VoxelCorner4 Physics run scoreboard players operation #Physics.Projection.VoxelCorner3.CrossProductAxis.yz Physics -= #Physics.Maths.Value2 Physics
+            # Corner 3 [500, 500] (Mirrored version of 0)
+            scoreboard players operation #Physics.Projection.VoxelCorner3.CrossProductAxis.yz Physics *= #Physics.Constants.-1 Physics
 
-            # Corner 4 [-500, 500, -500] (-> Mirrored version of 3)
-            scoreboard players operation #Physics.Projection.VoxelCorner4.CrossProductAxis.yz Physics *= #Physics.Constants.-1 Physics
+            # Corner 4 [-500, -500] (Same as 0)
 
-            # Corner 5 [-500, 500, 500] (-> Mirrored version of 2)
-            scoreboard players operation #Physics.Projection.VoxelCorner5.CrossProductAxis.yz Physics *= #Physics.Constants.-1 Physics
+            # Corner 5 [-500, 500] (Same as 1)
 
-            # Corner 6 [500, 500, -500] (-> Mirrored version of 1)
-            scoreboard players operation #Physics.Projection.VoxelCorner6.CrossProductAxis.yz Physics *= #Physics.Constants.-1 Physics
+            # Corner 6 [500, -500] (Same as 2)
 
-            # Corner 7 [500, 500, 500] (-> Mirrored version of 0)
-            scoreboard players operation #Physics.Projection.VoxelCorner7.CrossProductAxis.yz Physics *= #Physics.Constants.-1 Physics
+            # Corner 7 [500, 500] (Same as 3)
 
             # Find min and max
             execute if score #Physics.Projection.VoxelCorner1.CrossProductAxis.yz Physics > #Physics.Projection.Voxel.CrossProductAxis.yz.Max Physics run scoreboard players operation #Physics.Projection.Voxel.CrossProductAxis.yz.Max Physics = #Physics.Projection.VoxelCorner1.CrossProductAxis.yz Physics
             execute if score #Physics.Projection.VoxelCorner2.CrossProductAxis.yz Physics > #Physics.Projection.Voxel.CrossProductAxis.yz.Max Physics run scoreboard players operation #Physics.Projection.Voxel.CrossProductAxis.yz.Max Physics = #Physics.Projection.VoxelCorner2.CrossProductAxis.yz Physics
             execute if score #Physics.Projection.VoxelCorner3.CrossProductAxis.yz Physics > #Physics.Projection.Voxel.CrossProductAxis.yz.Max Physics run scoreboard players operation #Physics.Projection.Voxel.CrossProductAxis.yz.Max Physics = #Physics.Projection.VoxelCorner3.CrossProductAxis.yz Physics
-            execute if score #Physics.Projection.VoxelCorner4.CrossProductAxis.yz Physics > #Physics.Projection.Voxel.CrossProductAxis.yz.Max Physics run scoreboard players operation #Physics.Projection.Voxel.CrossProductAxis.yz.Max Physics = #Physics.Projection.VoxelCorner4.CrossProductAxis.yz Physics
-            execute if score #Physics.Projection.VoxelCorner5.CrossProductAxis.yz Physics > #Physics.Projection.Voxel.CrossProductAxis.yz.Max Physics run scoreboard players operation #Physics.Projection.Voxel.CrossProductAxis.yz.Max Physics = #Physics.Projection.VoxelCorner5.CrossProductAxis.yz Physics
-            execute if score #Physics.Projection.VoxelCorner6.CrossProductAxis.yz Physics > #Physics.Projection.Voxel.CrossProductAxis.yz.Max Physics run scoreboard players operation #Physics.Projection.Voxel.CrossProductAxis.yz.Max Physics = #Physics.Projection.VoxelCorner6.CrossProductAxis.yz Physics
-            execute if score #Physics.Projection.VoxelCorner7.CrossProductAxis.yz Physics > #Physics.Projection.Voxel.CrossProductAxis.yz.Max Physics run scoreboard players operation #Physics.Projection.Voxel.CrossProductAxis.yz.Max Physics = #Physics.Projection.VoxelCorner7.CrossProductAxis.yz Physics
             scoreboard players operation #Physics.Projection.Voxel.CrossProductAxis.yz.Min Physics = #Physics.Projection.Voxel.CrossProductAxis.yz.Max Physics
             scoreboard players operation #Physics.Projection.Voxel.CrossProductAxis.yz.Min Physics *= #Physics.Constants.-1 Physics
 
+
+
+
+
+
+
+
         # Cross Product: z_block x x_object
-            # Corner 0 [-500, -500, -500]
+        # (Important): Cross product's z component is 0, so z can be ignored
+            # Corner 0 [-500, -500]
             scoreboard players set #Physics.Projection.VoxelCorner0.CrossProductAxis.zx Physics -500
             execute store result score #Physics.Projection.VoxelCorner2.CrossProductAxis.zx Physics run scoreboard players operation #Physics.Projection.VoxelCorner0.CrossProductAxis.zx Physics *= #Physics.CrossProductAxis.zx.y Physics
 
             scoreboard players set #Physics.Maths.Value1 Physics -500
-            scoreboard players operation #Physics.Maths.Value1 Physics *= #Physics.CrossProductAxis.zx.x Physics
-            execute store result score #Physics.Projection.VoxelCorner1.CrossProductAxis.zx Physics run scoreboard players operation #Physics.Projection.VoxelCorner0.CrossProductAxis.zx Physics += #Physics.Maths.Value1 Physics
+            scoreboard players operation #Physics.Maths.Value1 Physics *= #Physics.CrossProductAxis.yz.x Physics
+            execute store result score #Physics.Projection.VoxelCorner6.CrossProductAxis.zx Physics store result score #Physics.Projection.Voxel.CrossProductAxis.zx.Max Physics run scoreboard players operation #Physics.Projection.VoxelCorner0.CrossProductAxis.zx Physics += #Physics.Maths.Value1 Physics
 
-            scoreboard players set #Physics.Maths.Value2 Physics -500
-            scoreboard players operation #Physics.Maths.Value2 Physics *= #Physics.CrossProductAxis.zx.z Physics
-            execute store result score #Physics.Projection.VoxelCorner7 Physics store result score #Physics.Projection.Voxel.CrossProductAxis.zx.Max Physics run scoreboard players operation #Physics.Projection.VoxelCorner0.CrossProductAxis.zx Physics += #Physics.Maths.Value2 Physics
+            # Corner 1 [-500, -500] (Same as 0)
 
-            # Corner 1 [-500, -500, 500]
-            execute store result score #Physics.Projection.VoxelCorner6 Physics run scoreboard players operation #Physics.Projection.VoxelCorner1.CrossProductAxis.zx Physics -= #Physics.Maths.Value2 Physics
+            # Corner 2 [500, -500]
+            execute store result score #Physics.Projection.VoxelCorner4.CrossProductAxis.zx Physics run scoreboard players operation #Physics.Projection.VoxelCorner2.CrossProductAxis.zx Physics -= #Physics.Maths.Value1 Physics
 
-            # Corner 2 [500, -500, -500]
-            scoreboard players operation #Physics.Projection.VoxelCorner2.CrossProductAxis.zx Physics *= #Physics.Constants.-1 Physics
-            execute store result score #Physics.Projection.VoxelCorner3.CrossProductAxis.zx Physics run scoreboard players operation #Physics.Projection.VoxelCorner2.CrossProductAxis.zx Physics += #Physics.Maths.Value1 Physics
-            execute store result score #Physics.Projection.VoxelCorner5 Physics run scoreboard players operation #Physics.Projection.VoxelCorner2.CrossProductAxis.zx Physics += #Physics.Maths.Value2 Physics
+            # Corner 3 [500, -500] (Same as 2)
 
-            # Corner 3 [500, -500, 500]
-            execute store result score #Physics.Projection.VoxelCorner4 Physics run scoreboard players operation #Physics.Projection.VoxelCorner3.CrossProductAxis.zx Physics -= #Physics.Maths.Value2 Physics
-
-            # Corner 4 [-500, 500, -500] (-> Mirrored version of 3)
+            # Corner 4 [-500, 500] (Mirrored version of 2)
             scoreboard players operation #Physics.Projection.VoxelCorner4.CrossProductAxis.zx Physics *= #Physics.Constants.-1 Physics
 
-            # Corner 5 [-500, 500, 500] (-> Mirrored version of 2)
-            scoreboard players operation #Physics.Projection.VoxelCorner5.CrossProductAxis.zx Physics *= #Physics.Constants.-1 Physics
+            # Corner 5 [-500, 500] (Same as 4)
 
-            # Corner 6 [500, 500, -500] (-> Mirrored version of 1)
+            # Corner 6 [500, 500] (Mirrored version of 0)
             scoreboard players operation #Physics.Projection.VoxelCorner6.CrossProductAxis.zx Physics *= #Physics.Constants.-1 Physics
 
-            # Corner 7 [500, 500, 500] (-> Mirrored version of 0)
-            scoreboard players operation #Physics.Projection.VoxelCorner7.CrossProductAxis.zx Physics *= #Physics.Constants.-1 Physics
+            # Corner 7 [500, 500] (Same as 6)
 
             # Find min and max
-            execute if score #Physics.Projection.VoxelCorner1.CrossProductAxis.zx Physics > #Physics.Projection.Voxel.CrossProductAxis.zx.Max Physics run scoreboard players operation #Physics.Projection.Voxel.CrossProductAxis.zx.Max Physics = #Physics.Projection.VoxelCorner1.CrossProductAxis.zx Physics
             execute if score #Physics.Projection.VoxelCorner2.CrossProductAxis.zx Physics > #Physics.Projection.Voxel.CrossProductAxis.zx.Max Physics run scoreboard players operation #Physics.Projection.Voxel.CrossProductAxis.zx.Max Physics = #Physics.Projection.VoxelCorner2.CrossProductAxis.zx Physics
-            execute if score #Physics.Projection.VoxelCorner3.CrossProductAxis.zx Physics > #Physics.Projection.Voxel.CrossProductAxis.zx.Max Physics run scoreboard players operation #Physics.Projection.Voxel.CrossProductAxis.zx.Max Physics = #Physics.Projection.VoxelCorner3.CrossProductAxis.zx Physics
             execute if score #Physics.Projection.VoxelCorner4.CrossProductAxis.zx Physics > #Physics.Projection.Voxel.CrossProductAxis.zx.Max Physics run scoreboard players operation #Physics.Projection.Voxel.CrossProductAxis.zx.Max Physics = #Physics.Projection.VoxelCorner4.CrossProductAxis.zx Physics
-            execute if score #Physics.Projection.VoxelCorner5.CrossProductAxis.zx Physics > #Physics.Projection.Voxel.CrossProductAxis.zx.Max Physics run scoreboard players operation #Physics.Projection.Voxel.CrossProductAxis.zx.Max Physics = #Physics.Projection.VoxelCorner5.CrossProductAxis.zx Physics
             execute if score #Physics.Projection.VoxelCorner6.CrossProductAxis.zx Physics > #Physics.Projection.Voxel.CrossProductAxis.zx.Max Physics run scoreboard players operation #Physics.Projection.Voxel.CrossProductAxis.zx.Max Physics = #Physics.Projection.VoxelCorner6.CrossProductAxis.zx Physics
-            execute if score #Physics.Projection.VoxelCorner7.CrossProductAxis.zx Physics > #Physics.Projection.Voxel.CrossProductAxis.zx.Max Physics run scoreboard players operation #Physics.Projection.Voxel.CrossProductAxis.zx.Max Physics = #Physics.Projection.VoxelCorner7.CrossProductAxis.zx Physics
             scoreboard players operation #Physics.Projection.Voxel.CrossProductAxis.zx.Min Physics = #Physics.Projection.Voxel.CrossProductAxis.zx.Max Physics
             scoreboard players operation #Physics.Projection.Voxel.CrossProductAxis.zx.Min Physics *= #Physics.Constants.-1 Physics
 
         # Cross Product: z_block x y_object
-            # Corner 0 [-500, -500, -500]
+        # (Important): Cross product's z component is 0, so z can be ignored
+            # Corner 0 [-500, -500]
             scoreboard players set #Physics.Projection.VoxelCorner0.CrossProductAxis.zy Physics -500
             execute store result score #Physics.Projection.VoxelCorner2.CrossProductAxis.zy Physics run scoreboard players operation #Physics.Projection.VoxelCorner0.CrossProductAxis.zy Physics *= #Physics.CrossProductAxis.zy.y Physics
 
             scoreboard players set #Physics.Maths.Value1 Physics -500
-            scoreboard players operation #Physics.Maths.Value1 Physics *= #Physics.CrossProductAxis.zy.x Physics
-            execute store result score #Physics.Projection.VoxelCorner1.CrossProductAxis.zy Physics run scoreboard players operation #Physics.Projection.VoxelCorner0.CrossProductAxis.zy Physics += #Physics.Maths.Value1 Physics
+            scoreboard players operation #Physics.Maths.Value1 Physics *= #Physics.CrossProductAxis.yz.x Physics
+            execute store result score #Physics.Projection.VoxelCorner6.CrossProductAxis.zy Physics store result score #Physics.Projection.Voxel.CrossProductAxis.zy.Max Physics run scoreboard players operation #Physics.Projection.VoxelCorner0.CrossProductAxis.zy Physics += #Physics.Maths.Value1 Physics
 
-            scoreboard players set #Physics.Maths.Value2 Physics -500
-            scoreboard players operation #Physics.Maths.Value2 Physics *= #Physics.CrossProductAxis.zy.z Physics
-            execute store result score #Physics.Projection.VoxelCorner7 Physics store result score #Physics.Projection.Voxel.CrossProductAxis.zy.Max Physics run scoreboard players operation #Physics.Projection.VoxelCorner0.CrossProductAxis.zy Physics += #Physics.Maths.Value2 Physics
+            # Corner 1 [-500, -500] (Same as 0)
 
-            # Corner 1 [-500, -500, 500]
-            execute store result score #Physics.Projection.VoxelCorner6 Physics run scoreboard players operation #Physics.Projection.VoxelCorner1.CrossProductAxis.zy Physics -= #Physics.Maths.Value2 Physics
+            # Corner 2 [500, -500]
+            execute store result score #Physics.Projection.VoxelCorner4.CrossProductAxis.zy Physics run scoreboard players operation #Physics.Projection.VoxelCorner2.CrossProductAxis.zy Physics -= #Physics.Maths.Value1 Physics
 
-            # Corner 2 [500, -500, -500]
-            scoreboard players operation #Physics.Projection.VoxelCorner2.CrossProductAxis.zy Physics *= #Physics.Constants.-1 Physics
-            execute store result score #Physics.Projection.VoxelCorner3.CrossProductAxis.zy Physics run scoreboard players operation #Physics.Projection.VoxelCorner2.CrossProductAxis.zy Physics += #Physics.Maths.Value1 Physics
-            execute store result score #Physics.Projection.VoxelCorner5 Physics run scoreboard players operation #Physics.Projection.VoxelCorner2.CrossProductAxis.zy Physics += #Physics.Maths.Value2 Physics
+            # Corner 3 [500, -500] (Same as 2)
 
-            # Corner 3 [500, -500, 500]
-            execute store result score #Physics.Projection.VoxelCorner4 Physics run scoreboard players operation #Physics.Projection.VoxelCorner3.CrossProductAxis.zy Physics -= #Physics.Maths.Value2 Physics
-
-            # Corner 4 [-500, 500, -500] (-> Mirrored version of 3)
+            # Corner 4 [-500, 500] (Mirrored version of 2)
             scoreboard players operation #Physics.Projection.VoxelCorner4.CrossProductAxis.zy Physics *= #Physics.Constants.-1 Physics
 
-            # Corner 5 [-500, 500, 500] (-> Mirrored version of 2)
-            scoreboard players operation #Physics.Projection.VoxelCorner5.CrossProductAxis.zy Physics *= #Physics.Constants.-1 Physics
+            # Corner 5 [-500, 500] (Same as 4)
 
-            # Corner 6 [500, 500, -500] (-> Mirrored version of 1)
+            # Corner 6 [500, 500] (Mirrored version of 0)
             scoreboard players operation #Physics.Projection.VoxelCorner6.CrossProductAxis.zy Physics *= #Physics.Constants.-1 Physics
 
-            # Corner 7 [500, 500, 500] (-> Mirrored version of 0)
-            scoreboard players operation #Physics.Projection.VoxelCorner7.CrossProductAxis.zy Physics *= #Physics.Constants.-1 Physics
+            # Corner 7 [500, 500] (Same as 6)
 
             # Find min and max
-            execute if score #Physics.Projection.VoxelCorner1.CrossProductAxis.zy Physics > #Physics.Projection.Voxel.CrossProductAxis.zy.Max Physics run scoreboard players operation #Physics.Projection.Voxel.CrossProductAxis.zy.Max Physics = #Physics.Projection.VoxelCorner1.CrossProductAxis.zy Physics
             execute if score #Physics.Projection.VoxelCorner2.CrossProductAxis.zy Physics > #Physics.Projection.Voxel.CrossProductAxis.zy.Max Physics run scoreboard players operation #Physics.Projection.Voxel.CrossProductAxis.zy.Max Physics = #Physics.Projection.VoxelCorner2.CrossProductAxis.zy Physics
-            execute if score #Physics.Projection.VoxelCorner3.CrossProductAxis.zy Physics > #Physics.Projection.Voxel.CrossProductAxis.zy.Max Physics run scoreboard players operation #Physics.Projection.Voxel.CrossProductAxis.zy.Max Physics = #Physics.Projection.VoxelCorner3.CrossProductAxis.zy Physics
             execute if score #Physics.Projection.VoxelCorner4.CrossProductAxis.zy Physics > #Physics.Projection.Voxel.CrossProductAxis.zy.Max Physics run scoreboard players operation #Physics.Projection.Voxel.CrossProductAxis.zy.Max Physics = #Physics.Projection.VoxelCorner4.CrossProductAxis.zy Physics
-            execute if score #Physics.Projection.VoxelCorner5.CrossProductAxis.zy Physics > #Physics.Projection.Voxel.CrossProductAxis.zy.Max Physics run scoreboard players operation #Physics.Projection.Voxel.CrossProductAxis.zy.Max Physics = #Physics.Projection.VoxelCorner5.CrossProductAxis.zy Physics
             execute if score #Physics.Projection.VoxelCorner6.CrossProductAxis.zy Physics > #Physics.Projection.Voxel.CrossProductAxis.zy.Max Physics run scoreboard players operation #Physics.Projection.Voxel.CrossProductAxis.zy.Max Physics = #Physics.Projection.VoxelCorner6.CrossProductAxis.zy Physics
-            execute if score #Physics.Projection.VoxelCorner7.CrossProductAxis.zy Physics > #Physics.Projection.Voxel.CrossProductAxis.zy.Max Physics run scoreboard players operation #Physics.Projection.Voxel.CrossProductAxis.zy.Max Physics = #Physics.Projection.VoxelCorner7.CrossProductAxis.zy Physics
             scoreboard players operation #Physics.Projection.Voxel.CrossProductAxis.zy.Min Physics = #Physics.Projection.Voxel.CrossProductAxis.zy.Max Physics
             scoreboard players operation #Physics.Projection.Voxel.CrossProductAxis.zy.Min Physics *= #Physics.Constants.-1 Physics
 
         # Cross Product: z_block x z_object
-            # Corner 0 [-500, -500, -500]
+        # (Important): Cross product's z component is 0, so z can be ignored
+            # Corner 0 [-500, -500]
             scoreboard players set #Physics.Projection.VoxelCorner0.CrossProductAxis.zz Physics -500
             execute store result score #Physics.Projection.VoxelCorner2.CrossProductAxis.zz Physics run scoreboard players operation #Physics.Projection.VoxelCorner0.CrossProductAxis.zz Physics *= #Physics.CrossProductAxis.zz.y Physics
 
             scoreboard players set #Physics.Maths.Value1 Physics -500
-            scoreboard players operation #Physics.Maths.Value1 Physics *= #Physics.CrossProductAxis.zz.x Physics
-            execute store result score #Physics.Projection.VoxelCorner1.CrossProductAxis.zz Physics run scoreboard players operation #Physics.Projection.VoxelCorner0.CrossProductAxis.zz Physics += #Physics.Maths.Value1 Physics
+            scoreboard players operation #Physics.Maths.Value1 Physics *= #Physics.CrossProductAxis.yz.x Physics
+            execute store result score #Physics.Projection.VoxelCorner6.CrossProductAxis.zz Physics store result score #Physics.Projection.Voxel.CrossProductAxis.zz.Max Physics run scoreboard players operation #Physics.Projection.VoxelCorner0.CrossProductAxis.zz Physics += #Physics.Maths.Value1 Physics
 
-            scoreboard players set #Physics.Maths.Value2 Physics -500
-            scoreboard players operation #Physics.Maths.Value2 Physics *= #Physics.CrossProductAxis.zz.z Physics
-            execute store result score #Physics.Projection.VoxelCorner7 Physics store result score #Physics.Projection.Voxel.CrossProductAxis.zz.Max Physics run scoreboard players operation #Physics.Projection.VoxelCorner0.CrossProductAxis.zz Physics += #Physics.Maths.Value2 Physics
+            # Corner 1 [-500, -500] (Same as 0)
 
-            # Corner 1 [-500, -500, 500]
-            execute store result score #Physics.Projection.VoxelCorner6 Physics run scoreboard players operation #Physics.Projection.VoxelCorner1.CrossProductAxis.zz Physics -= #Physics.Maths.Value2 Physics
+            # Corner 2 [500, -500]
+            execute store result score #Physics.Projection.VoxelCorner4.CrossProductAxis.zz Physics run scoreboard players operation #Physics.Projection.VoxelCorner2.CrossProductAxis.zz Physics -= #Physics.Maths.Value1 Physics
 
-            # Corner 2 [500, -500, -500]
-            scoreboard players operation #Physics.Projection.VoxelCorner2.CrossProductAxis.zz Physics *= #Physics.Constants.-1 Physics
-            execute store result score #Physics.Projection.VoxelCorner3.CrossProductAxis.zz Physics run scoreboard players operation #Physics.Projection.VoxelCorner2.CrossProductAxis.zz Physics += #Physics.Maths.Value1 Physics
-            execute store result score #Physics.Projection.VoxelCorner5 Physics run scoreboard players operation #Physics.Projection.VoxelCorner2.CrossProductAxis.zz Physics += #Physics.Maths.Value2 Physics
+            # Corner 3 [500, -500] (Same as 2)
 
-            # Corner 3 [500, -500, 500]
-            execute store result score #Physics.Projection.VoxelCorner4 Physics run scoreboard players operation #Physics.Projection.VoxelCorner3.CrossProductAxis.zz Physics -= #Physics.Maths.Value2 Physics
-
-            # Corner 4 [-500, 500, -500] (-> Mirrored version of 3)
+            # Corner 4 [-500, 500] (Mirrored version of 2)
             scoreboard players operation #Physics.Projection.VoxelCorner4.CrossProductAxis.zz Physics *= #Physics.Constants.-1 Physics
 
-            # Corner 5 [-500, 500, 500] (-> Mirrored version of 2)
-            scoreboard players operation #Physics.Projection.VoxelCorner5.CrossProductAxis.zz Physics *= #Physics.Constants.-1 Physics
+            # Corner 5 [-500, 500] (Same as 4)
 
-            # Corner 6 [500, 500, -500] (-> Mirrored version of 1)
+            # Corner 6 [500, 500] (Mirrored version of 0)
             scoreboard players operation #Physics.Projection.VoxelCorner6.CrossProductAxis.zz Physics *= #Physics.Constants.-1 Physics
 
-            # Corner 7 [500, 500, 500] (-> Mirrored version of 0)
-            scoreboard players operation #Physics.Projection.VoxelCorner7.CrossProductAxis.zz Physics *= #Physics.Constants.-1 Physics
+            # Corner 7 [500, 500] (Same as 6)
 
             # Find min and max
-            execute if score #Physics.Projection.VoxelCorner1.CrossProductAxis.zz Physics > #Physics.Projection.Voxel.CrossProductAxis.zz.Max Physics run scoreboard players operation #Physics.Projection.Voxel.CrossProductAxis.zz.Max Physics = #Physics.Projection.VoxelCorner1.CrossProductAxis.zz Physics
             execute if score #Physics.Projection.VoxelCorner2.CrossProductAxis.zz Physics > #Physics.Projection.Voxel.CrossProductAxis.zz.Max Physics run scoreboard players operation #Physics.Projection.Voxel.CrossProductAxis.zz.Max Physics = #Physics.Projection.VoxelCorner2.CrossProductAxis.zz Physics
-            execute if score #Physics.Projection.VoxelCorner3.CrossProductAxis.zz Physics > #Physics.Projection.Voxel.CrossProductAxis.zz.Max Physics run scoreboard players operation #Physics.Projection.Voxel.CrossProductAxis.zz.Max Physics = #Physics.Projection.VoxelCorner3.CrossProductAxis.zz Physics
             execute if score #Physics.Projection.VoxelCorner4.CrossProductAxis.zz Physics > #Physics.Projection.Voxel.CrossProductAxis.zz.Max Physics run scoreboard players operation #Physics.Projection.Voxel.CrossProductAxis.zz.Max Physics = #Physics.Projection.VoxelCorner4.CrossProductAxis.zz Physics
-            execute if score #Physics.Projection.VoxelCorner5.CrossProductAxis.zz Physics > #Physics.Projection.Voxel.CrossProductAxis.zz.Max Physics run scoreboard players operation #Physics.Projection.Voxel.CrossProductAxis.zz.Max Physics = #Physics.Projection.VoxelCorner5.CrossProductAxis.zz Physics
             execute if score #Physics.Projection.VoxelCorner6.CrossProductAxis.zz Physics > #Physics.Projection.Voxel.CrossProductAxis.zz.Max Physics run scoreboard players operation #Physics.Projection.Voxel.CrossProductAxis.zz.Max Physics = #Physics.Projection.VoxelCorner6.CrossProductAxis.zz Physics
-            execute if score #Physics.Projection.VoxelCorner7.CrossProductAxis.zz Physics > #Physics.Projection.Voxel.CrossProductAxis.zz.Max Physics run scoreboard players operation #Physics.Projection.Voxel.CrossProductAxis.zz.Max Physics = #Physics.Projection.VoxelCorner7.CrossProductAxis.zz Physics
             scoreboard players operation #Physics.Projection.Voxel.CrossProductAxis.zz.Min Physics = #Physics.Projection.Voxel.CrossProductAxis.zz.Max Physics
             scoreboard players operation #Physics.Projection.Voxel.CrossProductAxis.zz.Min Physics *= #Physics.Constants.-1 Physics
 
