@@ -2,8 +2,6 @@
 scoreboard players set #Physics.Init Physics 1
 tellraw @a ["",{"text":"Physics >> ","color":"#99EAD6"},"Installed Physics (v0.1.0)\n"]
 
-scoreboard objectives add Physics.Value dummy
-
 # Add object attributes
 scoreboard objectives add Physics.Object.ID dummy
 scoreboard objectives add Physics.Object.Pos.x dummy
@@ -101,30 +99,45 @@ scoreboard objectives add Physics.Object.BoundingBoxGlobalMax.z dummy
 scoreboard objectives add Physics.Object.BoundingBoxStepCount.x dummy
 scoreboard objectives add Physics.Object.BoundingBoxStepCount.y dummy
 scoreboard objectives add Physics.Object.BoundingBoxStepCount.z dummy
+scoreboard objectives add Physics.Object.Axis.x.x dummy
+scoreboard objectives add Physics.Object.Axis.x.y dummy
+scoreboard objectives add Physics.Object.Axis.x.z dummy
+scoreboard objectives add Physics.Object.Axis.y.x dummy
+scoreboard objectives add Physics.Object.Axis.y.y dummy
+scoreboard objectives add Physics.Object.Axis.y.z dummy
+scoreboard objectives add Physics.Object.Axis.z.x dummy
+scoreboard objectives add Physics.Object.Axis.z.y dummy
+scoreboard objectives add Physics.Object.Axis.z.z dummy
+scoreboard objectives add Physics.Object.ProjectionOwnAxis.x.Min dummy
+scoreboard objectives add Physics.Object.ProjectionOwnAxis.x.Max dummy
+scoreboard objectives add Physics.Object.ProjectionOwnAxis.y.Min dummy
+scoreboard objectives add Physics.Object.ProjectionOwnAxis.y.Max dummy
+scoreboard objectives add Physics.Object.ProjectionOwnAxis.z.Min dummy
+scoreboard objectives add Physics.Object.ProjectionOwnAxis.z.Max dummy
 
 # Set global variables
-scoreboard players set #Physics.Global.DefaultGravity Physics.Value 490
-scoreboard players set #Physics.Global.LinearDamping Physics.Value 98
-scoreboard players set #Physics.Global.AngularDamping Physics.Value 98
-scoreboard players set #Physics.Global.PlayerAttackForceMagnitude Physics.Value 300
+scoreboard players set #Physics.Global.DefaultGravity Physics 490
+scoreboard players set #Physics.Global.LinearDamping Physics 98
+scoreboard players set #Physics.Global.AngularDamping Physics 98
+scoreboard players set #Physics.Global.PlayerAttackForceMagnitude Physics 300
 
 # Set value constants (You can't multiply or divide by numbers without defining them first using scoreboards)
-scoreboard players set #Physics.Constants.-1000 Physics.Value -1000
-scoreboard players set #Physics.Constants.-500 Physics.Value -500
-scoreboard players set #Physics.Constants.-1 Physics.Value -1
-scoreboard players set #Physics.Constants.2 Physics.Value 2
-scoreboard players set #Physics.Constants.10 Physics.Value 10
-scoreboard players set #Physics.Constants.12 Physics.Value 12
-scoreboard players set #Physics.Constants.20 Physics.Value 20
-scoreboard players set #Physics.Constants.100 Physics.Value 100
-scoreboard players set #Physics.Constants.141 Physics.Value 141
-scoreboard players set #Physics.Constants.500 Physics.Value 500
-scoreboard players set #Physics.Constants.833 Physics.Value 833
-scoreboard players set #Physics.Constants.1000 Physics.Value 1000
-scoreboard players set #Physics.Constants.2000 Physics.Value 2000
-scoreboard players set #Physics.Constants.7775 Physics.Value 7775
-scoreboard players set #Physics.Constants.10000 Physics.Value 10000
-scoreboard players set #Physics.Constants.100000 Physics.Value 100000
+scoreboard players set #Physics.Constants.-1000 Physics -1000
+scoreboard players set #Physics.Constants.-500 Physics -500
+scoreboard players set #Physics.Constants.-1 Physics -1
+scoreboard players set #Physics.Constants.2 Physics 2
+scoreboard players set #Physics.Constants.10 Physics 10
+scoreboard players set #Physics.Constants.12 Physics 12
+scoreboard players set #Physics.Constants.20 Physics 20
+scoreboard players set #Physics.Constants.100 Physics 100
+scoreboard players set #Physics.Constants.141 Physics 141
+scoreboard players set #Physics.Constants.500 Physics 500
+scoreboard players set #Physics.Constants.833 Physics 833
+scoreboard players set #Physics.Constants.1000 Physics 1000
+scoreboard players set #Physics.Constants.2000 Physics 2000
+scoreboard players set #Physics.Constants.7775 Physics 7775
+scoreboard players set #Physics.Constants.10000 Physics 10000
+scoreboard players set #Physics.Constants.100000 Physics 100000
 
 # Setup starting values for data storages
 data modify storage physics:temp data.Integration set value {Pos:[0d,0d,0d],start_interpolation:0,transformation:{left_rotation:[0f,0f,0f,0f]}}

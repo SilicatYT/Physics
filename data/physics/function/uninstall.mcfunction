@@ -10,7 +10,6 @@ tellraw @s ["",{"text":"Physics >> ","color":"#99EAD6"},"Uninstalled Physics (v0
 
 # Remove scoreboard objectives
 scoreboard objectives remove Physics
-scoreboard objectives remove Physics.Value
 
 scoreboard objectives remove Physics.Object.Pos.x
 scoreboard objectives remove Physics.Object.Pos.y
@@ -106,6 +105,21 @@ scoreboard objectives remove Physics.Object.BoundingBoxGlobalMax.z
 scoreboard objectives remove Physics.Object.BoundingBoxStepCount.x
 scoreboard objectives remove Physics.Object.BoundingBoxStepCount.y
 scoreboard objectives remove Physics.Object.BoundingBoxStepCount.z
+scoreboard objectives remove Physics.Object.Axis.x.x
+scoreboard objectives remove Physics.Object.Axis.x.y
+scoreboard objectives remove Physics.Object.Axis.x.z
+scoreboard objectives remove Physics.Object.Axis.y.x
+scoreboard objectives remove Physics.Object.Axis.y.y
+scoreboard objectives remove Physics.Object.Axis.y.z
+scoreboard objectives remove Physics.Object.Axis.z.x
+scoreboard objectives remove Physics.Object.Axis.z.y
+scoreboard objectives remove Physics.Object.Axis.z.z
+scoreboard objectives remove Physics.Object.ProjectionOwnAxis.x.Min
+scoreboard objectives remove Physics.Object.ProjectionOwnAxis.x.Max
+scoreboard objectives remove Physics.Object.ProjectionOwnAxis.y.Min
+scoreboard objectives remove Physics.Object.ProjectionOwnAxis.y.Max
+scoreboard objectives remove Physics.Object.ProjectionOwnAxis.z.Min
+scoreboard objectives remove Physics.Object.ProjectionOwnAxis.z.Max
 
 # Remove data storages
 data remove storage physics:maths processing
