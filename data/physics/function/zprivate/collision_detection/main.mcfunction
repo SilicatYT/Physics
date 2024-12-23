@@ -4,17 +4,17 @@
     # (Important): Just like in several other parts of the code, I use "execute store result" when a value is calculated to create copies, instead of manually running "scoreboard players operation ... = ...", because the former is faster.
         # Get scores
         # (Important): Using store result to prevent repeated scoreboard operations. I think it should still be faster this way, even if I have to run a "get" command instead of being able to prepend the store result to where the value is calculated?
-        execute store result score #Physics.CrossProductAxis.yx.z Physics store result score #Physics.CrossProductAxis.zx.y Physics store result score #Physics.Maths.Value9 Physics run scoreboard players get @s Physics.Object.Axis.x.x
-        execute store result score #Physics.CrossProductAxis.xx.z Physics store result score #Physics.Maths.Value3 Physics store result score #Physics.CrossProductAxis.zx.x Physics run scoreboard players get @s Physics.Object.Axis.x.y
+        execute store result score #Physics.CrossProductAxis.yx.z Physics store result score #Physics.CrossProductAxis.zx.y Physics run scoreboard players operation #Physics.Maths.Value9 Physics = @s Physics.Object.Axis.x.x
+        execute store result score #Physics.CrossProductAxis.xx.z Physics store result score #Physics.Maths.Value3 Physics run scoreboard players operation #Physics.CrossProductAxis.zx.x Physics = @s Physics.Object.Axis.x.y
         execute store result score #Physics.CrossProductAxis.xx.y Physics store result score #Physics.CrossProductAxis.yx.x Physics store result score #Physics.Maths.Value6 Physics run scoreboard players get @s Physics.Object.Axis.x.z
 
-        execute store result score #Physics.CrossProductAxis.yy.z Physics store result score #Physics.CrossProductAxis.zy.y Physics store result score #Physics.Maths.Value10 Physics run scoreboard players get @s Physics.Object.Axis.y.x
-        execute store result score #Physics.CrossProductAxis.xy.z Physics store result score #Physics.Maths.Value4 Physics store result score #Physics.CrossProductAxis.zy.x Physics run scoreboard players get @s Physics.Object.Axis.y.y
-        execute store result score #Physics.CrossProductAxis.xy.y Physics store result score #Physics.CrossProductAxis.yy.x Physics store result score #Physics.Maths.Value7 Physics run scoreboard players get @s Physics.Object.Axis.y.z
+        execute store result score #Physics.CrossProductAxis.yy.z Physics store result score #Physics.CrossProductAxis.zy.y Physics run scoreboard players operation #Physics.Maths.Value10 Physics = @s Physics.Object.Axis.y.x
+        execute store result score #Physics.CrossProductAxis.xy.z Physics store result score #Physics.Maths.Value4 Physics run scoreboard players operation #Physics.CrossProductAxis.zy.x Physics = @s Physics.Object.Axis.y.y
+        execute store result score #Physics.CrossProductAxis.xy.y Physics store result score #Physics.CrossProductAxis.yy.x Physics run scoreboard players operation #Physics.Maths.Value7 Physics = @s Physics.Object.Axis.y.z
 
-        execute store result score #Physics.CrossProductAxis.yz.z Physics store result score #Physics.CrossProductAxis.zz.y Physics store result score #Physics.Maths.Value11 Physics run scoreboard players get @s Physics.Object.Axis.z.x
-        execute store result score #Physics.CrossProductAxis.xz.z Physics store result score #Physics.Maths.Value5 Physics store result score #Physics.CrossProductAxis.zz.x Physics run scoreboard players get @s Physics.Object.Axis.z.y
-        execute store result score #Physics.CrossProductAxis.xz.y Physics store result score #Physics.CrossProductAxis.yz.x Physics store result score #Physics.Maths.Value8 Physics run scoreboard players get @s Physics.Object.Axis.z.z
+        execute store result score #Physics.CrossProductAxis.yz.z Physics store result score #Physics.CrossProductAxis.zz.y Physics run scoreboard players operation #Physics.Maths.Value11 Physics = @s Physics.Object.Axis.z.x
+        execute store result score #Physics.CrossProductAxis.xz.z Physics store result score #Physics.Maths.Value5 Physics run scoreboard players operation #Physics.CrossProductAxis.zz.x Physics = @s Physics.Object.Axis.z.y
+        execute store result score #Physics.CrossProductAxis.xz.y Physics store result score #Physics.CrossProductAxis.yz.x Physics run scoreboard players operation #Physics.Maths.Value8 Physics = @s Physics.Object.Axis.z.z
 
         # x_block x x_object
             # Calculation (x_block => The x component is always 0, the y component is -z from the object's axis, and the z component is y from the object's axis)
@@ -507,7 +507,7 @@
             execute store result score #Physics.Projection.VoxelCorner2.CrossProductAxis.zx Physics run scoreboard players operation #Physics.Projection.VoxelCorner0.CrossProductAxis.zx Physics *= #Physics.CrossProductAxis.zx.y Physics
 
             scoreboard players set #Physics.Maths.Value1 Physics -500
-            scoreboard players operation #Physics.Maths.Value1 Physics *= #Physics.CrossProductAxis.yz.x Physics
+            scoreboard players operation #Physics.Maths.Value1 Physics *= #Physics.CrossProductAxis.zx.x Physics
             execute store result score #Physics.Projection.VoxelCorner6.CrossProductAxis.zx Physics store result score #Physics.Projection.VoxelBase.CrossProductAxis.zx.Max Physics run scoreboard players operation #Physics.Projection.VoxelCorner0.CrossProductAxis.zx Physics += #Physics.Maths.Value1 Physics
 
             # Corner 1 [-500, -500] (Same as 0)
@@ -541,7 +541,7 @@
             execute store result score #Physics.Projection.VoxelCorner2.CrossProductAxis.zy Physics run scoreboard players operation #Physics.Projection.VoxelCorner0.CrossProductAxis.zy Physics *= #Physics.CrossProductAxis.zy.y Physics
 
             scoreboard players set #Physics.Maths.Value1 Physics -500
-            scoreboard players operation #Physics.Maths.Value1 Physics *= #Physics.CrossProductAxis.yz.x Physics
+            scoreboard players operation #Physics.Maths.Value1 Physics *= #Physics.CrossProductAxis.zy.x Physics
             execute store result score #Physics.Projection.VoxelCorner6.CrossProductAxis.zy Physics store result score #Physics.Projection.VoxelBase.CrossProductAxis.zy.Max Physics run scoreboard players operation #Physics.Projection.VoxelCorner0.CrossProductAxis.zy Physics += #Physics.Maths.Value1 Physics
 
             # Corner 1 [-500, -500] (Same as 0)
@@ -575,7 +575,7 @@
             execute store result score #Physics.Projection.VoxelCorner2.CrossProductAxis.zz Physics run scoreboard players operation #Physics.Projection.VoxelCorner0.CrossProductAxis.zz Physics *= #Physics.CrossProductAxis.zz.y Physics
 
             scoreboard players set #Physics.Maths.Value1 Physics -500
-            scoreboard players operation #Physics.Maths.Value1 Physics *= #Physics.CrossProductAxis.yz.x Physics
+            scoreboard players operation #Physics.Maths.Value1 Physics *= #Physics.CrossProductAxis.zz.x Physics
             execute store result score #Physics.Projection.VoxelCorner6.CrossProductAxis.zz Physics store result score #Physics.Projection.VoxelBase.CrossProductAxis.zz.Max Physics run scoreboard players operation #Physics.Projection.VoxelCorner0.CrossProductAxis.zz Physics += #Physics.Maths.Value1 Physics
 
             # Corner 1 [-500, -500] (Same as 0)
@@ -623,13 +623,13 @@
             # Corner 2
             scoreboard players operation #Physics.Projection.ObjectCorner2.CrossProductAxis.xx Physics *= @s Physics.Object.CornerPosRelative.2.y
 
-            scoreboard players operation #Physics.Maths.Value14 Physics *= @s Physics.Object.CornerPosRelative.1.z
+            scoreboard players operation #Physics.Maths.Value14 Physics *= @s Physics.Object.CornerPosRelative.2.z
             execute store result score #Physics.Projection.ObjectCorner5.CrossProductAxis.xx Physics run scoreboard players operation #Physics.Projection.ObjectCorner2.CrossProductAxis.xx Physics += #Physics.Maths.Value14 Physics
 
             # Corner 3
             scoreboard players operation #Physics.Projection.ObjectCorner3.CrossProductAxis.xx Physics *= @s Physics.Object.CornerPosRelative.3.y
 
-            scoreboard players operation #Physics.Maths.Value15 Physics *= @s Physics.Object.CornerPosRelative.1.z
+            scoreboard players operation #Physics.Maths.Value15 Physics *= @s Physics.Object.CornerPosRelative.3.z
             execute store result score #Physics.Projection.ObjectCorner4.CrossProductAxis.xx Physics run scoreboard players operation #Physics.Projection.ObjectCorner3.CrossProductAxis.xx Physics += #Physics.Maths.Value15 Physics
 
             # Corner 4 (Mirrored version of 3)
@@ -684,13 +684,13 @@
             # Corner 2
             scoreboard players operation #Physics.Projection.ObjectCorner2.CrossProductAxis.xy Physics *= @s Physics.Object.CornerPosRelative.2.y
 
-            scoreboard players operation #Physics.Maths.Value19 Physics *= @s Physics.Object.CornerPosRelative.1.z
+            scoreboard players operation #Physics.Maths.Value19 Physics *= @s Physics.Object.CornerPosRelative.2.z
             execute store result score #Physics.Projection.ObjectCorner5.CrossProductAxis.xy Physics run scoreboard players operation #Physics.Projection.ObjectCorner2.CrossProductAxis.xy Physics += #Physics.Maths.Value19 Physics
 
             # Corner 3
             scoreboard players operation #Physics.Projection.ObjectCorner3.CrossProductAxis.xy Physics *= @s Physics.Object.CornerPosRelative.3.y
 
-            scoreboard players operation #Physics.Maths.Value20 Physics *= @s Physics.Object.CornerPosRelative.1.z
+            scoreboard players operation #Physics.Maths.Value20 Physics *= @s Physics.Object.CornerPosRelative.3.z
             execute store result score #Physics.Projection.ObjectCorner4.CrossProductAxis.xy Physics run scoreboard players operation #Physics.Projection.ObjectCorner3.CrossProductAxis.xy Physics += #Physics.Maths.Value20 Physics
 
             # Corner 4 (Mirrored version of 3)
@@ -745,13 +745,13 @@
             # Corner 2
             scoreboard players operation #Physics.Projection.ObjectCorner2.CrossProductAxis.xz Physics *= @s Physics.Object.CornerPosRelative.2.y
 
-            scoreboard players operation #Physics.Maths.Value24 Physics *= @s Physics.Object.CornerPosRelative.1.z
+            scoreboard players operation #Physics.Maths.Value24 Physics *= @s Physics.Object.CornerPosRelative.2.z
             execute store result score #Physics.Projection.ObjectCorner5.CrossProductAxis.xz Physics run scoreboard players operation #Physics.Projection.ObjectCorner2.CrossProductAxis.xz Physics += #Physics.Maths.Value24 Physics
 
             # Corner 3
             scoreboard players operation #Physics.Projection.ObjectCorner3.CrossProductAxis.xz Physics *= @s Physics.Object.CornerPosRelative.3.y
 
-            scoreboard players operation #Physics.Maths.Value25 Physics *= @s Physics.Object.CornerPosRelative.1.z
+            scoreboard players operation #Physics.Maths.Value25 Physics *= @s Physics.Object.CornerPosRelative.3.z
             execute store result score #Physics.Projection.ObjectCorner4.CrossProductAxis.xz Physics run scoreboard players operation #Physics.Projection.ObjectCorner3.CrossProductAxis.xz Physics += #Physics.Maths.Value25 Physics
 
             # Corner 4 (Mirrored version of 3)
@@ -806,13 +806,13 @@
             # Corner 2
             scoreboard players operation #Physics.Projection.ObjectCorner2.CrossProductAxis.yx Physics *= @s Physics.Object.CornerPosRelative.2.x
 
-            scoreboard players operation #Physics.Maths.Value29 Physics *= @s Physics.Object.CornerPosRelative.1.z
+            scoreboard players operation #Physics.Maths.Value29 Physics *= @s Physics.Object.CornerPosRelative.2.z
             execute store result score #Physics.Projection.ObjectCorner5.CrossProductAxis.yx Physics run scoreboard players operation #Physics.Projection.ObjectCorner2.CrossProductAxis.yx Physics += #Physics.Maths.Value29 Physics
 
             # Corner 3
             scoreboard players operation #Physics.Projection.ObjectCorner3.CrossProductAxis.yx Physics *= @s Physics.Object.CornerPosRelative.3.x
 
-            scoreboard players operation #Physics.Maths.Value30 Physics *= @s Physics.Object.CornerPosRelative.1.z
+            scoreboard players operation #Physics.Maths.Value30 Physics *= @s Physics.Object.CornerPosRelative.3.z
             execute store result score #Physics.Projection.ObjectCorner4.CrossProductAxis.yx Physics run scoreboard players operation #Physics.Projection.ObjectCorner3.CrossProductAxis.yx Physics += #Physics.Maths.Value30 Physics
 
             # Corner 4 (Mirrored version of 3)
@@ -867,13 +867,13 @@
             # Corner 2
             scoreboard players operation #Physics.Projection.ObjectCorner2.CrossProductAxis.yy Physics *= @s Physics.Object.CornerPosRelative.2.x
 
-            scoreboard players operation #Physics.Maths.Value34 Physics *= @s Physics.Object.CornerPosRelative.1.z
+            scoreboard players operation #Physics.Maths.Value34 Physics *= @s Physics.Object.CornerPosRelative.2.z
             execute store result score #Physics.Projection.ObjectCorner5.CrossProductAxis.yy Physics run scoreboard players operation #Physics.Projection.ObjectCorner2.CrossProductAxis.yy Physics += #Physics.Maths.Value34 Physics
 
             # Corner 3
             scoreboard players operation #Physics.Projection.ObjectCorner3.CrossProductAxis.yy Physics *= @s Physics.Object.CornerPosRelative.3.x
 
-            scoreboard players operation #Physics.Maths.Value35 Physics *= @s Physics.Object.CornerPosRelative.1.z
+            scoreboard players operation #Physics.Maths.Value35 Physics *= @s Physics.Object.CornerPosRelative.3.z
             execute store result score #Physics.Projection.ObjectCorner4.CrossProductAxis.yy Physics run scoreboard players operation #Physics.Projection.ObjectCorner3.CrossProductAxis.yy Physics += #Physics.Maths.Value35 Physics
 
             # Corner 4 (Mirrored version of 3)
@@ -928,13 +928,13 @@
             # Corner 2
             scoreboard players operation #Physics.Projection.ObjectCorner2.CrossProductAxis.yz Physics *= @s Physics.Object.CornerPosRelative.2.x
 
-            scoreboard players operation #Physics.Maths.Value39 Physics *= @s Physics.Object.CornerPosRelative.1.z
+            scoreboard players operation #Physics.Maths.Value39 Physics *= @s Physics.Object.CornerPosRelative.2.z
             execute store result score #Physics.Projection.ObjectCorner5.CrossProductAxis.yz Physics run scoreboard players operation #Physics.Projection.ObjectCorner2.CrossProductAxis.yz Physics += #Physics.Maths.Value39 Physics
 
             # Corner 3
             scoreboard players operation #Physics.Projection.ObjectCorner3.CrossProductAxis.yz Physics *= @s Physics.Object.CornerPosRelative.3.x
 
-            scoreboard players operation #Physics.Maths.Value40 Physics *= @s Physics.Object.CornerPosRelative.1.z
+            scoreboard players operation #Physics.Maths.Value40 Physics *= @s Physics.Object.CornerPosRelative.3.z
             execute store result score #Physics.Projection.ObjectCorner4.CrossProductAxis.yz Physics run scoreboard players operation #Physics.Projection.ObjectCorner3.CrossProductAxis.yz Physics += #Physics.Maths.Value40 Physics
 
             # Corner 4 (Mirrored version of 3)
@@ -989,13 +989,13 @@
             # Corner 2
             scoreboard players operation #Physics.Projection.ObjectCorner2.CrossProductAxis.zx Physics *= @s Physics.Object.CornerPosRelative.2.x
 
-            scoreboard players operation #Physics.Maths.Value44 Physics *= @s Physics.Object.CornerPosRelative.1.y
+            scoreboard players operation #Physics.Maths.Value44 Physics *= @s Physics.Object.CornerPosRelative.2.y
             execute store result score #Physics.Projection.ObjectCorner5.CrossProductAxis.zx Physics run scoreboard players operation #Physics.Projection.ObjectCorner2.CrossProductAxis.zx Physics += #Physics.Maths.Value44 Physics
 
             # Corner 3
             scoreboard players operation #Physics.Projection.ObjectCorner3.CrossProductAxis.zx Physics *= @s Physics.Object.CornerPosRelative.3.x
 
-            scoreboard players operation #Physics.Maths.Value45 Physics *= @s Physics.Object.CornerPosRelative.1.y
+            scoreboard players operation #Physics.Maths.Value45 Physics *= @s Physics.Object.CornerPosRelative.3.y
             execute store result score #Physics.Projection.ObjectCorner4.CrossProductAxis.zx Physics run scoreboard players operation #Physics.Projection.ObjectCorner3.CrossProductAxis.zx Physics += #Physics.Maths.Value45 Physics
 
             # Corner 4 (Mirrored version of 3)
@@ -1050,13 +1050,13 @@
             # Corner 2
             scoreboard players operation #Physics.Projection.ObjectCorner2.CrossProductAxis.zy Physics *= @s Physics.Object.CornerPosRelative.2.x
 
-            scoreboard players operation #Physics.Maths.Value49 Physics *= @s Physics.Object.CornerPosRelative.1.y
+            scoreboard players operation #Physics.Maths.Value49 Physics *= @s Physics.Object.CornerPosRelative.2.y
             execute store result score #Physics.Projection.ObjectCorner5.CrossProductAxis.zy Physics run scoreboard players operation #Physics.Projection.ObjectCorner2.CrossProductAxis.zy Physics += #Physics.Maths.Value49 Physics
 
             # Corner 3
             scoreboard players operation #Physics.Projection.ObjectCorner3.CrossProductAxis.zy Physics *= @s Physics.Object.CornerPosRelative.3.x
 
-            scoreboard players operation #Physics.Maths.Value50 Physics *= @s Physics.Object.CornerPosRelative.1.y
+            scoreboard players operation #Physics.Maths.Value50 Physics *= @s Physics.Object.CornerPosRelative.3.y
             execute store result score #Physics.Projection.ObjectCorner4.CrossProductAxis.zy Physics run scoreboard players operation #Physics.Projection.ObjectCorner3.CrossProductAxis.zy Physics += #Physics.Maths.Value50 Physics
 
             # Corner 4 (Mirrored version of 3)
@@ -1111,13 +1111,13 @@
             # Corner 2
             scoreboard players operation #Physics.Projection.ObjectCorner2.CrossProductAxis.zz Physics *= @s Physics.Object.CornerPosRelative.2.x
 
-            scoreboard players operation #Physics.Maths.Value54 Physics *= @s Physics.Object.CornerPosRelative.1.y
+            scoreboard players operation #Physics.Maths.Value54 Physics *= @s Physics.Object.CornerPosRelative.2.y
             execute store result score #Physics.Projection.ObjectCorner5.CrossProductAxis.zz Physics run scoreboard players operation #Physics.Projection.ObjectCorner2.CrossProductAxis.zz Physics += #Physics.Maths.Value54 Physics
 
             # Corner 3
             scoreboard players operation #Physics.Projection.ObjectCorner3.CrossProductAxis.zz Physics *= @s Physics.Object.CornerPosRelative.3.x
 
-            scoreboard players operation #Physics.Maths.Value55 Physics *= @s Physics.Object.CornerPosRelative.1.y
+            scoreboard players operation #Physics.Maths.Value55 Physics *= @s Physics.Object.CornerPosRelative.3.y
             execute store result score #Physics.Projection.ObjectCorner4.CrossProductAxis.zz Physics run scoreboard players operation #Physics.Projection.ObjectCorner3.CrossProductAxis.zz Physics += #Physics.Maths.Value55 Physics
 
             # Corner 4 (Mirrored version of 3)

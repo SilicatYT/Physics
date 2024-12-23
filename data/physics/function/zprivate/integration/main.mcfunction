@@ -30,9 +30,9 @@ execute if score @s Physics.Object.Velocity.y matches ..-1 run scoreboard player
 execute if score @s Physics.Object.Velocity.z matches ..-1 run scoreboard players add @s Physics.Object.Velocity.z 1
 
 # Update position
-execute store result storage physics:temp data.Integration.Pos[0] double 0.001 store result score @s Physics.Object.ProjectionOwnAxis.x.Min store result score @s Physics.Object.ProjectionOwnAxis.x.Max run scoreboard players operation @s Physics.Object.Pos.x += @s Physics.Object.Velocity.x
-execute store result storage physics:temp data.Integration.Pos[1] double 0.001 store result score @s Physics.Object.ProjectionOwnAxis.y.Min store result score @s Physics.Object.ProjectionOwnAxis.y.Max run scoreboard players operation @s Physics.Object.Pos.y += @s Physics.Object.Velocity.y
-execute store result storage physics:temp data.Integration.Pos[2] double 0.001 store result score @s Physics.Object.ProjectionOwnAxis.z.Min store result score @s Physics.Object.ProjectionOwnAxis.z.Max run scoreboard players operation @s Physics.Object.Pos.z += @s Physics.Object.Velocity.z
+execute store result storage physics:temp data.Integration.Pos[0] double 0.001 run scoreboard players operation @s Physics.Object.Pos.x += @s Physics.Object.Velocity.x
+execute store result storage physics:temp data.Integration.Pos[1] double 0.001 run scoreboard players operation @s Physics.Object.Pos.y += @s Physics.Object.Velocity.y
+execute store result storage physics:temp data.Integration.Pos[2] double 0.001 run scoreboard players operation @s Physics.Object.Pos.z += @s Physics.Object.Velocity.z
 
 # Update angular velocity
     # AngularAcceleration = InverseGlobalInertiaTensor * AccumulatedTorque
@@ -162,7 +162,7 @@ execute store result storage physics:temp data.Integration.Pos[2] double 0.001 s
         scoreboard players operation #Physics.Maths.Value2 Physics *= #Physics.Maths.Value2 Physics
         scoreboard players operation #Physics.Maths.Value1 Physics += #Physics.Maths.Value2 Physics
         scoreboard players operation #Physics.Maths.Value1 Physics /= #Physics.Constants.500 Physics
-        execute store result score @s Physics.Object.RotationMatrix.0 store result score @s Physics.Object.RotationMatrixTranspose.0 store result score @s Physics.Object.CornerPosRelative.0.x store result score @s Physics.Object.CornerPosRelative.1.x store result score @s Physics.Object.CornerPosRelative.2.x store result score @s Physics.Object.CornerPosRelative.3.x store result score @s Physics.Object.CornerPosRelative.4.x store result score @s Physics.Object.CornerPosRelative.5.x store result score @s Physics.Object.CornerPosRelative.6.x store result score @s Physics.Object.CornerPosRelative.7.x run scoreboard players remove #Physics.Maths.Value1 Physics 1000
+        execute store result score @s Physics.Object.RotationMatrix.0 store result score @s Physics.Object.RotationMatrixTranspose.0 store result score @s Physics.Object.CornerPosRelative.0.x store result score @s Physics.Object.CornerPosRelative.1.x store result score @s Physics.Object.CornerPosRelative.2.x store result score @s Physics.Object.CornerPosRelative.3.x store result score @s Physics.Object.CornerPosRelative.4.x store result score @s Physics.Object.CornerPosRelative.5.x store result score @s Physics.Object.CornerPosRelative.6.x store result score @s Physics.Object.CornerPosRelative.7.x store result score @s Physics.Object.Axis.x.x store result score #Physics.Projection.ObjectCorner0.ObjectAxis.x Physics store result score #Physics.Projection.ObjectCorner1.ObjectAxis.x Physics store result score #Physics.Projection.ObjectCorner2.ObjectAxis.x Physics store result score #Physics.Projection.ObjectCorner3.ObjectAxis.x Physics store result score #Physics.Projection.ObjectCenter.ObjectAxis.x Physics run scoreboard players remove #Physics.Maths.Value1 Physics 1000
 
         # Element 1: 2*(xy - az) -> With scale factor of 1,000: (xy - az)/500
         scoreboard players operation #Physics.Maths.Value1 Physics = @s Physics.Object.Orientation.x
@@ -170,7 +170,7 @@ execute store result storage physics:temp data.Integration.Pos[2] double 0.001 s
         scoreboard players operation #Physics.Maths.Value2 Physics = @s Physics.Object.Orientation.a
         scoreboard players operation #Physics.Maths.Value2 Physics *= @s Physics.Object.Orientation.z
         scoreboard players operation #Physics.Maths.Value1 Physics -= #Physics.Maths.Value2 Physics
-        execute store result score @s Physics.Object.RotationMatrix.1 store result score @s Physics.Object.RotationMatrixTranspose.3 store result score #Physics.Maths.Value19 Physics store result score #Physics.Maths.Value25 Physics store result score #Physics.Maths.Value31 Physics store result score #Physics.Maths.Value37 Physics run scoreboard players operation #Physics.Maths.Value1 Physics /= #Physics.Constants.500 Physics
+        execute store result score @s Physics.Object.RotationMatrix.1 store result score @s Physics.Object.RotationMatrixTranspose.3 store result score #Physics.Maths.Value19 Physics store result score #Physics.Maths.Value25 Physics store result score #Physics.Maths.Value31 Physics store result score #Physics.Maths.Value37 Physics store result score @s Physics.Object.Axis.y.x store result score #Physics.Projection.ObjectCorner0.ObjectAxis.y Physics store result score #Physics.Projection.ObjectCorner1.ObjectAxis.y Physics store result score #Physics.Projection.ObjectCorner2.ObjectAxis.y Physics store result score #Physics.Projection.ObjectCorner3.ObjectAxis.y Physics store result score #Physics.Projection.ObjectCenter.ObjectAxis.y Physics run scoreboard players operation #Physics.Maths.Value1 Physics /= #Physics.Constants.500 Physics
 
         # Element 2: 2*(xz + ay) -> With scale factor of 1,000: (xz + ay)/500
         scoreboard players operation #Physics.Maths.Value1 Physics = @s Physics.Object.Orientation.x
@@ -178,7 +178,7 @@ execute store result storage physics:temp data.Integration.Pos[2] double 0.001 s
         scoreboard players operation #Physics.Maths.Value2 Physics = @s Physics.Object.Orientation.a
         scoreboard players operation #Physics.Maths.Value2 Physics *= @s Physics.Object.Orientation.y
         scoreboard players operation #Physics.Maths.Value1 Physics += #Physics.Maths.Value2 Physics
-        execute store result score @s Physics.Object.RotationMatrix.2 store result score @s Physics.Object.RotationMatrixTranspose.6 store result score #Physics.Maths.Value20 Physics store result score #Physics.Maths.Value26 Physics store result score #Physics.Maths.Value32 Physics store result score #Physics.Maths.Value38 Physics run scoreboard players operation #Physics.Maths.Value1 Physics /= #Physics.Constants.500 Physics
+        execute store result score @s Physics.Object.RotationMatrix.2 store result score @s Physics.Object.RotationMatrixTranspose.6 store result score #Physics.Maths.Value20 Physics store result score #Physics.Maths.Value26 Physics store result score #Physics.Maths.Value32 Physics store result score #Physics.Maths.Value38 Physics store result score @s Physics.Object.Axis.z.x store result score #Physics.Projection.ObjectCorner0.ObjectAxis.z Physics store result score #Physics.Projection.ObjectCorner1.ObjectAxis.z Physics store result score #Physics.Projection.ObjectCorner2.ObjectAxis.z Physics store result score #Physics.Projection.ObjectCorner3.ObjectAxis.z Physics store result score #Physics.Projection.ObjectCenter.ObjectAxis.z Physics run scoreboard players operation #Physics.Maths.Value1 Physics /= #Physics.Constants.500 Physics
 
         # Element 3: 2*(xz + ay) -> With scale factor of 1,000: (xz + ay)/500
         scoreboard players operation #Physics.Maths.Value1 Physics = @s Physics.Object.Orientation.x
@@ -186,7 +186,7 @@ execute store result storage physics:temp data.Integration.Pos[2] double 0.001 s
         scoreboard players operation #Physics.Maths.Value2 Physics = @s Physics.Object.Orientation.a
         scoreboard players operation #Physics.Maths.Value2 Physics *= @s Physics.Object.Orientation.z
         scoreboard players operation #Physics.Maths.Value1 Physics += #Physics.Maths.Value2 Physics
-        execute store result score @s Physics.Object.RotationMatrix.3 store result score @s Physics.Object.RotationMatrixTranspose.1 store result score @s Physics.Object.CornerPosRelative.0.y store result score @s Physics.Object.CornerPosRelative.1.y store result score @s Physics.Object.CornerPosRelative.2.y store result score @s Physics.Object.CornerPosRelative.3.y store result score @s Physics.Object.CornerPosRelative.4.y store result score @s Physics.Object.CornerPosRelative.5.y store result score @s Physics.Object.CornerPosRelative.6.y store result score @s Physics.Object.CornerPosRelative.7.y run scoreboard players operation #Physics.Maths.Value1 Physics /= #Physics.Constants.500 Physics
+        execute store result score @s Physics.Object.RotationMatrix.3 store result score @s Physics.Object.RotationMatrixTranspose.1 store result score @s Physics.Object.CornerPosRelative.0.y store result score @s Physics.Object.CornerPosRelative.1.y store result score @s Physics.Object.CornerPosRelative.2.y store result score @s Physics.Object.CornerPosRelative.3.y store result score @s Physics.Object.CornerPosRelative.4.y store result score @s Physics.Object.CornerPosRelative.5.y store result score @s Physics.Object.CornerPosRelative.6.y store result score @s Physics.Object.CornerPosRelative.7.y store result score @s Physics.Object.Axis.x.y store result score #Physics.Maths.Value43 Physics store result score #Physics.Maths.Value45 Physics store result score #Physics.Maths.Value47 Physics store result score #Physics.Maths.Value49 Physics store result score #Physics.Maths.Value51 Physics run scoreboard players operation #Physics.Maths.Value1 Physics /= #Physics.Constants.500 Physics
 
         # Element 4: 2*(a^2 + y^2)-1 -> With scale factor of 1,000: (a^2 + y^2)/500-1000
         scoreboard players operation #Physics.Maths.Value1 Physics = @s Physics.Object.Orientation.a
@@ -195,7 +195,7 @@ execute store result storage physics:temp data.Integration.Pos[2] double 0.001 s
         scoreboard players operation #Physics.Maths.Value2 Physics *= #Physics.Maths.Value2 Physics
         scoreboard players operation #Physics.Maths.Value1 Physics += #Physics.Maths.Value2 Physics
         scoreboard players operation #Physics.Maths.Value1 Physics /= #Physics.Constants.500 Physics
-        execute store result score @s Physics.Object.RotationMatrix.4 store result score @s Physics.Object.RotationMatrixTranspose.4 store result score #Physics.Maths.Value21 Physics store result score #Physics.Maths.Value27 Physics store result score #Physics.Maths.Value33 Physics store result score #Physics.Maths.Value39 Physics run scoreboard players remove #Physics.Maths.Value1 Physics 1000
+        execute store result score @s Physics.Object.RotationMatrix.4 store result score @s Physics.Object.RotationMatrixTranspose.4 store result score #Physics.Maths.Value21 Physics store result score #Physics.Maths.Value27 Physics store result score #Physics.Maths.Value33 Physics store result score #Physics.Maths.Value39 Physics store result score @s Physics.Object.Axis.y.y store result score #Physics.Maths.Value53 Physics store result score #Physics.Maths.Value55 Physics store result score #Physics.Maths.Value57 Physics store result score #Physics.Maths.Value59 Physics store result score #Physics.Maths.Value61 Physics run scoreboard players remove #Physics.Maths.Value1 Physics 1000
 
         # Element 5: 2*(yz - ax) -> With scale factor of 1,000: (yz - ax)/500
         scoreboard players operation #Physics.Maths.Value1 Physics = @s Physics.Object.Orientation.y
@@ -203,7 +203,7 @@ execute store result storage physics:temp data.Integration.Pos[2] double 0.001 s
         scoreboard players operation #Physics.Maths.Value2 Physics = @s Physics.Object.Orientation.a
         scoreboard players operation #Physics.Maths.Value2 Physics *= @s Physics.Object.Orientation.x
         scoreboard players operation #Physics.Maths.Value1 Physics -= #Physics.Maths.Value2 Physics
-        execute store result score @s Physics.Object.RotationMatrix.5 store result score @s Physics.Object.RotationMatrixTranspose.7 store result score #Physics.Maths.Value22 Physics store result score #Physics.Maths.Value28 Physics store result score #Physics.Maths.Value34 Physics store result score #Physics.Maths.Value40 Physics run scoreboard players operation #Physics.Maths.Value1 Physics /= #Physics.Constants.500 Physics
+        execute store result score @s Physics.Object.RotationMatrix.5 store result score @s Physics.Object.RotationMatrixTranspose.7 store result score #Physics.Maths.Value22 Physics store result score #Physics.Maths.Value28 Physics store result score #Physics.Maths.Value34 Physics store result score #Physics.Maths.Value40 Physics store result score @s Physics.Object.Axis.z.y store result score #Physics.Maths.Value63 Physics store result score #Physics.Maths.Value65 Physics store result score #Physics.Maths.Value67 Physics store result score #Physics.Maths.Value69 Physics store result score #Physics.Maths.Value71 Physics run scoreboard players operation #Physics.Maths.Value1 Physics /= #Physics.Constants.500 Physics
 
         # Element 6: 2*(xz - ay) -> With scale factor of 1,000: (xz - ay)/500
         scoreboard players operation #Physics.Maths.Value1 Physics = @s Physics.Object.Orientation.x
@@ -211,7 +211,7 @@ execute store result storage physics:temp data.Integration.Pos[2] double 0.001 s
         scoreboard players operation #Physics.Maths.Value2 Physics = @s Physics.Object.Orientation.a
         scoreboard players operation #Physics.Maths.Value2 Physics *= @s Physics.Object.Orientation.y
         scoreboard players operation #Physics.Maths.Value1 Physics -= #Physics.Maths.Value2 Physics
-        execute store result score @s Physics.Object.RotationMatrix.6 store result score @s Physics.Object.RotationMatrixTranspose.2 store result score @s Physics.Object.CornerPosRelative.0.z store result score @s Physics.Object.CornerPosRelative.1.z store result score @s Physics.Object.CornerPosRelative.2.z store result score @s Physics.Object.CornerPosRelative.3.z store result score @s Physics.Object.CornerPosRelative.4.z store result score @s Physics.Object.CornerPosRelative.5.z store result score @s Physics.Object.CornerPosRelative.6.z store result score @s Physics.Object.CornerPosRelative.7.z run scoreboard players operation #Physics.Maths.Value1 Physics /= #Physics.Constants.500 Physics
+        execute store result score @s Physics.Object.RotationMatrix.6 store result score @s Physics.Object.RotationMatrixTranspose.2 store result score @s Physics.Object.CornerPosRelative.0.z store result score @s Physics.Object.CornerPosRelative.1.z store result score @s Physics.Object.CornerPosRelative.2.z store result score @s Physics.Object.CornerPosRelative.3.z store result score @s Physics.Object.CornerPosRelative.4.z store result score @s Physics.Object.CornerPosRelative.5.z store result score @s Physics.Object.CornerPosRelative.6.z store result score @s Physics.Object.CornerPosRelative.7.z store result score @s Physics.Object.Axis.x.z store result score #Physics.Maths.Value44 Physics store result score #Physics.Maths.Value46 Physics store result score #Physics.Maths.Value48 Physics store result score #Physics.Maths.Value50 Physics store result score #Physics.Maths.Value52 Physics run scoreboard players operation #Physics.Maths.Value1 Physics /= #Physics.Constants.500 Physics
 
         # Element 7: 2*(yz + ax) -> With scale factor of 1,000: (yz + ax)/500
         scoreboard players operation #Physics.Maths.Value1 Physics = @s Physics.Object.Orientation.y
@@ -219,7 +219,7 @@ execute store result storage physics:temp data.Integration.Pos[2] double 0.001 s
         scoreboard players operation #Physics.Maths.Value2 Physics = @s Physics.Object.Orientation.a
         scoreboard players operation #Physics.Maths.Value2 Physics *= @s Physics.Object.Orientation.x
         scoreboard players operation #Physics.Maths.Value1 Physics += #Physics.Maths.Value2 Physics
-        execute store result score @s Physics.Object.RotationMatrix.7 store result score @s Physics.Object.RotationMatrixTranspose.5 store result score #Physics.Maths.Value23 Physics store result score #Physics.Maths.Value29 Physics store result score #Physics.Maths.Value35 Physics store result score #Physics.Maths.Value41 Physics run scoreboard players operation #Physics.Maths.Value1 Physics /= #Physics.Constants.500 Physics
+        execute store result score @s Physics.Object.RotationMatrix.7 store result score @s Physics.Object.RotationMatrixTranspose.5 store result score #Physics.Maths.Value23 Physics store result score #Physics.Maths.Value29 Physics store result score #Physics.Maths.Value35 Physics store result score #Physics.Maths.Value41 Physics store result score @s Physics.Object.Axis.y.z store result score #Physics.Maths.Value54 Physics store result score #Physics.Maths.Value56 Physics store result score #Physics.Maths.Value58 Physics store result score #Physics.Maths.Value60 Physics store result score #Physics.Maths.Value62 Physics run scoreboard players operation #Physics.Maths.Value1 Physics /= #Physics.Constants.500 Physics
 
         # Element 8: 2*(a^2 + z^2) -> With scale factor of 1,000: (a^2 + z^2)/500
         scoreboard players operation #Physics.Maths.Value1 Physics = @s Physics.Object.Orientation.a
@@ -228,7 +228,7 @@ execute store result storage physics:temp data.Integration.Pos[2] double 0.001 s
         scoreboard players operation #Physics.Maths.Value2 Physics *= #Physics.Maths.Value2 Physics
         scoreboard players operation #Physics.Maths.Value1 Physics += #Physics.Maths.Value2 Physics
         scoreboard players operation #Physics.Maths.Value1 Physics /= #Physics.Constants.500 Physics
-        execute store result score @s Physics.Object.RotationMatrix.8 store result score @s Physics.Object.RotationMatrixTranspose.8 store result score #Physics.Maths.Value24 Physics store result score #Physics.Maths.Value30 Physics store result score #Physics.Maths.Value36 Physics store result score #Physics.Maths.Value42 Physics run scoreboard players remove #Physics.Maths.Value1 Physics 1000
+        execute store result score @s Physics.Object.RotationMatrix.8 store result score @s Physics.Object.RotationMatrixTranspose.8 store result score #Physics.Maths.Value24 Physics store result score #Physics.Maths.Value30 Physics store result score #Physics.Maths.Value36 Physics store result score #Physics.Maths.Value42 Physics store result score @s Physics.Object.Axis.z.z store result score #Physics.Maths.Value64 Physics store result score #Physics.Maths.Value66 Physics store result score #Physics.Maths.Value68 Physics store result score #Physics.Maths.Value70 Physics store result score #Physics.Maths.Value72 Physics run scoreboard players remove #Physics.Maths.Value1 Physics 1000
 
     # Inverse global inertia tensor: R * I * R_transpose
     # (Important): InverseInertiaTensorLocal is scaled by 1,000,000,000x and RotationMatrix is scaled by 1,000x. The rotation matrix can have values from -1,000 to 1,000. So to avoid overflow, I first divide the local inertia tensor by 1,000, then multiply it by the rotation matrix. Then I divide it by 10,000 again so I can actually calculate with it. Now it's scaled by 100,000x.
@@ -490,18 +490,18 @@ execute store result storage physics:temp data.Integration.Pos[2] double 0.001 s
     scoreboard players operation @s Physics.Object.CornerPosGlobal.0.x += @s Physics.Object.Pos.x
     scoreboard players operation @s Physics.Object.CornerPosGlobal.0.y += @s Physics.Object.Pos.y
     scoreboard players operation @s Physics.Object.CornerPosGlobal.0.z += @s Physics.Object.Pos.z
-    execute store result score @s Physics.Object.Axis.z.x run scoreboard players operation @s Physics.Object.CornerPosGlobal.1.x += @s Physics.Object.Pos.x
-    execute store result score @s Physics.Object.Axis.z.y run scoreboard players operation @s Physics.Object.CornerPosGlobal.1.y += @s Physics.Object.Pos.y
-    execute store result score @s Physics.Object.Axis.z.z run scoreboard players operation @s Physics.Object.CornerPosGlobal.1.z += @s Physics.Object.Pos.z
-    execute store result score @s Physics.Object.Axis.x.x run scoreboard players operation @s Physics.Object.CornerPosGlobal.2.x += @s Physics.Object.Pos.x
-    execute store result score @s Physics.Object.Axis.x.y run scoreboard players operation @s Physics.Object.CornerPosGlobal.2.y += @s Physics.Object.Pos.y
-    execute store result score @s Physics.Object.Axis.x.z run scoreboard players operation @s Physics.Object.CornerPosGlobal.2.z += @s Physics.Object.Pos.z
+    scoreboard players operation @s Physics.Object.CornerPosGlobal.1.x += @s Physics.Object.Pos.x
+    scoreboard players operation @s Physics.Object.CornerPosGlobal.1.y += @s Physics.Object.Pos.y
+    scoreboard players operation @s Physics.Object.CornerPosGlobal.1.z += @s Physics.Object.Pos.z
+    scoreboard players operation @s Physics.Object.CornerPosGlobal.2.x += @s Physics.Object.Pos.x
+    scoreboard players operation @s Physics.Object.CornerPosGlobal.2.y += @s Physics.Object.Pos.y
+    scoreboard players operation @s Physics.Object.CornerPosGlobal.2.z += @s Physics.Object.Pos.z
     scoreboard players operation @s Physics.Object.CornerPosGlobal.3.x += @s Physics.Object.Pos.x
     scoreboard players operation @s Physics.Object.CornerPosGlobal.3.y += @s Physics.Object.Pos.y
     scoreboard players operation @s Physics.Object.CornerPosGlobal.3.z += @s Physics.Object.Pos.z
-    execute store result score @s Physics.Object.Axis.y.x run scoreboard players operation @s Physics.Object.CornerPosGlobal.4.x += @s Physics.Object.Pos.x
-    execute store result score @s Physics.Object.Axis.y.y run scoreboard players operation @s Physics.Object.CornerPosGlobal.4.y += @s Physics.Object.Pos.y
-    execute store result score @s Physics.Object.Axis.y.z run scoreboard players operation @s Physics.Object.CornerPosGlobal.4.z += @s Physics.Object.Pos.z
+    scoreboard players operation @s Physics.Object.CornerPosGlobal.4.x += @s Physics.Object.Pos.x
+    scoreboard players operation @s Physics.Object.CornerPosGlobal.4.y += @s Physics.Object.Pos.y
+    scoreboard players operation @s Physics.Object.CornerPosGlobal.4.z += @s Physics.Object.Pos.z
     scoreboard players operation @s Physics.Object.CornerPosGlobal.5.x += @s Physics.Object.Pos.x
     scoreboard players operation @s Physics.Object.CornerPosGlobal.5.y += @s Physics.Object.Pos.y
     scoreboard players operation @s Physics.Object.CornerPosGlobal.5.z += @s Physics.Object.Pos.z
@@ -520,84 +520,234 @@ execute store result storage physics:temp data.Integration.Pos[2] double 0.001 s
     scoreboard players operation @s Physics.Object.BoundingBoxGlobalMax.z += @s Physics.Object.Pos.z
 
     # Precalculate values for the SAT
-        # x, y and z axes of the object (Normalized)
-        # (Important): I used "execute store result ..." to copy the cornerpos into the Physics.Object.Axis.?.? scores earlier, to save a "scoreboard players operation ... = ..." call.
-        # Note: I use "scoreboard players operation ... = ..." here, even though I could put it in an "execute store result score ... run ..." statement in the integration step. But because other stuff can run between the integration and this, I can't store the value in a fake player, so I'd need to create 9 additional scoreboard objectives, at which point I'm not sure about the performance benefit anymore. I might need to benchmark.
-        # (Important): Because of the squaring, the result is scaled too much, or rather dividing by the square root would get rid of the scaling. So I need to multiply the quaternions by 1,000x first.
+        # x, y and z axes of the object (Normalized) => Can be read from the rotation matrix. 1st column is the x axis, and so on
+
+        # Projection of the object onto its own axes
+        # (Important): I use "execute store result ..." earlier to copy the axis values into the temp scores when it's getting calculated (= when the rotation matrix is set), so I don't need multiple "scoreboard players operation ... = ..." calls
             # x axis
-                # Calculation (Corner2 - Corner0)
-                execute store result score #Physics.Maths.SquareRoot.Input Physics run scoreboard players operation @s Physics.Object.Axis.x.x -= @s Physics.Object.CornerPosGlobal.0.x
-                execute store result score #Physics.Maths.Value1 Physics run scoreboard players operation @s Physics.Object.Axis.x.y -= @s Physics.Object.CornerPosGlobal.0.y
-                execute store result score #Physics.Maths.Value2 Physics run scoreboard players operation @s Physics.Object.Axis.x.z -= @s Physics.Object.CornerPosGlobal.0.z
+                # Corner 0
+                scoreboard players operation #Physics.Projection.ObjectCorner0.ObjectAxis.x Physics *= @s Physics.Object.CornerPosRelative.0.x
 
-                # Normalization
-                scoreboard players operation #Physics.Maths.SquareRoot.Input Physics *= #Physics.Maths.SquareRoot.Input Physics
-                scoreboard players operation #Physics.Maths.Value1 Physics *= #Physics.Maths.Value1 Physics
-                scoreboard players operation #Physics.Maths.SquareRoot.Input Physics += #Physics.Maths.Value1 Physics
-                scoreboard players operation #Physics.Maths.Value2 Physics *= #Physics.Maths.Value2 Physics
-                scoreboard players operation #Physics.Maths.SquareRoot.Input Physics += #Physics.Maths.Value2 Physics
-                function physics:zprivate/maths/get_square_root
+                scoreboard players operation #Physics.Maths.Value43 Physics *= @s Physics.Object.CornerPosRelative.0.y
+                scoreboard players operation #Physics.Projection.ObjectCorner0.ObjectAxis.x Physics += #Physics.Maths.Value43 Physics
 
-                scoreboard players operation @s Physics.Object.Axis.x.x *= #Physics.Constants.1000 Physics
-                scoreboard players operation @s Physics.Object.Axis.x.y *= #Physics.Constants.1000 Physics
-                scoreboard players operation @s Physics.Object.Axis.x.z *= #Physics.Constants.1000 Physics
-                scoreboard players operation @s Physics.Object.Axis.x.x /= #Physics.Maths.SquareRoot.Output Physics
-                scoreboard players operation @s Physics.Object.Axis.x.y /= #Physics.Maths.SquareRoot.Output Physics
-                scoreboard players operation @s Physics.Object.Axis.x.z /= #Physics.Maths.SquareRoot.Output Physics
+                scoreboard players operation #Physics.Maths.Value44 Physics *= @s Physics.Object.CornerPosRelative.0.z
+                execute store result score #Physics.Projection.ObjectCorner7.ObjectAxis.x Physics store result score #Physics.Projection.Object.ObjectAxis.x.Min Physics store result score #Physics.Projection.Object.ObjectAxis.x.Max Physics run scoreboard players operation #Physics.Projection.ObjectCorner0.ObjectAxis.x Physics += #Physics.Maths.Value44 Physics
+
+                # Corner 1
+                scoreboard players operation #Physics.Projection.ObjectCorner1.ObjectAxis.x Physics *= @s Physics.Object.CornerPosRelative.1.x
+
+                scoreboard players operation #Physics.Maths.Value45 Physics *= @s Physics.Object.CornerPosRelative.1.y
+                scoreboard players operation #Physics.Projection.ObjectCorner1.ObjectAxis.x Physics += #Physics.Maths.Value45 Physics
+
+                scoreboard players operation #Physics.Maths.Value46 Physics *= @s Physics.Object.CornerPosRelative.1.z
+                execute store result score #Physics.Projection.ObjectCorner6.ObjectAxis.x Physics run scoreboard players operation #Physics.Projection.ObjectCorner1.ObjectAxis.x Physics += #Physics.Maths.Value46 Physics
+
+                # Corner 2
+                scoreboard players operation #Physics.Projection.ObjectCorner2.ObjectAxis.x Physics *= @s Physics.Object.CornerPosRelative.2.x
+
+                scoreboard players operation #Physics.Maths.Value47 Physics *= @s Physics.Object.CornerPosRelative.2.y
+                scoreboard players operation #Physics.Projection.ObjectCorner2.ObjectAxis.x Physics += #Physics.Maths.Value47 Physics
+
+                scoreboard players operation #Physics.Maths.Value48 Physics *= @s Physics.Object.CornerPosRelative.2.z
+                execute store result score #Physics.Projection.ObjectCorner5.ObjectAxis.x Physics run scoreboard players operation #Physics.Projection.ObjectCorner2.ObjectAxis.x Physics += #Physics.Maths.Value48 Physics
+
+                # Corner 3
+                scoreboard players operation #Physics.Projection.ObjectCorner3.ObjectAxis.x Physics *= @s Physics.Object.CornerPosRelative.3.x
+
+                scoreboard players operation #Physics.Maths.Value49 Physics *= @s Physics.Object.CornerPosRelative.3.y
+                scoreboard players operation #Physics.Projection.ObjectCorner3.ObjectAxis.x Physics += #Physics.Maths.Value49 Physics
+
+                scoreboard players operation #Physics.Maths.Value50 Physics *= @s Physics.Object.CornerPosRelative.3.z
+                execute store result score #Physics.Projection.ObjectCorner4.ObjectAxis.x Physics run scoreboard players operation #Physics.Projection.ObjectCorner3.ObjectAxis.x Physics += #Physics.Maths.Value50 Physics
+
+                # Corner 4 (Mirrored version of 3)
+                scoreboard players operation #Physics.Projection.ObjectCorner4.ObjectAxis.x Physics *= #Physics.Constants.-1 Physics
+
+                # Corner 5 (Mirrored version of 2)
+                scoreboard players operation #Physics.Projection.ObjectCorner5.ObjectAxis.x Physics *= #Physics.Constants.-1 Physics
+
+                # Corner 6 (Mirrored version of 1)
+                scoreboard players operation #Physics.Projection.ObjectCorner6.ObjectAxis.x Physics *= #Physics.Constants.-1 Physics
+
+                # Corner 7 (Mirrored version of 0)
+                scoreboard players operation #Physics.Projection.ObjectCorner7.ObjectAxis.x Physics *= #Physics.Constants.-1 Physics
+
+                # Find min and max (Relative to object center)
+                execute if score #Physics.Projection.ObjectCorner1.ObjectAxis.x Physics > #Physics.Projection.Object.ObjectAxis.x.Max Physics run scoreboard players operation #Physics.Projection.Object.ObjectAxis.x.Max Physics = #Physics.Projection.ObjectCorner1.ObjectAxis.x Physics
+                execute if score #Physics.Projection.ObjectCorner2.ObjectAxis.x Physics > #Physics.Projection.Object.ObjectAxis.x.Max Physics run scoreboard players operation #Physics.Projection.Object.ObjectAxis.x.Max Physics = #Physics.Projection.ObjectCorner2.ObjectAxis.x Physics
+                execute if score #Physics.Projection.ObjectCorner3.ObjectAxis.x Physics > #Physics.Projection.Object.ObjectAxis.x.Max Physics run scoreboard players operation #Physics.Projection.Object.ObjectAxis.x.Max Physics = #Physics.Projection.ObjectCorner3.ObjectAxis.x Physics
+                execute if score #Physics.Projection.ObjectCorner4.ObjectAxis.x Physics > #Physics.Projection.Object.ObjectAxis.x.Max Physics run scoreboard players operation #Physics.Projection.Object.ObjectAxis.x.Max Physics = #Physics.Projection.ObjectCorner4.ObjectAxis.x Physics
+                execute if score #Physics.Projection.ObjectCorner5.ObjectAxis.x Physics > #Physics.Projection.Object.ObjectAxis.x.Max Physics run scoreboard players operation #Physics.Projection.Object.ObjectAxis.x.Max Physics = #Physics.Projection.ObjectCorner5.ObjectAxis.x Physics
+                execute if score #Physics.Projection.ObjectCorner6.ObjectAxis.x Physics > #Physics.Projection.Object.ObjectAxis.x.Max Physics run scoreboard players operation #Physics.Projection.Object.ObjectAxis.x.Max Physics = #Physics.Projection.ObjectCorner6.ObjectAxis.x Physics
+                execute if score #Physics.Projection.ObjectCorner7.ObjectAxis.x Physics > #Physics.Projection.Object.ObjectAxis.x.Max Physics run scoreboard players operation #Physics.Projection.Object.ObjectAxis.x.Max Physics = #Physics.Projection.ObjectCorner7.ObjectAxis.x Physics
+                execute store result score #Physics.Projection.Object.ObjectAxis.x.Min Physics run scoreboard players operation #Physics.Projection.Object.ObjectAxis.x.Max Physics /= #Physics.Constants.1000 Physics
+                scoreboard players operation #Physics.Projection.Object.ObjectAxis.x.Min Physics *= #Physics.Constants.-1 Physics
+
+                # Turn the min and max global by projecting the center point onto the same axis and adding it to the min and max
+                # (Important): I divide the projection by 1,000x to ensure consistent scaling, because multiplying a number that's scaled by 1,000x with another number that's scaled the same will result in a scaling of 1,000,000x.
+                scoreboard players operation #Physics.Projection.ObjectCenter.ObjectAxis.x Physics *= @s Physics.Object.Pos.x
+
+                scoreboard players operation #Physics.Maths.Value51 Physics *= @s Physics.Object.Pos.y
+                scoreboard players operation #Physics.Projection.ObjectCenter.ObjectAxis.x Physics += #Physics.Maths.Value51 Physics
+
+                scoreboard players operation #Physics.Maths.Value52 Physics *= @s Physics.Object.Pos.z
+                scoreboard players operation #Physics.Projection.ObjectCenter.ObjectAxis.x Physics += #Physics.Maths.Value52 Physics
+
+                scoreboard players operation #Physics.Projection.ObjectCenter.ObjectAxis.x Physics /= #Physics.Constants.1000 Physics
+
+                execute store result score @s Physics.Object.ProjectionOwnAxis.x.Min run scoreboard players operation #Physics.Projection.Object.ObjectAxis.x.Min Physics += #Physics.Projection.ObjectCenter.ObjectAxis.x Physics
+                execute store result score @s Physics.Object.ProjectionOwnAxis.x.Max run scoreboard players operation #Physics.Projection.Object.ObjectAxis.x.Max Physics += #Physics.Projection.ObjectCenter.ObjectAxis.x Physics
 
             # y axis
-                # Calculation (Corner4 - Corner0)
-                execute store result score #Physics.Maths.SquareRoot.Input Physics run scoreboard players operation @s Physics.Object.Axis.y.x -= @s Physics.Object.CornerPosGlobal.0.x
-                execute store result score #Physics.Maths.Value1 Physics run scoreboard players operation @s Physics.Object.Axis.y.y -= @s Physics.Object.CornerPosGlobal.0.y
-                execute store result score #Physics.Maths.Value2 Physics run scoreboard players operation @s Physics.Object.Axis.y.z -= @s Physics.Object.CornerPosGlobal.0.z
+                # Corner 0
+                scoreboard players operation #Physics.Projection.ObjectCorner0.ObjectAxis.y Physics *= @s Physics.Object.CornerPosRelative.0.x
 
-                # Normalization
-                scoreboard players operation #Physics.Maths.SquareRoot.Input Physics *= #Physics.Maths.SquareRoot.Input Physics
-                scoreboard players operation #Physics.Maths.Value1 Physics *= #Physics.Maths.Value1 Physics
-                scoreboard players operation #Physics.Maths.SquareRoot.Input Physics += #Physics.Maths.Value1 Physics
-                scoreboard players operation #Physics.Maths.Value2 Physics *= #Physics.Maths.Value2 Physics
-                scoreboard players operation #Physics.Maths.SquareRoot.Input Physics += #Physics.Maths.Value2 Physics
-                function physics:zprivate/maths/get_square_root
+                scoreboard players operation #Physics.Maths.Value53 Physics *= @s Physics.Object.CornerPosRelative.0.y
+                scoreboard players operation #Physics.Projection.ObjectCorner0.ObjectAxis.y Physics += #Physics.Maths.Value53 Physics
 
-                scoreboard players operation @s Physics.Object.Axis.y.x *= #Physics.Constants.1000 Physics
-                scoreboard players operation @s Physics.Object.Axis.y.y *= #Physics.Constants.1000 Physics
-                scoreboard players operation @s Physics.Object.Axis.y.z *= #Physics.Constants.1000 Physics
-                scoreboard players operation @s Physics.Object.Axis.y.x /= #Physics.Maths.SquareRoot.Output Physics
-                scoreboard players operation @s Physics.Object.Axis.y.y /= #Physics.Maths.SquareRoot.Output Physics
-                scoreboard players operation @s Physics.Object.Axis.y.z /= #Physics.Maths.SquareRoot.Output Physics
+                scoreboard players operation #Physics.Maths.Value54 Physics *= @s Physics.Object.CornerPosRelative.0.z
+                execute store result score #Physics.Projection.ObjectCorner7.ObjectAxis.y Physics store result score #Physics.Projection.Object.ObjectAxis.y.Min Physics store result score #Physics.Projection.Object.ObjectAxis.y.Max Physics run scoreboard players operation #Physics.Projection.ObjectCorner0.ObjectAxis.y Physics += #Physics.Maths.Value54 Physics
+
+                # Corner 1
+                scoreboard players operation #Physics.Projection.ObjectCorner1.ObjectAxis.y Physics *= @s Physics.Object.CornerPosRelative.1.x
+
+                scoreboard players operation #Physics.Maths.Value55 Physics *= @s Physics.Object.CornerPosRelative.1.y
+                scoreboard players operation #Physics.Projection.ObjectCorner1.ObjectAxis.y Physics += #Physics.Maths.Value55 Physics
+
+                scoreboard players operation #Physics.Maths.Value56 Physics *= @s Physics.Object.CornerPosRelative.1.z
+                execute store result score #Physics.Projection.ObjectCorner6.ObjectAxis.y Physics run scoreboard players operation #Physics.Projection.ObjectCorner1.ObjectAxis.y Physics += #Physics.Maths.Value56 Physics
+
+                # Corner 2
+                scoreboard players operation #Physics.Projection.ObjectCorner2.ObjectAxis.y Physics *= @s Physics.Object.CornerPosRelative.2.x
+
+                scoreboard players operation #Physics.Maths.Value57 Physics *= @s Physics.Object.CornerPosRelative.2.y
+                scoreboard players operation #Physics.Projection.ObjectCorner2.ObjectAxis.y Physics += #Physics.Maths.Value57 Physics
+
+                scoreboard players operation #Physics.Maths.Value58 Physics *= @s Physics.Object.CornerPosRelative.2.z
+                execute store result score #Physics.Projection.ObjectCorner5.ObjectAxis.y Physics run scoreboard players operation #Physics.Projection.ObjectCorner2.ObjectAxis.y Physics += #Physics.Maths.Value58 Physics
+
+                # Corner 3
+                scoreboard players operation #Physics.Projection.ObjectCorner3.ObjectAxis.y Physics *= @s Physics.Object.CornerPosRelative.3.x
+
+                scoreboard players operation #Physics.Maths.Value59 Physics *= @s Physics.Object.CornerPosRelative.3.y
+                scoreboard players operation #Physics.Projection.ObjectCorner3.ObjectAxis.y Physics += #Physics.Maths.Value59 Physics
+
+                scoreboard players operation #Physics.Maths.Value60 Physics *= @s Physics.Object.CornerPosRelative.3.z
+                execute store result score #Physics.Projection.ObjectCorner4.ObjectAxis.y Physics run scoreboard players operation #Physics.Projection.ObjectCorner3.ObjectAxis.y Physics += #Physics.Maths.Value60 Physics
+
+                # Corner 4 (Mirrored version of 3)
+                scoreboard players operation #Physics.Projection.ObjectCorner4.ObjectAxis.y Physics *= #Physics.Constants.-1 Physics
+
+                # Corner 5 (Mirrored version of 2)
+                scoreboard players operation #Physics.Projection.ObjectCorner5.ObjectAxis.y Physics *= #Physics.Constants.-1 Physics
+
+                # Corner 6 (Mirrored version of 1)
+                scoreboard players operation #Physics.Projection.ObjectCorner6.ObjectAxis.y Physics *= #Physics.Constants.-1 Physics
+
+                # Corner 7 (Mirrored version of 0)
+                scoreboard players operation #Physics.Projection.ObjectCorner7.ObjectAxis.y Physics *= #Physics.Constants.-1 Physics
+
+                # Find min and max (Relative to object center)
+                execute if score #Physics.Projection.ObjectCorner1.ObjectAxis.y Physics > #Physics.Projection.Object.ObjectAxis.y.Max Physics run scoreboard players operation #Physics.Projection.Object.ObjectAxis.y.Max Physics = #Physics.Projection.ObjectCorner1.ObjectAxis.y Physics
+                execute if score #Physics.Projection.ObjectCorner2.ObjectAxis.y Physics > #Physics.Projection.Object.ObjectAxis.y.Max Physics run scoreboard players operation #Physics.Projection.Object.ObjectAxis.y.Max Physics = #Physics.Projection.ObjectCorner2.ObjectAxis.y Physics
+                execute if score #Physics.Projection.ObjectCorner3.ObjectAxis.y Physics > #Physics.Projection.Object.ObjectAxis.y.Max Physics run scoreboard players operation #Physics.Projection.Object.ObjectAxis.y.Max Physics = #Physics.Projection.ObjectCorner3.ObjectAxis.y Physics
+                execute if score #Physics.Projection.ObjectCorner4.ObjectAxis.y Physics > #Physics.Projection.Object.ObjectAxis.y.Max Physics run scoreboard players operation #Physics.Projection.Object.ObjectAxis.y.Max Physics = #Physics.Projection.ObjectCorner4.ObjectAxis.y Physics
+                execute if score #Physics.Projection.ObjectCorner5.ObjectAxis.y Physics > #Physics.Projection.Object.ObjectAxis.y.Max Physics run scoreboard players operation #Physics.Projection.Object.ObjectAxis.y.Max Physics = #Physics.Projection.ObjectCorner5.ObjectAxis.y Physics
+                execute if score #Physics.Projection.ObjectCorner6.ObjectAxis.y Physics > #Physics.Projection.Object.ObjectAxis.y.Max Physics run scoreboard players operation #Physics.Projection.Object.ObjectAxis.y.Max Physics = #Physics.Projection.ObjectCorner6.ObjectAxis.y Physics
+                execute if score #Physics.Projection.ObjectCorner7.ObjectAxis.y Physics > #Physics.Projection.Object.ObjectAxis.y.Max Physics run scoreboard players operation #Physics.Projection.Object.ObjectAxis.y.Max Physics = #Physics.Projection.ObjectCorner7.ObjectAxis.y Physics
+                execute store result score #Physics.Projection.Object.ObjectAxis.y.Min Physics run scoreboard players operation #Physics.Projection.Object.ObjectAxis.y.Max Physics /= #Physics.Constants.1000 Physics
+                scoreboard players operation #Physics.Projection.Object.ObjectAxis.y.Min Physics *= #Physics.Constants.-1 Physics
+
+                # Turn the min and max global by projecting the center point onto the same axis and adding it to the min and max
+                # (Important): I divide the projection by 1,000x to ensure consistent scaling, because multiplying a number that's scaled by 1,000x with another number that's scaled the same will result in a scaling of 1,000,000x.
+                scoreboard players operation #Physics.Projection.ObjectCenter.ObjectAxis.y Physics *= @s Physics.Object.Pos.x
+
+                scoreboard players operation #Physics.Maths.Value61 Physics *= @s Physics.Object.Pos.y
+                scoreboard players operation #Physics.Projection.ObjectCenter.ObjectAxis.y Physics += #Physics.Maths.Value61 Physics
+
+                scoreboard players operation #Physics.Maths.Value62 Physics *= @s Physics.Object.Pos.z
+                scoreboard players operation #Physics.Projection.ObjectCenter.ObjectAxis.y Physics += #Physics.Maths.Value62 Physics
+
+                scoreboard players operation #Physics.Projection.ObjectCenter.ObjectAxis.y Physics /= #Physics.Constants.1000 Physics
+
+                execute store result score @s Physics.Object.ProjectionOwnAxis.y.Min run scoreboard players operation #Physics.Projection.Object.ObjectAxis.y.Min Physics += #Physics.Projection.ObjectCenter.ObjectAxis.y Physics
+                execute store result score @s Physics.Object.ProjectionOwnAxis.y.Max run scoreboard players operation #Physics.Projection.Object.ObjectAxis.y.Max Physics += #Physics.Projection.ObjectCenter.ObjectAxis.y Physics
 
             # z axis
-                # Calculation (Corner1 - Corner0)
-                execute store result score #Physics.Maths.SquareRoot.Input Physics run scoreboard players operation @s Physics.Object.Axis.z.x -= @s Physics.Object.CornerPosGlobal.0.x
-                execute store result score #Physics.Maths.Value1 Physics run scoreboard players operation @s Physics.Object.Axis.z.y -= @s Physics.Object.CornerPosGlobal.0.y
-                execute store result score #Physics.Maths.Value2 Physics run scoreboard players operation @s Physics.Object.Axis.z.z -= @s Physics.Object.CornerPosGlobal.0.z
+                # Corner 0
+                scoreboard players operation #Physics.Projection.ObjectCorner0.ObjectAxis.z Physics *= @s Physics.Object.CornerPosRelative.0.x
 
-                # Normalization
-                scoreboard players operation #Physics.Maths.SquareRoot.Input Physics *= #Physics.Maths.SquareRoot.Input Physics
-                scoreboard players operation #Physics.Maths.Value1 Physics *= #Physics.Maths.Value1 Physics
-                scoreboard players operation #Physics.Maths.SquareRoot.Input Physics += #Physics.Maths.Value1 Physics
-                scoreboard players operation #Physics.Maths.Value2 Physics *= #Physics.Maths.Value2 Physics
-                scoreboard players operation #Physics.Maths.SquareRoot.Input Physics += #Physics.Maths.Value2 Physics
-                function physics:zprivate/maths/get_square_root
+                scoreboard players operation #Physics.Maths.Value63 Physics *= @s Physics.Object.CornerPosRelative.0.y
+                scoreboard players operation #Physics.Projection.ObjectCorner0.ObjectAxis.z Physics += #Physics.Maths.Value63 Physics
 
-                scoreboard players operation @s Physics.Object.Axis.z.x *= #Physics.Constants.1000 Physics
-                scoreboard players operation @s Physics.Object.Axis.z.y *= #Physics.Constants.1000 Physics
-                scoreboard players operation @s Physics.Object.Axis.z.z *= #Physics.Constants.1000 Physics
-                scoreboard players operation @s Physics.Object.Axis.z.x /= #Physics.Maths.SquareRoot.Output Physics
-                scoreboard players operation @s Physics.Object.Axis.z.y /= #Physics.Maths.SquareRoot.Output Physics
-                scoreboard players operation @s Physics.Object.Axis.z.z /= #Physics.Maths.SquareRoot.Output Physics
+                scoreboard players operation #Physics.Maths.Value64 Physics *= @s Physics.Object.CornerPosRelative.0.z
+                execute store result score #Physics.Projection.ObjectCorner7.ObjectAxis.z Physics store result score #Physics.Projection.Object.ObjectAxis.z.Min Physics store result score #Physics.Projection.Object.ObjectAxis.z.Max Physics run scoreboard players operation #Physics.Projection.ObjectCorner0.ObjectAxis.z Physics += #Physics.Maths.Value64 Physics
 
-        # Projection of the object onto its own axes (Min = Pos - Dimension/2, Max = Pos + Dimension/2)
-        # (Important): I use "execute store result ..." earlier to copy the Pos into temp scores, so I don't need multiple "scoreboard players operation ... = ..." calls
-        scoreboard players operation #Physics.Maths.Value1 Physics = @s Physics.Object.Dimension.x
-        scoreboard players operation #Physics.Maths.Value1 Physics /= #Physics.Constants.2 Physics
+                # Corner 1
+                scoreboard players operation #Physics.Projection.ObjectCorner1.ObjectAxis.z Physics *= @s Physics.Object.CornerPosRelative.1.x
 
-        scoreboard players operation @s Physics.Object.ProjectionOwnAxis.x.Min -= #Physics.Maths.Value1 Physics
-        scoreboard players operation @s Physics.Object.ProjectionOwnAxis.x.Max += #Physics.Maths.Value1 Physics
-        scoreboard players operation @s Physics.Object.ProjectionOwnAxis.y.Min -= #Physics.Maths.Value1 Physics
-        scoreboard players operation @s Physics.Object.ProjectionOwnAxis.y.Max += #Physics.Maths.Value1 Physics
-        scoreboard players operation @s Physics.Object.ProjectionOwnAxis.z.Min -= #Physics.Maths.Value1 Physics
-        scoreboard players operation @s Physics.Object.ProjectionOwnAxis.z.Max += #Physics.Maths.Value1 Physics
+                scoreboard players operation #Physics.Maths.Value65 Physics *= @s Physics.Object.CornerPosRelative.1.y
+                scoreboard players operation #Physics.Projection.ObjectCorner1.ObjectAxis.z Physics += #Physics.Maths.Value65 Physics
+
+                scoreboard players operation #Physics.Maths.Value66 Physics *= @s Physics.Object.CornerPosRelative.1.z
+                execute store result score #Physics.Projection.ObjectCorner6.ObjectAxis.z Physics run scoreboard players operation #Physics.Projection.ObjectCorner1.ObjectAxis.z Physics += #Physics.Maths.Value66 Physics
+
+                # Corner 2
+                scoreboard players operation #Physics.Projection.ObjectCorner2.ObjectAxis.z Physics *= @s Physics.Object.CornerPosRelative.2.x
+
+                scoreboard players operation #Physics.Maths.Value67 Physics *= @s Physics.Object.CornerPosRelative.2.y
+                scoreboard players operation #Physics.Projection.ObjectCorner2.ObjectAxis.z Physics += #Physics.Maths.Value67 Physics
+
+                scoreboard players operation #Physics.Maths.Value68 Physics *= @s Physics.Object.CornerPosRelative.2.z
+                execute store result score #Physics.Projection.ObjectCorner5.ObjectAxis.z Physics run scoreboard players operation #Physics.Projection.ObjectCorner2.ObjectAxis.z Physics += #Physics.Maths.Value68 Physics
+
+                # Corner 3
+                scoreboard players operation #Physics.Projection.ObjectCorner3.ObjectAxis.z Physics *= @s Physics.Object.CornerPosRelative.3.x
+
+                scoreboard players operation #Physics.Maths.Value69 Physics *= @s Physics.Object.CornerPosRelative.3.y
+                scoreboard players operation #Physics.Projection.ObjectCorner3.ObjectAxis.z Physics += #Physics.Maths.Value69 Physics
+
+                scoreboard players operation #Physics.Maths.Value70 Physics *= @s Physics.Object.CornerPosRelative.3.z
+                execute store result score #Physics.Projection.ObjectCorner4.ObjectAxis.z Physics run scoreboard players operation #Physics.Projection.ObjectCorner3.ObjectAxis.z Physics += #Physics.Maths.Value70 Physics
+
+                # Corner 4 (Mirrored version of 3)
+                scoreboard players operation #Physics.Projection.ObjectCorner4.ObjectAxis.z Physics *= #Physics.Constants.-1 Physics
+
+                # Corner 5 (Mirrored version of 2)
+                scoreboard players operation #Physics.Projection.ObjectCorner5.ObjectAxis.z Physics *= #Physics.Constants.-1 Physics
+
+                # Corner 6 (Mirrored version of 1)
+                scoreboard players operation #Physics.Projection.ObjectCorner6.ObjectAxis.z Physics *= #Physics.Constants.-1 Physics
+
+                # Corner 7 (Mirrored version of 0)
+                scoreboard players operation #Physics.Projection.ObjectCorner7.ObjectAxis.z Physics *= #Physics.Constants.-1 Physics
+
+                # Find min and max (Relative to object center)
+                execute if score #Physics.Projection.ObjectCorner1.ObjectAxis.z Physics > #Physics.Projection.Object.ObjectAxis.z.Max Physics run scoreboard players operation #Physics.Projection.Object.ObjectAxis.z.Max Physics = #Physics.Projection.ObjectCorner1.ObjectAxis.z Physics
+                execute if score #Physics.Projection.ObjectCorner2.ObjectAxis.z Physics > #Physics.Projection.Object.ObjectAxis.z.Max Physics run scoreboard players operation #Physics.Projection.Object.ObjectAxis.z.Max Physics = #Physics.Projection.ObjectCorner2.ObjectAxis.z Physics
+                execute if score #Physics.Projection.ObjectCorner3.ObjectAxis.z Physics > #Physics.Projection.Object.ObjectAxis.z.Max Physics run scoreboard players operation #Physics.Projection.Object.ObjectAxis.z.Max Physics = #Physics.Projection.ObjectCorner3.ObjectAxis.z Physics
+                execute if score #Physics.Projection.ObjectCorner4.ObjectAxis.z Physics > #Physics.Projection.Object.ObjectAxis.z.Max Physics run scoreboard players operation #Physics.Projection.Object.ObjectAxis.z.Max Physics = #Physics.Projection.ObjectCorner4.ObjectAxis.z Physics
+                execute if score #Physics.Projection.ObjectCorner5.ObjectAxis.z Physics > #Physics.Projection.Object.ObjectAxis.z.Max Physics run scoreboard players operation #Physics.Projection.Object.ObjectAxis.z.Max Physics = #Physics.Projection.ObjectCorner5.ObjectAxis.z Physics
+                execute if score #Physics.Projection.ObjectCorner6.ObjectAxis.z Physics > #Physics.Projection.Object.ObjectAxis.z.Max Physics run scoreboard players operation #Physics.Projection.Object.ObjectAxis.z.Max Physics = #Physics.Projection.ObjectCorner6.ObjectAxis.z Physics
+                execute if score #Physics.Projection.ObjectCorner7.ObjectAxis.z Physics > #Physics.Projection.Object.ObjectAxis.z.Max Physics run scoreboard players operation #Physics.Projection.Object.ObjectAxis.z.Max Physics = #Physics.Projection.ObjectCorner7.ObjectAxis.z Physics
+                execute store result score #Physics.Projection.Object.ObjectAxis.z.Min Physics run scoreboard players operation #Physics.Projection.Object.ObjectAxis.z.Max Physics /= #Physics.Constants.1000 Physics
+                scoreboard players operation #Physics.Projection.Object.ObjectAxis.z.Min Physics *= #Physics.Constants.-1 Physics
+
+                # Turn the min and max global by projecting the center point onto the same axis and adding it to the min and max
+                # (Important): I divide the projection by 1,000x to ensure consistent scaling, because multiplying a number that's scaled by 1,000x with another number that's scaled the same will result in a scaling of 1,000,000x.
+                scoreboard players operation #Physics.Projection.ObjectCenter.ObjectAxis.z Physics *= @s Physics.Object.Pos.x
+
+                scoreboard players operation #Physics.Maths.Value71 Physics *= @s Physics.Object.Pos.y
+                scoreboard players operation #Physics.Projection.ObjectCenter.ObjectAxis.z Physics += #Physics.Maths.Value71 Physics
+
+                scoreboard players operation #Physics.Maths.Value72 Physics *= @s Physics.Object.Pos.z
+                scoreboard players operation #Physics.Projection.ObjectCenter.ObjectAxis.z Physics += #Physics.Maths.Value72 Physics
+
+                scoreboard players operation #Physics.Projection.ObjectCenter.ObjectAxis.z Physics /= #Physics.Constants.1000 Physics
+
+                execute store result score @s Physics.Object.ProjectionOwnAxis.z.Min run scoreboard players operation #Physics.Projection.Object.ObjectAxis.z.Min Physics += #Physics.Projection.ObjectCenter.ObjectAxis.z Physics
+                execute store result score @s Physics.Object.ProjectionOwnAxis.z.Max run scoreboard players operation #Physics.Projection.Object.ObjectAxis.z.Max Physics += #Physics.Projection.ObjectCenter.ObjectAxis.z Physics
 
 # Clear accumulators
 scoreboard players set @s Physics.Object.AccumulatedForce.x 0

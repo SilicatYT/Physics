@@ -1,3 +1,8 @@
+execute store result storage test:test data.x double 0.001 run scoreboard players get #Physics.BlockPos.x Physics
+execute store result storage test:test data.y double 0.001 run scoreboard players get #Physics.BlockPos.y Physics
+execute store result storage test:test data.z double 0.001 run scoreboard players get #Physics.BlockPos.z Physics
+function physics:zprivate/collision_detection/voxel_grid/spawn_particle_2 with storage test:test data
+
 # Note: All axis-vectors need to be normalized, including the cross product axes
 # Note: Precalculation - The projection of the object onto the world-geometry voxel's 3 axes is the same as the object's min and max values for those axes, so the min and max of the bounding box.
 # Note: Precalculation - The projection of the object onto its own 3 axes is -(dimension/2) for the min, and (dimension/2) for the max. Then just add the object center's projection onto the same axis to those min and max values.
@@ -367,3 +372,5 @@
 
 #tellraw @a "Block is intersecting"
 # if a.Min <= b.Max and b.Min <= a.Max: Success (Axis is not separating)
+
+function physics:zprivate/collision_detection/voxel_grid/spawn_particle with storage test:test data
