@@ -1,7 +1,6 @@
 execute store result storage test:test data.x double 0.001 run scoreboard players get #Physics.BlockPos.x Physics
 execute store result storage test:test data.y double 0.001 run scoreboard players get #Physics.BlockPos.y Physics
 execute store result storage test:test data.z double 0.001 run scoreboard players get #Physics.BlockPos.z Physics
-function physics:zprivate/collision_detection/voxel_grid/spawn_particle_2 with storage test:test data
 
 # Note: All axis-vectors need to be normalized, including the cross product axes
 # Note: Precalculation - The projection of the object onto the world-geometry voxel's 3 axes is the same as the object's min and max values for those axes, so the min and max of the bounding box.
@@ -17,7 +16,7 @@ function physics:zprivate/collision_detection/voxel_grid/spawn_particle_2 with s
             # Projection: Block
             execute store result score #Physics.Projection.Voxel.WorldAxis.x.Max Physics run scoreboard players operation #Physics.Projection.Voxel.WorldAxis.x.Min Physics = #Physics.BlockPos.x Physics
             scoreboard players remove #Physics.Projection.Voxel.WorldAxis.x.Min Physics 500
-            scoreboard players add #Physics.Projection.Voxel.WorldAxis.x.Min Physics 500
+            scoreboard players add #Physics.Projection.Voxel.WorldAxis.x.Max Physics 500
 
             # Projection: Object (= Global Bounding Box)
 
@@ -29,7 +28,7 @@ function physics:zprivate/collision_detection/voxel_grid/spawn_particle_2 with s
             # Projection: Block
             execute store result score #Physics.Projection.Voxel.WorldAxis.y.Max Physics run scoreboard players operation #Physics.Projection.Voxel.WorldAxis.y.Min Physics = #Physics.BlockPos.y Physics
             scoreboard players remove #Physics.Projection.Voxel.WorldAxis.y.Min Physics 500
-            scoreboard players add #Physics.Projection.Voxel.WorldAxis.y.Min Physics 500
+            scoreboard players add #Physics.Projection.Voxel.WorldAxis.y.Max Physics 500
 
             # Projection: Object (= Global Bounding Box)
 
@@ -41,7 +40,7 @@ function physics:zprivate/collision_detection/voxel_grid/spawn_particle_2 with s
             # Projection: Block
             execute store result score #Physics.Projection.Voxel.WorldAxis.z.Max Physics run scoreboard players operation #Physics.Projection.Voxel.WorldAxis.z.Min Physics = #Physics.BlockPos.z Physics
             scoreboard players remove #Physics.Projection.Voxel.WorldAxis.z.Min Physics 500
-            scoreboard players add #Physics.Projection.Voxel.WorldAxis.z.Min Physics 500
+            scoreboard players add #Physics.Projection.Voxel.WorldAxis.z.Max Physics 500
 
             # Projection: Object (= Global Bounding Box)
 
@@ -370,7 +369,140 @@ function physics:zprivate/collision_detection/voxel_grid/spawn_particle_2 with s
             execute unless score #Physics.Projection.Voxel.CrossProductAxis.zz.Min Physics <= #Physics.Projection.Object.CrossProductAxis.zz.Max Physics run return 0
             execute unless score #Physics.Projection.Object.CrossProductAxis.zz.Min Physics <= #Physics.Projection.Voxel.CrossProductAxis.zz.Max Physics run return 0
 
-#tellraw @a "Block is intersecting"
-# if a.Min <= b.Max and b.Min <= a.Max: Success (Axis is not separating)
+function physics:zprivate/collision_detection/voxel_grid/debug_set_glass with storage test:test data
 
-function physics:zprivate/collision_detection/voxel_grid/spawn_particle with storage test:test data
+# Get how much each axis is overlapping & get the least overlap
+    # x_block
+    scoreboard players operation #Physics.Overlap.WorldAxis.x Physics = @s Physics.Object.BoundingBoxGlobalMax.x
+    scoreboard players operation #Physics.Overlap.WorldAxis.x Physics -= #Physics.Projection.Voxel.WorldAxis.x.Min Physics
+    scoreboard players operation #Physics.Maths.Value1 Physics = #Physics.Projection.Voxel.WorldAxis.x.Max Physics
+    scoreboard players operation #Physics.Maths.Value1 Physics -= @s Physics.Object.BoundingBoxGlobalMin.x
+    execute if score #Physics.Overlap.WorldAxis.x Physics > #Physics.Maths.Value1 Physics run scoreboard players operation #Physics.Overlap.WorldAxis.x Physics = #Physics.Maths.Value1 Physics
+
+    scoreboard players operation #Physics.MinOverlap Physics = #Physics.Overlap.WorldAxis.x Physics
+
+    # y_block
+    scoreboard players operation #Physics.Overlap.WorldAxis.y Physics = @s Physics.Object.BoundingBoxGlobalMax.y
+    scoreboard players operation #Physics.Overlap.WorldAxis.y Physics -= #Physics.Projection.Voxel.WorldAxis.y.Min Physics
+    scoreboard players operation #Physics.Maths.Value1 Physics = #Physics.Projection.Voxel.WorldAxis.y.Max Physics
+    scoreboard players operation #Physics.Maths.Value1 Physics -= @s Physics.Object.BoundingBoxGlobalMin.y
+    execute if score #Physics.Overlap.WorldAxis.y Physics > #Physics.Maths.Value1 Physics run scoreboard players operation #Physics.Overlap.WorldAxis.y Physics = #Physics.Maths.Value1 Physics
+
+    execute if score #Physics.MinOverlap Physics > #Physics.Overlap.WorldAxis.y Physics run scoreboard players operation #Physics.MinOverlap Physics = #Physics.Overlap.WorldAxis.y Physics
+
+    # z_block
+    scoreboard players operation #Physics.Overlap.WorldAxis.z Physics = @s Physics.Object.BoundingBoxGlobalMax.z
+    scoreboard players operation #Physics.Overlap.WorldAxis.z Physics -= #Physics.Projection.Voxel.WorldAxis.z.Min Physics
+    scoreboard players operation #Physics.Maths.Value1 Physics = #Physics.Projection.Voxel.WorldAxis.z.Max Physics
+    scoreboard players operation #Physics.Maths.Value1 Physics -= @s Physics.Object.BoundingBoxGlobalMin.z
+    execute if score #Physics.Overlap.WorldAxis.z Physics > #Physics.Maths.Value1 Physics run scoreboard players operation #Physics.Overlap.WorldAxis.z Physics = #Physics.Maths.Value1 Physics
+
+    execute if score #Physics.MinOverlap Physics > #Physics.Overlap.WorldAxis.z Physics run scoreboard players operation #Physics.MinOverlap Physics = #Physics.Overlap.WorldAxis.z Physics
+
+    # x_object
+    scoreboard players operation #Physics.Overlap.ObjectAxis.x Physics = @s Physics.Object.ProjectionOwnAxis.x.Max
+    scoreboard players operation #Physics.Overlap.ObjectAxis.x Physics -= #Physics.Projection.Voxel.ObjectAxis.x.Min Physics
+    scoreboard players operation #Physics.Maths.Value1 Physics = #Physics.Projection.Voxel.ObjectAxis.x.Max Physics
+    scoreboard players operation #Physics.Maths.Value1 Physics -= @s Physics.Object.ProjectionOwnAxis.x.Min
+    execute if score #Physics.Overlap.ObjectAxis.x Physics > #Physics.Maths.Value1 Physics run scoreboard players operation #Physics.Overlap.ObjectAxis.x Physics = #Physics.Maths.Value1 Physics
+
+    execute if score #Physics.MinOverlap Physics > #Physics.Overlap.ObjectAxis.x Physics run scoreboard players operation #Physics.MinOverlap Physics = #Physics.Overlap.ObjectAxis.x Physics
+
+    # y_object
+    scoreboard players operation #Physics.Overlap.ObjectAxis.y Physics = @s Physics.Object.ProjectionOwnAxis.y.Max
+    scoreboard players operation #Physics.Overlap.ObjectAxis.y Physics -= #Physics.Projection.Voxel.ObjectAxis.y.Min Physics
+    scoreboard players operation #Physics.Maths.Value1 Physics = #Physics.Projection.Voxel.ObjectAxis.y.Max Physics
+    scoreboard players operation #Physics.Maths.Value1 Physics -= @s Physics.Object.ProjectionOwnAxis.y.Min
+    execute if score #Physics.Overlap.ObjectAxis.y Physics > #Physics.Maths.Value1 Physics run scoreboard players operation #Physics.Overlap.ObjectAxis.y Physics = #Physics.Maths.Value1 Physics
+
+    execute if score #Physics.MinOverlap Physics > #Physics.Overlap.ObjectAxis.y Physics run scoreboard players operation #Physics.MinOverlap Physics = #Physics.Overlap.ObjectAxis.y Physics
+
+    # z_object
+    scoreboard players operation #Physics.Overlap.ObjectAxis.z Physics = @s Physics.Object.ProjectionOwnAxis.z.Max
+    scoreboard players operation #Physics.Overlap.ObjectAxis.z Physics -= #Physics.Projection.Voxel.ObjectAxis.z.Min Physics
+    scoreboard players operation #Physics.Maths.Value1 Physics = #Physics.Projection.Voxel.ObjectAxis.z.Max Physics
+    scoreboard players operation #Physics.Maths.Value1 Physics -= @s Physics.Object.ProjectionOwnAxis.z.Min
+    execute if score #Physics.Overlap.ObjectAxis.z Physics > #Physics.Maths.Value1 Physics run scoreboard players operation #Physics.Overlap.ObjectAxis.z Physics = #Physics.Maths.Value1 Physics
+
+    execute if score #Physics.MinOverlap Physics > #Physics.Overlap.ObjectAxis.z Physics run scoreboard players operation #Physics.MinOverlap Physics = #Physics.Overlap.ObjectAxis.z Physics
+
+    # Cross product: x_block x x_object
+    scoreboard players operation #Physics.Overlap.CrossProductAxis.xx Physics = #Physics.Projection.Object.CrossProductAxis.xx.Max Physics
+    scoreboard players operation #Physics.Overlap.CrossProductAxis.xx Physics -= #Physics.Projection.Voxel.CrossProductAxis.xx.Min Physics
+    scoreboard players operation #Physics.Maths.Value1 Physics = #Physics.Projection.Voxel.CrossProductAxis.xx.Max Physics
+    scoreboard players operation #Physics.Maths.Value1 Physics -= #Physics.Projection.Object.CrossProductAxis.xx.Min Physics
+    execute if score #Physics.Overlap.CrossProductAxis.xx Physics > #Physics.Maths.Value1 Physics run scoreboard players operation #Physics.Overlap.CrossProductAxis.xx Physics = #Physics.Maths.Value1 Physics
+
+    execute if score #Physics.MinOverlap Physics > #Physics.Overlap.CrossProductAxis.xx Physics run scoreboard players operation #Physics.MinOverlap Physics = #Physics.Overlap.CrossProductAxis.xx Physics
+
+    # Cross product: x_block x y_object
+    scoreboard players operation #Physics.Overlap.CrossProductAxis.xy Physics = #Physics.Projection.Object.CrossProductAxis.xy.Max Physics
+    scoreboard players operation #Physics.Overlap.CrossProductAxis.xy Physics -= #Physics.Projection.Voxel.CrossProductAxis.xy.Min Physics
+    scoreboard players operation #Physics.Maths.Value1 Physics = #Physics.Projection.Voxel.CrossProductAxis.xy.Max Physics
+    scoreboard players operation #Physics.Maths.Value1 Physics -= #Physics.Projection.Object.CrossProductAxis.xy.Min Physics
+    execute if score #Physics.Overlap.CrossProductAxis.xy Physics > #Physics.Maths.Value1 Physics run scoreboard players operation #Physics.Overlap.CrossProductAxis.xy Physics = #Physics.Maths.Value1 Physics
+
+    execute if score #Physics.MinOverlap Physics > #Physics.Overlap.CrossProductAxis.xy Physics run scoreboard players operation #Physics.MinOverlap Physics = #Physics.Overlap.CrossProductAxis.xy Physics
+
+    # Cross product: x_block x z_object
+    scoreboard players operation #Physics.Overlap.CrossProductAxis.xz Physics = #Physics.Projection.Object.CrossProductAxis.xz.Max Physics
+    scoreboard players operation #Physics.Overlap.CrossProductAxis.xz Physics -= #Physics.Projection.Voxel.CrossProductAxis.xz.Min Physics
+    scoreboard players operation #Physics.Maths.Value1 Physics = #Physics.Projection.Voxel.CrossProductAxis.xz.Max Physics
+    scoreboard players operation #Physics.Maths.Value1 Physics -= #Physics.Projection.Object.CrossProductAxis.xz.Min Physics
+    execute if score #Physics.Overlap.CrossProductAxis.xz Physics > #Physics.Maths.Value1 Physics run scoreboard players operation #Physics.Overlap.CrossProductAxis.xz Physics = #Physics.Maths.Value1 Physics
+
+    execute if score #Physics.MinOverlap Physics > #Physics.Overlap.CrossProductAxis.xz Physics run scoreboard players operation #Physics.MinOverlap Physics = #Physics.Overlap.CrossProductAxis.xz Physics
+
+    # Cross product: y_block x x_object
+    scoreboard players operation #Physics.Overlap.CrossProductAxis.yx Physics = #Physics.Projection.Object.CrossProductAxis.yx.Max Physics
+    scoreboard players operation #Physics.Overlap.CrossProductAxis.yx Physics -= #Physics.Projection.Voxel.CrossProductAxis.yx.Min Physics
+    scoreboard players operation #Physics.Maths.Value1 Physics = #Physics.Projection.Voxel.CrossProductAxis.yx.Max Physics
+    scoreboard players operation #Physics.Maths.Value1 Physics -= #Physics.Projection.Object.CrossProductAxis.yx.Min Physics
+    execute if score #Physics.Overlap.CrossProductAxis.yx Physics > #Physics.Maths.Value1 Physics run scoreboard players operation #Physics.Overlap.CrossProductAxis.yx Physics = #Physics.Maths.Value1 Physics
+
+    execute if score #Physics.MinOverlap Physics > #Physics.Overlap.CrossProductAxis.yx Physics run scoreboard players operation #Physics.MinOverlap Physics = #Physics.Overlap.CrossProductAxis.yx Physics
+
+    # Cross product: y_block x y_object
+    scoreboard players operation #Physics.Overlap.CrossProductAxis.yy Physics = #Physics.Projection.Object.CrossProductAxis.yy.Max Physics
+    scoreboard players operation #Physics.Overlap.CrossProductAxis.yy Physics -= #Physics.Projection.Voxel.CrossProductAxis.yy.Min Physics
+    scoreboard players operation #Physics.Maths.Value1 Physics = #Physics.Projection.Voxel.CrossProductAxis.yy.Max Physics
+    scoreboard players operation #Physics.Maths.Value1 Physics -= #Physics.Projection.Object.CrossProductAxis.yy.Min Physics
+    execute if score #Physics.Overlap.CrossProductAxis.yy Physics > #Physics.Maths.Value1 Physics run scoreboard players operation #Physics.Overlap.CrossProductAxis.yy Physics = #Physics.Maths.Value1 Physics
+
+    execute if score #Physics.MinOverlap Physics > #Physics.Overlap.CrossProductAxis.yy Physics run scoreboard players operation #Physics.MinOverlap Physics = #Physics.Overlap.CrossProductAxis.yy Physics
+
+    # Cross product: y_block x z_object
+    scoreboard players operation #Physics.Overlap.CrossProductAxis.yz Physics = #Physics.Projection.Object.CrossProductAxis.yz.Max Physics
+    scoreboard players operation #Physics.Overlap.CrossProductAxis.yz Physics -= #Physics.Projection.Voxel.CrossProductAxis.yz.Min Physics
+    scoreboard players operation #Physics.Maths.Value1 Physics = #Physics.Projection.Voxel.CrossProductAxis.yz.Max Physics
+    scoreboard players operation #Physics.Maths.Value1 Physics -= #Physics.Projection.Object.CrossProductAxis.yz.Min Physics
+    execute if score #Physics.Overlap.CrossProductAxis.yz Physics > #Physics.Maths.Value1 Physics run scoreboard players operation #Physics.Overlap.CrossProductAxis.yz Physics = #Physics.Maths.Value1 Physics
+
+    execute if score #Physics.MinOverlap Physics > #Physics.Overlap.CrossProductAxis.yz Physics run scoreboard players operation #Physics.MinOverlap Physics = #Physics.Overlap.CrossProductAxis.yz Physics
+
+    # Cross product: z_block x x_object
+    scoreboard players operation #Physics.Overlap.CrossProductAxis.zx Physics = #Physics.Projection.Object.CrossProductAxis.zx.Max Physics
+    scoreboard players operation #Physics.Overlap.CrossProductAxis.zx Physics -= #Physics.Projection.Voxel.CrossProductAxis.zx.Min Physics
+    scoreboard players operation #Physics.Maths.Value1 Physics = #Physics.Projection.Voxel.CrossProductAxis.zx.Max Physics
+    scoreboard players operation #Physics.Maths.Value1 Physics -= #Physics.Projection.Object.CrossProductAxis.zx.Min Physics
+    execute if score #Physics.Overlap.CrossProductAxis.zx Physics > #Physics.Maths.Value1 Physics run scoreboard players operation #Physics.Overlap.CrossProductAxis.zx Physics = #Physics.Maths.Value1 Physics
+
+    execute if score #Physics.MinOverlap Physics > #Physics.Overlap.CrossProductAxis.zx Physics run scoreboard players operation #Physics.MinOverlap Physics = #Physics.Overlap.CrossProductAxis.zx Physics
+
+    # Cross product: z_block x y_object
+    scoreboard players operation #Physics.Overlap.CrossProductAxis.zy Physics = #Physics.Projection.Object.CrossProductAxis.zy.Max Physics
+    scoreboard players operation #Physics.Overlap.CrossProductAxis.zy Physics -= #Physics.Projection.Voxel.CrossProductAxis.zy.Min Physics
+    scoreboard players operation #Physics.Maths.Value1 Physics = #Physics.Projection.Voxel.CrossProductAxis.zy.Max Physics
+    scoreboard players operation #Physics.Maths.Value1 Physics -= #Physics.Projection.Object.CrossProductAxis.zy.Min Physics
+    execute if score #Physics.Overlap.CrossProductAxis.zy Physics > #Physics.Maths.Value1 Physics run scoreboard players operation #Physics.Overlap.CrossProductAxis.zy Physics = #Physics.Maths.Value1 Physics
+
+    execute if score #Physics.MinOverlap Physics > #Physics.Overlap.CrossProductAxis.zy Physics run scoreboard players operation #Physics.MinOverlap Physics = #Physics.Overlap.CrossProductAxis.zy Physics
+
+    # Cross product: z_block x z_object
+    scoreboard players operation #Physics.Overlap.CrossProductAxis.zz Physics = #Physics.Projection.Object.CrossProductAxis.zz.Max Physics
+    scoreboard players operation #Physics.Overlap.CrossProductAxis.zz Physics -= #Physics.Projection.Voxel.CrossProductAxis.zz.Min Physics
+    scoreboard players operation #Physics.Maths.Value1 Physics = #Physics.Projection.Voxel.CrossProductAxis.zz.Max Physics
+    scoreboard players operation #Physics.Maths.Value1 Physics -= #Physics.Projection.Object.CrossProductAxis.zz.Min Physics
+    execute if score #Physics.Overlap.CrossProductAxis.zz Physics > #Physics.Maths.Value1 Physics run scoreboard players operation #Physics.Overlap.CrossProductAxis.zz Physics = #Physics.Maths.Value1 Physics
+
+    execute if score #Physics.MinOverlap Physics > #Physics.Overlap.CrossProductAxis.zz Physics run scoreboard players operation #Physics.MinOverlap Physics = #Physics.Overlap.CrossProductAxis.zz Physics
