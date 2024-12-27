@@ -145,9 +145,10 @@ scoreboard players set #Physics.Global.LinearDamping Physics 98
 scoreboard players set #Physics.Global.AngularDamping Physics 98
 scoreboard players set #Physics.Global.PlayerAttackForceMagnitude Physics 300
 
-# Set value constants (You can't multiply or divide by numbers without defining them first using scoreboards)
+# Set value constants
 scoreboard players set #Physics.Constants.-1000 Physics -1000
 scoreboard players set #Physics.Constants.-500 Physics -500
+scoreboard players set #Physics.Constants.-2 Physics -2
 scoreboard players set #Physics.Constants.-1 Physics -1
 scoreboard players set #Physics.Constants.2 Physics 2
 scoreboard players set #Physics.Constants.10 Physics 10
@@ -168,3 +169,6 @@ data modify storage physics:temp data.Integration set value {Pos:[0d,0d,0d],star
 data modify storage physics:temp data.Integration.Pos set value [0d,0d,0d]
 data modify storage physics:temp data.IntersectionPosGlobal set value [0d,0d,0d]
 data modify storage physics:maths processing.Distance set value [0f,0f,0f,0f,0f,0f,0f,0f,0f,0f,0f,0f,0f,0f,0f,1f]
+
+# Set gamerules
+gamerule maxCommandChainLength 2147483647

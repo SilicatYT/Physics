@@ -147,4 +147,5 @@ scoreboard objectives remove Physics.Object.ProjectionOwnAxis.z.Max
 
 # Remove data storages
 data remove storage physics:maths processing
+data remove storage physics:debug data
 data remove storage physics:temp data

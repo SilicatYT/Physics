@@ -1,7 +1,3 @@
-execute store result storage test:test data.x double 0.001 run scoreboard players get #Physics.BlockPos.x Physics
-execute store result storage test:test data.y double 0.001 run scoreboard players get #Physics.BlockPos.y Physics
-execute store result storage test:test data.z double 0.001 run scoreboard players get #Physics.BlockPos.z Physics
-
 # Note: All axis-vectors need to be normalized, including the cross product axes
 # Note: Precalculation - The projection of the object onto the world-geometry voxel's 3 axes is the same as the object's min and max values for those axes, so the min and max of the bounding box.
 # Note: Precalculation - The projection of the object onto its own 3 axes is -(dimension/2) for the min, and (dimension/2) for the max. Then just add the object center's projection onto the same axis to those min and max values.
@@ -369,8 +365,6 @@ execute store result storage test:test data.z double 0.001 run scoreboard player
             execute unless score #Physics.Projection.Voxel.CrossProductAxis.zz.Min Physics <= #Physics.Projection.Object.CrossProductAxis.zz.Max Physics run return 0
             execute unless score #Physics.Projection.Object.CrossProductAxis.zz.Min Physics <= #Physics.Projection.Voxel.CrossProductAxis.zz.Max Physics run return 0
 
-function physics:zprivate/collision_detection/voxel_grid/debug_set_glass with storage test:test data
-
 # Get how much each axis is overlapping & get the least overlap
     # x_block
     scoreboard players operation #Physics.Overlap.WorldAxis.x Physics = @s Physics.Object.BoundingBoxGlobalMax.x
@@ -505,4 +499,20 @@ function physics:zprivate/collision_detection/voxel_grid/debug_set_glass with st
     scoreboard players operation #Physics.Maths.Value1 Physics -= #Physics.Projection.Object.CrossProductAxis.zz.Min Physics
     execute if score #Physics.Overlap.CrossProductAxis.zz Physics > #Physics.Maths.Value1 Physics run scoreboard players operation #Physics.Overlap.CrossProductAxis.zz Physics = #Physics.Maths.Value1 Physics
 
-    execute if score #Physics.MinOverlap Physics > #Physics.Overlap.CrossProductAxis.zz Physics run scoreboard players operation #Physics.MinOverlap Physics = #Physics.Overlap.CrossProductAxis.zz Physics
+    execute if score #Physics.MinOverlap Physics > #Physics.Overlap.CrossProductAxis.zz Physics run return run function physics:zprivate/contact_generation/get_features/cross_product_axis_zz
+
+# Get the involved features of both objects
+execute if score #Physics.MinOverlap Physics = #Physics.Overlap.WorldAxis.x Physics run return run function physics:zprivate/contact_generation/get_features/voxel_grid/world_axis_x
+execute if score #Physics.MinOverlap Physics = #Physics.Overlap.WorldAxis.y Physics run return run function physics:zprivate/contact_generation/get_features/voxel_grid/world_axis_y
+execute if score #Physics.MinOverlap Physics = #Physics.Overlap.WorldAxis.z Physics run return run function physics:zprivate/contact_generation/get_features/voxel_grid/world_axis_z
+execute if score #Physics.MinOverlap Physics = #Physics.Overlap.ObjectAxis.x Physics run return run function physics:zprivate/contact_generation/get_features/voxel_grid/object_axis_x
+execute if score #Physics.MinOverlap Physics = #Physics.Overlap.ObjectAxis.y Physics run return run function physics:zprivate/contact_generation/get_features/voxel_grid/object_axis_y
+execute if score #Physics.MinOverlap Physics = #Physics.Overlap.ObjectAxis.z Physics run return run function physics:zprivate/contact_generation/get_features/voxel_grid/object_axis_z
+execute if score #Physics.MinOverlap Physics = #Physics.Overlap.CrossProductAxis.xx Physics run return run function physics:zprivate/contact_generation/get_features/voxel_grid/cross_product_axis_xx
+execute if score #Physics.MinOverlap Physics = #Physics.Overlap.CrossProductAxis.xy Physics run return run function physics:zprivate/contact_generation/get_features/voxel_grid/cross_product_axis_xy
+execute if score #Physics.MinOverlap Physics = #Physics.Overlap.CrossProductAxis.xz Physics run return run function physics:zprivate/contact_generation/get_features/voxel_grid/cross_product_axis_xz
+execute if score #Physics.MinOverlap Physics = #Physics.Overlap.CrossProductAxis.yx Physics run return run function physics:zprivate/contact_generation/get_features/voxel_grid/cross_product_axis_yx
+execute if score #Physics.MinOverlap Physics = #Physics.Overlap.CrossProductAxis.yy Physics run return run function physics:zprivate/contact_generation/get_features/voxel_grid/cross_product_axis_yy
+execute if score #Physics.MinOverlap Physics = #Physics.Overlap.CrossProductAxis.yz Physics run return run function physics:zprivate/contact_generation/get_features/voxel_grid/cross_product_axis_yz
+execute if score #Physics.MinOverlap Physics = #Physics.Overlap.CrossProductAxis.zx Physics run return run function physics:zprivate/contact_generation/get_features/voxel_grid/cross_product_axis_zx
+function physics:zprivate/contact_generation/get_features/voxel_grid/cross_product_axis_zy
