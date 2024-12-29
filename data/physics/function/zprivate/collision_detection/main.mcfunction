@@ -502,7 +502,7 @@
         # (Important): Cross product's z component is 0, so z can be ignored
             # Corner 0 [-500, -500]
             scoreboard players operation #Physics.Projection.VoxelCornerBase0.CrossProductAxis.zx Physics = #Physics.CrossProductAxis.zx.x Physics
-            execute store result score #Physics.Projection.VoxelCornerBase1.CrossProductAxis.zx Physics run scoreboard players operation #Physics.Projection.VoxelCornerBase0.CrossProductAxis.zx Physics /= #Physics.Constants.-2 Physics
+            execute store result score #Physics.Projection.VoxelCornerBase4.CrossProductAxis.zx Physics run scoreboard players operation #Physics.Projection.VoxelCornerBase0.CrossProductAxis.zx Physics /= #Physics.Constants.-2 Physics
 
             scoreboard players operation #Physics.Maths.Value1 Physics = #Physics.CrossProductAxis.zx.y Physics
             scoreboard players operation #Physics.Maths.Value1 Physics /= #Physics.Constants.-2 Physics
@@ -510,13 +510,13 @@
 
             # Corner 1 [-500, -500] (Same as 0)
 
-            # Corner 2 [500, -500]
-            execute store result score #Physics.Projection.VoxelCornerBase4.CrossProductAxis.zx Physics run scoreboard players operation #Physics.Projection.VoxelCornerBase2.CrossProductAxis.zx Physics -= #Physics.Maths.Value1 Physics
-
             # Corner 3 [500, -500] (Same as 2)
 
-            # Corner 4 [-500, 500] (Mirrored version of 2)
-            scoreboard players operation #Physics.Projection.VoxelCornerBase4.CrossProductAxis.zx Physics *= #Physics.Constants.-1 Physics
+            # Corner 4 [-500, 500]
+            execute store result score #Physics.Projection.VoxelCornerBase2.CrossProductAxis.zx Physics run scoreboard players operation #Physics.Projection.VoxelCornerBase4.CrossProductAxis.zx Physics -= #Physics.Maths.Value1 Physics
+
+            # Corner 2 [500, -500] (Mirrored version of 4)
+            scoreboard players operation #Physics.Projection.VoxelCornerBase2.CrossProductAxis.zx Physics *= #Physics.Constants.-1 Physics
 
             # Corner 5 [-500, 500] (Same as 4)
 
@@ -536,7 +536,7 @@
         # (Important): Cross product's z component is 0, so z can be ignored
             # Corner 0 [-500, -500]
             scoreboard players operation #Physics.Projection.VoxelCornerBase0.CrossProductAxis.zy Physics = #Physics.CrossProductAxis.zy.x Physics
-            execute store result score #Physics.Projection.VoxelCornerBase1.CrossProductAxis.zy Physics run scoreboard players operation #Physics.Projection.VoxelCornerBase0.CrossProductAxis.zy Physics /= #Physics.Constants.-2 Physics
+            execute store result score #Physics.Projection.VoxelCornerBase4.CrossProductAxis.zy Physics run scoreboard players operation #Physics.Projection.VoxelCornerBase0.CrossProductAxis.zy Physics /= #Physics.Constants.-2 Physics
 
             scoreboard players operation #Physics.Maths.Value1 Physics = #Physics.CrossProductAxis.zy.y Physics
             scoreboard players operation #Physics.Maths.Value1 Physics /= #Physics.Constants.-2 Physics
@@ -544,13 +544,13 @@
 
             # Corner 1 [-500, -500] (Same as 0)
 
-            # Corner 2 [500, -500]
-            execute store result score #Physics.Projection.VoxelCornerBase4.CrossProductAxis.zy Physics run scoreboard players operation #Physics.Projection.VoxelCornerBase2.CrossProductAxis.zy Physics -= #Physics.Maths.Value1 Physics
-
             # Corner 3 [500, -500] (Same as 2)
 
-            # Corner 4 [-500, 500] (Mirrored version of 2)
-            scoreboard players operation #Physics.Projection.VoxelCornerBase4.CrossProductAxis.zy Physics *= #Physics.Constants.-1 Physics
+            # Corner 4 [-500, 500]
+            execute store result score #Physics.Projection.VoxelCornerBase2.CrossProductAxis.zy Physics run scoreboard players operation #Physics.Projection.VoxelCornerBase4.CrossProductAxis.zy Physics -= #Physics.Maths.Value1 Physics
+
+            # Corner 2 [500, -500] (Mirrored version of 4)
+            scoreboard players operation #Physics.Projection.VoxelCornerBase2.CrossProductAxis.zy Physics *= #Physics.Constants.-1 Physics
 
             # Corner 5 [-500, 500] (Same as 4)
 
@@ -570,7 +570,7 @@
         # (Important): Cross product's z component is 0, so z can be ignored
             # Corner 0 [-500, -500]
             scoreboard players operation #Physics.Projection.VoxelCornerBase0.CrossProductAxis.zz Physics = #Physics.CrossProductAxis.zz.x Physics
-            execute store result score #Physics.Projection.VoxelCornerBase1.CrossProductAxis.zz Physics run scoreboard players operation #Physics.Projection.VoxelCornerBase0.CrossProductAxis.zz Physics /= #Physics.Constants.-2 Physics
+            execute store result score #Physics.Projection.VoxelCornerBase4.CrossProductAxis.zz Physics run scoreboard players operation #Physics.Projection.VoxelCornerBase0.CrossProductAxis.zz Physics /= #Physics.Constants.-2 Physics
 
             scoreboard players operation #Physics.Maths.Value1 Physics = #Physics.CrossProductAxis.zz.y Physics
             scoreboard players operation #Physics.Maths.Value1 Physics /= #Physics.Constants.-2 Physics
@@ -578,13 +578,13 @@
 
             # Corner 1 [-500, -500] (Same as 0)
 
-            # Corner 2 [500, -500]
-            execute store result score #Physics.Projection.VoxelCornerBase4.CrossProductAxis.zz Physics run scoreboard players operation #Physics.Projection.VoxelCornerBase2.CrossProductAxis.zz Physics -= #Physics.Maths.Value1 Physics
-
             # Corner 3 [500, -500] (Same as 2)
 
-            # Corner 4 [-500, 500] (Mirrored version of 2)
-            scoreboard players operation #Physics.Projection.VoxelCornerBase4.CrossProductAxis.zz Physics *= #Physics.Constants.-1 Physics
+            # Corner 4 [-500, 500]
+            execute store result score #Physics.Projection.VoxelCornerBase2.CrossProductAxis.zz Physics run scoreboard players operation #Physics.Projection.VoxelCornerBase4.CrossProductAxis.zz Physics -= #Physics.Maths.Value1 Physics
+
+            # Corner 2 [500, -500] (Mirrored version of 4)
+            scoreboard players operation #Physics.Projection.VoxelCornerBase2.CrossProductAxis.zz Physics *= #Physics.Constants.-1 Physics
 
             # Corner 5 [-500, 500] (Same as 4)
 

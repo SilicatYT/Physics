@@ -4,76 +4,19 @@ execute if score #Physics.Projection.Voxel.ObjectAxis.z.Min Physics >= @s Physic
 execute if score #Physics.Projection.Voxel.ObjectAxis.z.Min Physics < @s Physics.Object.ProjectionOwnAxis.z.Min run scoreboard players set #Physics.ObjectA.Feature Physics 15
 
 # Get the world-geometry voxel's feature (Corner that's closest to the object)
-# (Important): I check which of the 8 corners' projection is the closest to the object's face.
-    # Adjust point projections for the voxel position (They are currently relative)
-    scoreboard players operation #Physics.Projection.VoxelCorner0.ObjectAxis.z Physics = #Physics.Projection.VoxelCornerBase0.ObjectAxis.z Physics
-    scoreboard players operation #Physics.Projection.VoxelCorner1.ObjectAxis.z Physics = #Physics.Projection.VoxelCornerBase1.ObjectAxis.z Physics
-    scoreboard players operation #Physics.Projection.VoxelCorner2.ObjectAxis.z Physics = #Physics.Projection.VoxelCornerBase2.ObjectAxis.z Physics
-    scoreboard players operation #Physics.Projection.VoxelCorner3.ObjectAxis.z Physics = #Physics.Projection.VoxelCornerBase3.ObjectAxis.z Physics
-    scoreboard players operation #Physics.Projection.VoxelCorner4.ObjectAxis.z Physics = #Physics.Projection.VoxelCornerBase4.ObjectAxis.z Physics
-    scoreboard players operation #Physics.Projection.VoxelCorner5.ObjectAxis.z Physics = #Physics.Projection.VoxelCornerBase5.ObjectAxis.z Physics
-    scoreboard players operation #Physics.Projection.VoxelCorner6.ObjectAxis.z Physics = #Physics.Projection.VoxelCornerBase6.ObjectAxis.z Physics
-    scoreboard players operation #Physics.Projection.VoxelCorner7.ObjectAxis.z Physics = #Physics.Projection.VoxelCornerBase7.ObjectAxis.z Physics
-
-    scoreboard players operation #Physics.Projection.VoxelCorner0.ObjectAxis.z Physics += #Physics.Projection.VoxelCenter.ObjectAxis.z Physics
-    scoreboard players operation #Physics.Projection.VoxelCorner1.ObjectAxis.z Physics += #Physics.Projection.VoxelCenter.ObjectAxis.z Physics
-    scoreboard players operation #Physics.Projection.VoxelCorner2.ObjectAxis.z Physics += #Physics.Projection.VoxelCenter.ObjectAxis.z Physics
-    scoreboard players operation #Physics.Projection.VoxelCorner3.ObjectAxis.z Physics += #Physics.Projection.VoxelCenter.ObjectAxis.z Physics
-    scoreboard players operation #Physics.Projection.VoxelCorner4.ObjectAxis.z Physics += #Physics.Projection.VoxelCenter.ObjectAxis.z Physics
-    scoreboard players operation #Physics.Projection.VoxelCorner5.ObjectAxis.z Physics += #Physics.Projection.VoxelCenter.ObjectAxis.z Physics
-    scoreboard players operation #Physics.Projection.VoxelCorner6.ObjectAxis.z Physics += #Physics.Projection.VoxelCenter.ObjectAxis.z Physics
-    scoreboard players operation #Physics.Projection.VoxelCorner7.ObjectAxis.z Physics += #Physics.Projection.VoxelCenter.ObjectAxis.z Physics
-
-    # Corner 0
-    execute if score #Physics.ObjectA.Feature Physics matches 14 store result score #Physics.Maths.Value1 Physics store result score #Physics.Maths.Value2 Physics store result score #Physics.Maths.Value3 Physics store result score #Physics.Maths.Value4 Physics store result score #Physics.Maths.Value5 Physics store result score #Physics.Maths.Value6 Physics store result score #Physics.Maths.Value7 Physics run scoreboard players operation #Physics.MinPointDistance Physics = @s Physics.Object.ProjectionOwnAxis.z.Max
-    execute if score #Physics.ObjectA.Feature Physics matches 15 store result score #Physics.Maths.Value1 Physics store result score #Physics.Maths.Value2 Physics store result score #Physics.Maths.Value3 Physics store result score #Physics.Maths.Value4 Physics store result score #Physics.Maths.Value5 Physics store result score #Physics.Maths.Value6 Physics store result score #Physics.Maths.Value7 Physics run scoreboard players operation #Physics.MinPointDistance Physics = @s Physics.Object.ProjectionOwnAxis.z.Min
-    scoreboard players operation #Physics.MinPointDistance Physics -= #Physics.Projection.VoxelCorner0.ObjectAxis.z Physics
-    execute if score #Physics.MinPointDistance Physics matches ..-1 run scoreboard players operation #Physics.MinPointDistance Physics *= #Physics.Constants.-1 Physics
-
-    # Corner 1
-    scoreboard players operation #Physics.Maths.Value1 Physics -= #Physics.Projection.VoxelCorner1.ObjectAxis.z Physics
-    execute if score #Physics.Maths.Value1 Physics matches ..-1 run scoreboard players operation #Physics.Maths.Value1 Physics *= #Physics.Constants.-1 Physics
-    execute if score #Physics.MinPointDistance Physics > #Physics.Maths.Value1 Physics run scoreboard players operation #Physics.MinPointDistance Physics = #Physics.Maths.Value1 Physics
-
-    # Corner 2
-    scoreboard players operation #Physics.Maths.Value2 Physics -= #Physics.Projection.VoxelCorner2.ObjectAxis.z Physics
-    execute if score #Physics.Maths.Value2 Physics matches ..-1 run scoreboard players operation #Physics.Maths.Value2 Physics *= #Physics.Constants.-1 Physics
-    execute if score #Physics.MinPointDistance Physics > #Physics.Maths.Value2 Physics run scoreboard players operation #Physics.MinPointDistance Physics = #Physics.Maths.Value2 Physics
-
-    # Corner 3
-    scoreboard players operation #Physics.Maths.Value3 Physics -= #Physics.Projection.VoxelCorner3.ObjectAxis.z Physics
-    execute if score #Physics.Maths.Value3 Physics matches ..-1 run scoreboard players operation #Physics.Maths.Value3 Physics *= #Physics.Constants.-1 Physics
-    execute if score #Physics.MinPointDistance Physics > #Physics.Maths.Value3 Physics run scoreboard players operation #Physics.MinPointDistance Physics = #Physics.Maths.Value3 Physics
-
-    # Corner 4
-    scoreboard players operation #Physics.Maths.Value4 Physics -= #Physics.Projection.VoxelCorner4.ObjectAxis.z Physics
-    execute if score #Physics.Maths.Value4 Physics matches ..-1 run scoreboard players operation #Physics.Maths.Value4 Physics *= #Physics.Constants.-1 Physics
-    execute if score #Physics.MinPointDistance Physics > #Physics.Maths.Value4 Physics run scoreboard players operation #Physics.MinPointDistance Physics = #Physics.Maths.Value4 Physics
-
-    # Corner 5
-    scoreboard players operation #Physics.Maths.Value5 Physics -= #Physics.Projection.VoxelCorner5.ObjectAxis.z Physics
-    execute if score #Physics.Maths.Value5 Physics matches ..-1 run scoreboard players operation #Physics.Maths.Value5 Physics *= #Physics.Constants.-1 Physics
-    execute if score #Physics.MinPointDistance Physics > #Physics.Maths.Value5 Physics run scoreboard players operation #Physics.MinPointDistance Physics = #Physics.Maths.Value5 Physics
-
-    # Corner 6
-    scoreboard players operation #Physics.Maths.Value6 Physics -= #Physics.Projection.VoxelCorner6.ObjectAxis.z Physics
-    execute if score #Physics.Maths.Value6 Physics matches ..-1 run scoreboard players operation #Physics.Maths.Value6 Physics *= #Physics.Constants.-1 Physics
-    execute if score #Physics.MinPointDistance Physics > #Physics.Maths.Value6 Physics run scoreboard players operation #Physics.MinPointDistance Physics = #Physics.Maths.Value6 Physics
-
-    # Corner 7
-    scoreboard players operation #Physics.Maths.Value7 Physics -= #Physics.Projection.VoxelCorner7.ObjectAxis.z Physics
-    execute if score #Physics.Maths.Value7 Physics matches ..-1 run scoreboard players operation #Physics.Maths.Value7 Physics *= #Physics.Constants.-1 Physics
-    execute if score #Physics.MinPointDistance Physics > #Physics.Maths.Value7 Physics run scoreboard players operation #Physics.MinPointDistance Physics = #Physics.Maths.Value7 Physics
+# (Important): I check which of the 8 corners' projection is the closest to the object along the axis (furthest along the axis), so I have to get either the min or the max.
+execute if score #Physics.ObjectA.Feature Physics matches 14 run scoreboard players operation #Physics.DeepestProjection Physics = #Physics.Projection.VoxelBase.ObjectAxis.z.Min Physics
+execute if score #Physics.ObjectA.Feature Physics matches 15 run scoreboard players operation #Physics.DeepestProjection Physics = #Physics.Projection.VoxelBase.ObjectAxis.z.Max Physics
 
     # Set the feature
     scoreboard players set #Physics.ObjectB.Feature Physics 0
-    execute if score #Physics.MinPointDistance Physics = #Physics.Maths.Value1 Physics run scoreboard players set #Physics.ObjectB.Feature Physics 1
-    execute if score #Physics.MinPointDistance Physics = #Physics.Maths.Value2 Physics run scoreboard players set #Physics.ObjectB.Feature Physics 2
-    execute if score #Physics.MinPointDistance Physics = #Physics.Maths.Value3 Physics run scoreboard players set #Physics.ObjectB.Feature Physics 3
-    execute if score #Physics.MinPointDistance Physics = #Physics.Maths.Value4 Physics run scoreboard players set #Physics.ObjectB.Feature Physics 4
-    execute if score #Physics.MinPointDistance Physics = #Physics.Maths.Value5 Physics run scoreboard players set #Physics.ObjectB.Feature Physics 5
-    execute if score #Physics.MinPointDistance Physics = #Physics.Maths.Value6 Physics run scoreboard players set #Physics.ObjectB.Feature Physics 6
-    execute if score #Physics.MinPointDistance Physics = #Physics.Maths.Value7 Physics run scoreboard players set #Physics.ObjectB.Feature Physics 7
+    execute if score #Physics.DeepestProjection Physics = #Physics.Projection.VoxelCornerBase1.ObjectAxis.z Physics run scoreboard players set #Physics.ObjectB.Feature Physics 1
+    execute if score #Physics.DeepestProjection Physics = #Physics.Projection.VoxelCornerBase2.ObjectAxis.z Physics run scoreboard players set #Physics.ObjectB.Feature Physics 2
+    execute if score #Physics.DeepestProjection Physics = #Physics.Projection.VoxelCornerBase3.ObjectAxis.z Physics run scoreboard players set #Physics.ObjectB.Feature Physics 3
+    execute if score #Physics.DeepestProjection Physics = #Physics.Projection.VoxelCornerBase4.ObjectAxis.z Physics run scoreboard players set #Physics.ObjectB.Feature Physics 4
+    execute if score #Physics.DeepestProjection Physics = #Physics.Projection.VoxelCornerBase5.ObjectAxis.z Physics run scoreboard players set #Physics.ObjectB.Feature Physics 5
+    execute if score #Physics.DeepestProjection Physics = #Physics.Projection.VoxelCornerBase6.ObjectAxis.z Physics run scoreboard players set #Physics.ObjectB.Feature Physics 6
+    execute if score #Physics.DeepestProjection Physics = #Physics.Projection.VoxelCornerBase7.ObjectAxis.z Physics run scoreboard players set #Physics.ObjectB.Feature Physics 7
 
 # Debug: Show contact features
 execute if score #Physics.Debug.ShowContactFeatures Physics matches 1 run function physics:debug/show_contact_features
