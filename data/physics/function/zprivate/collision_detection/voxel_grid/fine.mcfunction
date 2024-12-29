@@ -365,6 +365,11 @@
             execute unless score #Physics.Projection.Voxel.CrossProductAxis.zz.Min Physics <= #Physics.Projection.Object.CrossProductAxis.zz.Max Physics run return 0
             execute unless score #Physics.Projection.Object.CrossProductAxis.zz.Min Physics <= #Physics.Projection.Voxel.CrossProductAxis.zz.Max Physics run return 0
 
+execute store result storage test:test data.x double 0.001 run scoreboard players get #Physics.BlockPos.x Physics
+execute store result storage test:test data.y double 0.001 run scoreboard players get #Physics.BlockPos.y Physics
+execute store result storage test:test data.z double 0.001 run scoreboard players get #Physics.BlockPos.z Physics
+function physics:zprivate/collision_detection/voxel_grid/debug_set_glass with storage test:test data
+
 # Get how much each axis is overlapping & get the least overlap
     # x_block
     scoreboard players operation #Physics.Overlap.WorldAxis.x Physics = @s Physics.Object.BoundingBoxGlobalMax.x

@@ -1,12 +1,12 @@
 # Get the world-geometry voxel's feature (Face that's closest to the object)
 # (Important): There are 2 candidate faces (those normal to the axis), and I select the correct one by looking at the projection of a single point of them and looking which is closer. If I look at the same point for both faces, I can easily get which face is closer.
-execute if score @s Physics.Object.BoundingBoxGlobalMin.y >= #Physics.Projection.Voxel.WorldAxis.y.Min Physics run scoreboard players set #Physics.ObjectB.Feature Physics 12
-execute if score @s Physics.Object.BoundingBoxGlobalMin.y < #Physics.Projection.Voxel.WorldAxis.y.Min Physics run scoreboard players set #Physics.ObjectB.Feature Physics 13
+execute if score @s Physics.Object.BoundingBoxGlobalMin.y >= #Physics.Projection.Voxel.WorldAxis.y.Min Physics run scoreboard players set #Physics.ObjectB.Feature Physics 102
+execute if score @s Physics.Object.BoundingBoxGlobalMin.y < #Physics.Projection.Voxel.WorldAxis.y.Min Physics run scoreboard players set #Physics.ObjectB.Feature Physics 103
 
 # Get the object's feature (Corner that's closest to the world-geometry voxel)
 # (Important): I check which of the 8 corners' projection is the closest to the world-geometry voxel (furthest along in either the positive or negative direction, depending on the face).
-execute if score #Physics.ObjectB.Feature Physics matches 12 run scoreboard players operation #Physics.DeepestProjection Physics = @s Physics.Object.BoundingBoxGlobalMin.y
-execute if score #Physics.ObjectB.Feature Physics matches 13 run scoreboard players operation #Physics.DeepestProjection Physics = @s Physics.Object.BoundingBoxGlobalMax.y
+execute if score #Physics.ObjectB.Feature Physics matches 102 run scoreboard players operation #Physics.DeepestProjection Physics = @s Physics.Object.BoundingBoxGlobalMin.y
+execute if score #Physics.ObjectB.Feature Physics matches 103 run scoreboard players operation #Physics.DeepestProjection Physics = @s Physics.Object.BoundingBoxGlobalMax.y
 
     # Set the feature
     scoreboard players set #Physics.ObjectA.Feature Physics 0

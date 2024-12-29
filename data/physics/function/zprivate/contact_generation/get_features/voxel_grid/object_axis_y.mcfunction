@@ -1,12 +1,12 @@
 # Get the object's feature (Face that's closest to the world-geometry voxel)
 # (Important): There are 2 candidate faces (those normal to the axis), and I select the correct one by looking at the projection of a single point of them and looking which is closer. If I look at the same point for both faces, I can easily get which face is closer.
-execute if score #Physics.Projection.Voxel.ObjectAxis.y.Min Physics >= @s Physics.Object.ProjectionOwnAxis.y.Min run scoreboard players set #Physics.ObjectA.Feature Physics 12
-execute if score #Physics.Projection.Voxel.ObjectAxis.y.Min Physics < @s Physics.Object.ProjectionOwnAxis.y.Min run scoreboard players set #Physics.ObjectA.Feature Physics 13
+execute if score #Physics.Projection.Voxel.ObjectAxis.y.Min Physics >= @s Physics.Object.ProjectionOwnAxis.y.Min run scoreboard players set #Physics.ObjectA.Feature Physics 102
+execute if score #Physics.Projection.Voxel.ObjectAxis.y.Min Physics < @s Physics.Object.ProjectionOwnAxis.y.Min run scoreboard players set #Physics.ObjectA.Feature Physics 103
 
 # Get the world-geometry voxel's feature (Corner that's closest to the object)
 # (Important): I check which of the 8 corners' projection is the closest to the object along the axis (furthest along the axis), so I have to get either the min or the max.
-execute if score #Physics.ObjectA.Feature Physics matches 12 run scoreboard players operation #Physics.DeepestProjection Physics = #Physics.Projection.VoxelBase.ObjectAxis.y.Min Physics
-execute if score #Physics.ObjectA.Feature Physics matches 13 run scoreboard players operation #Physics.DeepestProjection Physics = #Physics.Projection.VoxelBase.ObjectAxis.y.Max Physics
+execute if score #Physics.ObjectA.Feature Physics matches 102 run scoreboard players operation #Physics.DeepestProjection Physics = #Physics.Projection.VoxelBase.ObjectAxis.y.Min Physics
+execute if score #Physics.ObjectA.Feature Physics matches 103 run scoreboard players operation #Physics.DeepestProjection Physics = #Physics.Projection.VoxelBase.ObjectAxis.y.Max Physics
 
     # Set the feature
     scoreboard players set #Physics.ObjectB.Feature Physics 0
