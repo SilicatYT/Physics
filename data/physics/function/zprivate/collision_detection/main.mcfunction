@@ -4,17 +4,17 @@
     # (Important): Just like in several other parts of the code, I use "execute store result" when a value is calculated to create copies, instead of manually running "scoreboard players operation ... = ...", because the former is faster.
         # Get scores
         # (Important): Using store result to prevent repeated scoreboard operations. I think it should still be faster this way, even if I have to run a "get" command instead of being able to prepend the store result to where the value is calculated?
-        execute store result score #Physics.CrossProductAxis.yx.z Physics store result score #Physics.CrossProductAxis.zx.y Physics run scoreboard players operation #Physics.Maths.Value9 Physics = @s Physics.Object.Axis.x.x
-        execute store result score #Physics.CrossProductAxis.xx.z Physics store result score #Physics.Maths.Value3 Physics run scoreboard players operation #Physics.CrossProductAxis.zx.x Physics = @s Physics.Object.Axis.x.y
-        execute store result score #Physics.CrossProductAxis.xx.y Physics store result score #Physics.CrossProductAxis.yx.x Physics store result score #Physics.Maths.Value6 Physics run scoreboard players get @s Physics.Object.Axis.x.z
+        execute store result score #Physics.ThisObject Physics.Object.Axis.x.x store result score #Physics.CrossProductAxis.yx.z Physics store result score #Physics.CrossProductAxis.zx.y Physics run scoreboard players operation #Physics.Maths.Value9 Physics = @s Physics.Object.Axis.x.x
+        execute store result score #Physics.ThisObject Physics.Object.Axis.x.y store result score #Physics.CrossProductAxis.xx.z Physics store result score #Physics.Maths.Value3 Physics run scoreboard players operation #Physics.CrossProductAxis.zx.x Physics = @s Physics.Object.Axis.x.y
+        execute store result score #Physics.ThisObject Physics.Object.Axis.x.z store result score #Physics.CrossProductAxis.xx.y Physics store result score #Physics.CrossProductAxis.yx.x Physics store result score #Physics.Maths.Value6 Physics run scoreboard players get @s Physics.Object.Axis.x.z
 
-        execute store result score #Physics.CrossProductAxis.yy.z Physics store result score #Physics.CrossProductAxis.zy.y Physics run scoreboard players operation #Physics.Maths.Value10 Physics = @s Physics.Object.Axis.y.x
-        execute store result score #Physics.CrossProductAxis.xy.z Physics store result score #Physics.Maths.Value4 Physics run scoreboard players operation #Physics.CrossProductAxis.zy.x Physics = @s Physics.Object.Axis.y.y
-        execute store result score #Physics.CrossProductAxis.xy.y Physics store result score #Physics.CrossProductAxis.yy.x Physics run scoreboard players operation #Physics.Maths.Value7 Physics = @s Physics.Object.Axis.y.z
+        execute store result score #Physics.ThisObject Physics.Object.Axis.y.x store result score #Physics.CrossProductAxis.yy.z Physics store result score #Physics.CrossProductAxis.zy.y Physics run scoreboard players operation #Physics.Maths.Value10 Physics = @s Physics.Object.Axis.y.x
+        execute store result score #Physics.ThisObject Physics.Object.Axis.y.y store result score #Physics.CrossProductAxis.xy.z Physics store result score #Physics.Maths.Value4 Physics run scoreboard players operation #Physics.CrossProductAxis.zy.x Physics = @s Physics.Object.Axis.y.y
+        execute store result score #Physics.ThisObject Physics.Object.Axis.y.z store result score #Physics.CrossProductAxis.xy.y Physics store result score #Physics.CrossProductAxis.yy.x Physics run scoreboard players operation #Physics.Maths.Value7 Physics = @s Physics.Object.Axis.y.z
 
-        execute store result score #Physics.CrossProductAxis.yz.z Physics store result score #Physics.CrossProductAxis.zz.y Physics run scoreboard players operation #Physics.Maths.Value11 Physics = @s Physics.Object.Axis.z.x
-        execute store result score #Physics.CrossProductAxis.xz.z Physics store result score #Physics.Maths.Value5 Physics run scoreboard players operation #Physics.CrossProductAxis.zz.x Physics = @s Physics.Object.Axis.z.y
-        execute store result score #Physics.CrossProductAxis.xz.y Physics store result score #Physics.CrossProductAxis.yz.x Physics run scoreboard players operation #Physics.Maths.Value8 Physics = @s Physics.Object.Axis.z.z
+        execute store result score #Physics.ThisObject Physics.Object.Axis.z.x store result score #Physics.CrossProductAxis.yz.z Physics store result score #Physics.CrossProductAxis.zz.y Physics run scoreboard players operation #Physics.Maths.Value11 Physics = @s Physics.Object.Axis.z.x
+        execute store result score #Physics.ThisObject Physics.Object.Axis.z.y store result score #Physics.CrossProductAxis.xz.z Physics store result score #Physics.Maths.Value5 Physics run scoreboard players operation #Physics.CrossProductAxis.zz.x Physics = @s Physics.Object.Axis.z.y
+        execute store result score #Physics.ThisObject Physics.Object.Axis.z.z store result score #Physics.CrossProductAxis.xz.y Physics store result score #Physics.CrossProductAxis.yz.x Physics run scoreboard players operation #Physics.Maths.Value8 Physics = @s Physics.Object.Axis.z.z
 
         # x_block x x_object
             # Calculation (x_block => The x component is always 0, the y component is -z from the object's axis, and the z component is y from the object's axis)
@@ -1086,11 +1086,40 @@ execute at @s run function physics:zprivate/collision_detection/voxel_grid/main 
 # Check for coarse collisions with other dynamic objects, so I can then perform the SAT to check for fine collisions
 # (Important): Only checks objects in a range of 6.929 blocks, which is the sum of both objects' maximum supported bounding box divided by 2 (so from the center of both entities), assuming I cap the dimensions at 4 blocks. The reasoning is explained in the set_attributes/dimension function.
 tag @s add Physics.Checked
-scoreboard players operation #Physics.OtherObject Physics.Object.ID = @s Physics.Object.ID
-scoreboard players operation #Physics.OtherObject Physics.Object.BoundingBoxGlobalMin.x = @s Physics.Object.BoundingBoxGlobalMin.x
-scoreboard players operation #Physics.OtherObject Physics.Object.BoundingBoxGlobalMax.x = @s Physics.Object.BoundingBoxGlobalMax.x
-scoreboard players operation #Physics.OtherObject Physics.Object.BoundingBoxGlobalMin.y = @s Physics.Object.BoundingBoxGlobalMin.y
-scoreboard players operation #Physics.OtherObject Physics.Object.BoundingBoxGlobalMax.y = @s Physics.Object.BoundingBoxGlobalMax.y
-scoreboard players operation #Physics.OtherObject Physics.Object.BoundingBoxGlobalMin.z = @s Physics.Object.BoundingBoxGlobalMin.z
-scoreboard players operation #Physics.OtherObject Physics.Object.BoundingBoxGlobalMax.z = @s Physics.Object.BoundingBoxGlobalMax.z
-execute at @s as @e[type=minecraft:item_display,tag=Physics.Object,tag=!Physics.Checked,distance=..6.929] if score @s Physics.Object.BoundingBoxGlobalMin.x <= #Physics.OtherObject Physics.Object.BoundingBoxGlobalMax.x if score #Physics.OtherObject Physics.Object.BoundingBoxGlobalMin.x <= @s Physics.Object.BoundingBoxGlobalMax.x if score @s Physics.Object.BoundingBoxGlobalMin.z <= #Physics.OtherObject Physics.Object.BoundingBoxGlobalMax.z if score #Physics.OtherObject Physics.Object.BoundingBoxGlobalMin.z <= @s Physics.Object.BoundingBoxGlobalMax.z if score @s Physics.Object.BoundingBoxGlobalMin.y <= #Physics.OtherObject Physics.Object.BoundingBoxGlobalMax.y if score #Physics.OtherObject Physics.Object.BoundingBoxGlobalMin.y <= @s Physics.Object.BoundingBoxGlobalMax.y run particle flame ~ ~ ~ 0.3 0.3 0.3 0 1
+
+    # Prepare scores
+    # (Important): #Physics.ThisObject Physics.Object.Axis.?.? are set at the start of this function, inside the "execute store result", to squeeze out an extra bit of performance
+    scoreboard players operation #Physics.ThisObject Physics.Object.ID = @s Physics.Object.ID
+
+    scoreboard players operation #Physics.ThisObject Physics.Object.Pos.x = @s Physics.Object.Pos.x
+    scoreboard players operation #Physics.ThisObject Physics.Object.Pos.y = @s Physics.Object.Pos.y
+    scoreboard players operation #Physics.ThisObject Physics.Object.Pos.z = @s Physics.Object.Pos.z
+
+    scoreboard players operation #Physics.ThisObject Physics.Object.CornerPosRelative.0.x = @s Physics.Object.CornerPosRelative.0.x
+    scoreboard players operation #Physics.ThisObject Physics.Object.CornerPosRelative.0.y = @s Physics.Object.CornerPosRelative.0.y
+    scoreboard players operation #Physics.ThisObject Physics.Object.CornerPosRelative.0.z = @s Physics.Object.CornerPosRelative.0.z
+    scoreboard players operation #Physics.ThisObject Physics.Object.CornerPosRelative.1.x = @s Physics.Object.CornerPosRelative.1.x
+    scoreboard players operation #Physics.ThisObject Physics.Object.CornerPosRelative.1.y = @s Physics.Object.CornerPosRelative.1.y
+    scoreboard players operation #Physics.ThisObject Physics.Object.CornerPosRelative.1.z = @s Physics.Object.CornerPosRelative.1.z
+    scoreboard players operation #Physics.ThisObject Physics.Object.CornerPosRelative.2.x = @s Physics.Object.CornerPosRelative.2.x
+    scoreboard players operation #Physics.ThisObject Physics.Object.CornerPosRelative.2.y = @s Physics.Object.CornerPosRelative.2.y
+    scoreboard players operation #Physics.ThisObject Physics.Object.CornerPosRelative.2.z = @s Physics.Object.CornerPosRelative.2.z
+    scoreboard players operation #Physics.ThisObject Physics.Object.CornerPosRelative.3.x = @s Physics.Object.CornerPosRelative.3.x
+    scoreboard players operation #Physics.ThisObject Physics.Object.CornerPosRelative.3.y = @s Physics.Object.CornerPosRelative.3.y
+    scoreboard players operation #Physics.ThisObject Physics.Object.CornerPosRelative.3.z = @s Physics.Object.CornerPosRelative.3.z
+
+    scoreboard players operation #Physics.ThisObject Physics.Object.BoundingBoxGlobalMin.x = @s Physics.Object.BoundingBoxGlobalMin.x
+    scoreboard players operation #Physics.ThisObject Physics.Object.BoundingBoxGlobalMax.x = @s Physics.Object.BoundingBoxGlobalMax.x
+    scoreboard players operation #Physics.ThisObject Physics.Object.BoundingBoxGlobalMin.y = @s Physics.Object.BoundingBoxGlobalMin.y
+    scoreboard players operation #Physics.ThisObject Physics.Object.BoundingBoxGlobalMax.y = @s Physics.Object.BoundingBoxGlobalMax.y
+    scoreboard players operation #Physics.ThisObject Physics.Object.BoundingBoxGlobalMin.z = @s Physics.Object.BoundingBoxGlobalMin.z
+    scoreboard players operation #Physics.ThisObject Physics.Object.BoundingBoxGlobalMax.z = @s Physics.Object.BoundingBoxGlobalMax.z
+
+    scoreboard players operation #Physics.ThisObject Physics.Object.ProjectionOwnAxis.x.Min = @s Physics.Object.ProjectionOwnAxis.x.Min
+    scoreboard players operation #Physics.ThisObject Physics.Object.ProjectionOwnAxis.x.Max = @s Physics.Object.ProjectionOwnAxis.x.Max
+    scoreboard players operation #Physics.ThisObject Physics.Object.ProjectionOwnAxis.y.Min = @s Physics.Object.ProjectionOwnAxis.y.Min
+    scoreboard players operation #Physics.ThisObject Physics.Object.ProjectionOwnAxis.y.Max = @s Physics.Object.ProjectionOwnAxis.y.Max
+    scoreboard players operation #Physics.ThisObject Physics.Object.ProjectionOwnAxis.z.Min = @s Physics.Object.ProjectionOwnAxis.z.Min
+    scoreboard players operation #Physics.ThisObject Physics.Object.ProjectionOwnAxis.z.Max = @s Physics.Object.ProjectionOwnAxis.z.Max
+
+execute at @s as @e[type=minecraft:item_display,tag=Physics.Object,tag=!Physics.Checked,distance=..6.929] if score @s Physics.Object.BoundingBoxGlobalMin.x <= #Physics.ThisObject Physics.Object.BoundingBoxGlobalMax.x if score #Physics.ThisObject Physics.Object.BoundingBoxGlobalMin.x <= @s Physics.Object.BoundingBoxGlobalMax.x if score @s Physics.Object.BoundingBoxGlobalMin.z <= #Physics.ThisObject Physics.Object.BoundingBoxGlobalMax.z if score #Physics.ThisObject Physics.Object.BoundingBoxGlobalMin.z <= @s Physics.Object.BoundingBoxGlobalMax.z if score @s Physics.Object.BoundingBoxGlobalMin.y <= #Physics.ThisObject Physics.Object.BoundingBoxGlobalMax.y if score #Physics.ThisObject Physics.Object.BoundingBoxGlobalMin.y <= @s Physics.Object.BoundingBoxGlobalMax.y run function physics:zprivate/collision_detection/object/fine
