@@ -1081,7 +1081,7 @@ execute store result storage physics:temp data.StepCountX byte 1 run scoreboard 
 execute store result storage physics:temp data.StepCountY byte 1 run scoreboard players get @s Physics.Object.BoundingBoxStepCount.y
 execute store result storage physics:temp data.StepCountZ byte 1 run scoreboard players get @s Physics.Object.BoundingBoxStepCount.z
 
-execute at @s run function physics:zprivate/collision_detection/voxel_grid/main with storage physics:temp data
+execute at @s run function physics:zprivate/collision_detection/world/main with storage physics:temp data
 
 # Check for coarse collisions with other dynamic objects, so I can then perform the SAT to check for fine collisions
 # (Important): Only checks objects in a range of 6.929 blocks, which is the sum of both objects' maximum supported bounding box divided by 2 (so from the center of both entities), assuming I cap the dimensions at 4 blocks. The reasoning is explained in the set_attributes/dimension function.
