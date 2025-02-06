@@ -24,6 +24,6 @@ scoreboard players add #Physics.Maths.BoundingBoxLimit.x Physics 500
 scoreboard players add #Physics.Maths.BoundingBoxLimit.y Physics 500
 scoreboard players add #Physics.Maths.BoundingBoxLimit.z Physics 500
 
-# Iterate through every single voxel that collides with the object's AABB
+# Iterate through every single block that collides with the object's AABB
 # Note: I could remove the $(Offset), but it would mean that either ~ or ~<StepCount> for any axis could be outside the bounding box, instead of only ~<StepCount>. This would require lots of score checks, even if it would make it cache a lot more. I don't think it's worth it, especially considering larger objects where the number of extra score checks would dramatically increase.
 $execute positioned $(StartX) $(StartY) $(StartZ) run function physics:zprivate/collision_detection/world/coarse/$(StepCountX)_$(StepCountY)_$(StepCountZ)
