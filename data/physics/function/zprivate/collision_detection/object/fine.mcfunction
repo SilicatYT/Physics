@@ -1916,6 +1916,9 @@
             execute unless score #Physics.Projection.Object.CrossProductAxis.zz.Min Physics <= #Physics.Projection.OtherObject.CrossProductAxis.zz.Max Physics run return 0
             execute unless score #Physics.Projection.OtherObject.CrossProductAxis.zz.Min Physics <= #Physics.Projection.Object.CrossProductAxis.zz.Max Physics run return 0
 
+# Store the other object's ID for later
+execute store result storage physics:temp data.B int 1 run scoreboard players get @s Physics.Object.ID
+
 # Get how much each axis is overlapping & get the least overlap
     # x_this
     scoreboard players operation #Physics.Overlap.ObjectAxis.x Physics = #Physics.ThisObject Physics.Object.ProjectionOwnAxis.x.Max

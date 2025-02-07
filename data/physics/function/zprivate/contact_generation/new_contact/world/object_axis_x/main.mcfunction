@@ -1,7 +1,7 @@
 # Get the object's feature (Face that's closest to the world-geometry block)
 # (Important): There are 2 candidate faces (those normal to the axis), and I select the correct one by looking at the projection of a single point of them and looking which is closer. If I look at the same point for both faces, I can easily get which face is closer.
-execute if score #Physics.Projection.Block.ObjectAxis.x.Min Physics < @s Physics.Object.ProjectionOwnAxis.x.Min store result storage physics:temp data.NewContact.FeatureA int 1 run scoreboard players set #Physics.ObjectA.Feature Physics 100
-execute if score #Physics.Projection.Block.ObjectAxis.x.Min Physics >= @s Physics.Object.ProjectionOwnAxis.x.Min store result storage physics:temp data.NewContact.FeatureA int 1 run scoreboard players set #Physics.ObjectA.Feature Physics 101
+execute if score #Physics.Projection.Block.ObjectAxis.x.Min Physics < @s Physics.Object.ProjectionOwnAxis.x.Min store result storage physics:temp data.NewContact.FeatureA int 1 store result storage physics:temp data.FeatureA int 1 run scoreboard players set #Physics.ObjectA.Feature Physics 100
+execute if score #Physics.Projection.Block.ObjectAxis.x.Min Physics >= @s Physics.Object.ProjectionOwnAxis.x.Min store result storage physics:temp data.NewContact.FeatureA int 1 store result storage physics:temp data.FeatureA int 1 run scoreboard players set #Physics.ObjectA.Feature Physics 101
 
 # Get the world-geometry block's feature (Corner that's closest to the object)
 # (Important): I check which of the 8 corners' projection is the closest to the object along the axis (furthest along the axis), so I have to get either the min or the max.
@@ -9,14 +9,15 @@ execute if score #Physics.ObjectA.Feature Physics matches 100 run scoreboard pla
 execute if score #Physics.ObjectA.Feature Physics matches 101 run scoreboard players operation #Physics.DeepestProjection Physics = #Physics.Projection.BlockBase.ObjectAxis.x.Min Physics
 
     # Set the feature
-    execute if score #Physics.DeepestProjection Physics = #Physics.Projection.BlockCornerBase0.ObjectAxis.x Physics run function physics:zprivate/contact_generation/new_contact/world/object_axis_x/get_corner/0
-    execute if score #Physics.DeepestProjection Physics = #Physics.Projection.BlockCornerBase1.ObjectAxis.x Physics run function physics:zprivate/contact_generation/new_contact/world/object_axis_x/get_corner/1
-    execute if score #Physics.DeepestProjection Physics = #Physics.Projection.BlockCornerBase2.ObjectAxis.x Physics run function physics:zprivate/contact_generation/new_contact/world/object_axis_x/get_corner/2
-    execute if score #Physics.DeepestProjection Physics = #Physics.Projection.BlockCornerBase3.ObjectAxis.x Physics run function physics:zprivate/contact_generation/new_contact/world/object_axis_x/get_corner/3
-    execute if score #Physics.DeepestProjection Physics = #Physics.Projection.BlockCornerBase4.ObjectAxis.x Physics run function physics:zprivate/contact_generation/new_contact/world/object_axis_x/get_corner/4
-    execute if score #Physics.DeepestProjection Physics = #Physics.Projection.BlockCornerBase5.ObjectAxis.x Physics run function physics:zprivate/contact_generation/new_contact/world/object_axis_x/get_corner/5
-    execute if score #Physics.DeepestProjection Physics = #Physics.Projection.BlockCornerBase6.ObjectAxis.x Physics run function physics:zprivate/contact_generation/new_contact/world/object_axis_x/get_corner/6
-    execute if score #Physics.DeepestProjection Physics = #Physics.Projection.BlockCornerBase7.ObjectAxis.x Physics run function physics:zprivate/contact_generation/new_contact/world/object_axis_x/get_corner/7
+    # (Important): There are only 8 corners, so everything is cached. Reduces duplicate files.
+    execute if score #Physics.DeepestProjection Physics = #Physics.Projection.BlockCornerBase0.ObjectAxis.x Physics run function physics:zprivate/contact_generation/new_contact/world/object_axis_x/get_corner {Corner:0}
+    execute if score #Physics.DeepestProjection Physics = #Physics.Projection.BlockCornerBase1.ObjectAxis.x Physics run function physics:zprivate/contact_generation/new_contact/world/object_axis_x/get_corner {Corner:1}
+    execute if score #Physics.DeepestProjection Physics = #Physics.Projection.BlockCornerBase2.ObjectAxis.x Physics run function physics:zprivate/contact_generation/new_contact/world/object_axis_x/get_corner {Corner:2}
+    execute if score #Physics.DeepestProjection Physics = #Physics.Projection.BlockCornerBase3.ObjectAxis.x Physics run function physics:zprivate/contact_generation/new_contact/world/object_axis_x/get_corner {Corner:3}
+    execute if score #Physics.DeepestProjection Physics = #Physics.Projection.BlockCornerBase4.ObjectAxis.x Physics run function physics:zprivate/contact_generation/new_contact/world/object_axis_x/get_corner {Corner:4}
+    execute if score #Physics.DeepestProjection Physics = #Physics.Projection.BlockCornerBase5.ObjectAxis.x Physics run function physics:zprivate/contact_generation/new_contact/world/object_axis_x/get_corner {Corner:5}
+    execute if score #Physics.DeepestProjection Physics = #Physics.Projection.BlockCornerBase6.ObjectAxis.x Physics run function physics:zprivate/contact_generation/new_contact/world/object_axis_x/get_corner {Corner:6}
+    execute if score #Physics.DeepestProjection Physics = #Physics.Projection.BlockCornerBase7.ObjectAxis.x Physics run function physics:zprivate/contact_generation/new_contact/world/object_axis_x/get_corner {Corner:7}
 
 # Calculate Penetration Depth, Contact Normal, Contact Point & Separating Velocity
     # Penetration Depth
@@ -52,4 +53,12 @@ execute if score #Physics.ObjectA.Feature Physics matches 101 run scoreboard pla
     # (Important): ???
 
 # Store the new contact
-#execute store result
+# (Important): The values are stored in their scaled up form, just like how I need them to process them.
+# (Important): Note that I store the block position scaled up by 1,000x, because I don't want to scale it back up manually later.
+execute store result storage physics:temp data.NewContact.Gametime int 1 run time query gametime
+
+execute store result storage physics:temp data.Pos[0] int 1 run scoreboard players get #Physics.BlockPos.x Physics
+execute store result storage physics:temp data.Pos[1] int 1 run scoreboard players get #Physics.BlockPos.y Physics
+execute store result storage physics:temp data.Pos[2] int 1 run scoreboard players get #Physics.BlockPos.z Physics
+
+function physics:zprivate/contact_generation/new_contact/world/store with storage physics:temp data

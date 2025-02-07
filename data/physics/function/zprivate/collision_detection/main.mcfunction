@@ -1,3 +1,9 @@
+# Prepare the contacts storage & copy over this object's stored contacts from the previous tick (If there are any)
+# (Important): The ID in the data storage is also used when generating the new contact
+data modify storage physics:zprivate data.ContactGroups append value {A:-1,Objects:[{Blocks:[]}]}
+execute store result storage physics:temp data.A int 1 store result storage physics:zprivate data.ContactGroups[-1].A int 1 run scoreboard players get @s Physics.Object.ID
+execute if entity @s[tag=Physics.HasContacts] run function physics:zprivate/contact_generation/accumulate/get_previous with storage physics:temp data
+
 # Pre-calculate as much as possible for the world SAT (Collisions with regular blocks)
     # 9 cross products of the 3 axes of the object and the world-geometry block
     # (Important): Because for instance the block's x axis only has its x component set, this results in a cross product whose x component is not set. I make several of these implications directly and don't even set certain values if the solution is always the same value. Then I work with that value directly.
@@ -1083,6 +1089,9 @@ execute store result storage physics:temp data.StepCountZ byte 1 run scoreboard 
 
 execute at @s run function physics:zprivate/collision_detection/world/main with storage physics:temp data
 
+# Delete the "Blocks" entry in the object's contacts if no world collision was found
+execute unless data storage physics:zprivate data.ContactGroups[-1].Objects[0].Blocks[0] run data remove storage physics:zprivate data.ContactGroups[-1].Objects[0]
+
 # Check for coarse collisions with other dynamic objects, so I can then perform the SAT to check for fine collisions
 # (Important): Only checks objects in a range of 6.929 blocks, which is the sum of both objects' maximum supported bounding box divided by 2 (so from the center of both entities), assuming I cap the dimensions at 4 blocks. The reasoning is explained in the set_attributes/dimension function.
 tag @s add Physics.Checked
@@ -1123,3 +1132,22 @@ tag @s add Physics.Checked
     scoreboard players operation #Physics.ThisObject Physics.Object.ProjectionOwnAxis.z.Max = @s Physics.Object.ProjectionOwnAxis.z.Max
 
 execute at @s as @e[type=minecraft:item_display,tag=Physics.Object,tag=!Physics.Checked,distance=..6.929] if score @s Physics.Object.BoundingBoxGlobalMin.x <= #Physics.ThisObject Physics.Object.BoundingBoxGlobalMax.x if score #Physics.ThisObject Physics.Object.BoundingBoxGlobalMin.x <= @s Physics.Object.BoundingBoxGlobalMax.x if score @s Physics.Object.BoundingBoxGlobalMin.z <= #Physics.ThisObject Physics.Object.BoundingBoxGlobalMax.z if score #Physics.ThisObject Physics.Object.BoundingBoxGlobalMin.z <= @s Physics.Object.BoundingBoxGlobalMax.z if score @s Physics.Object.BoundingBoxGlobalMin.y <= #Physics.ThisObject Physics.Object.BoundingBoxGlobalMax.y if score #Physics.ThisObject Physics.Object.BoundingBoxGlobalMin.y <= @s Physics.Object.BoundingBoxGlobalMax.y run function physics:zprivate/collision_detection/object/fine
+
+# Delete the entire contacts entry if no collision was found or copied over from last tick
+tag @s remove Physics.HasContacts
+execute store result score #Physics.ContactCount Physics if data storage physics:zprivate data.ContactGroups[-1].Objects[]
+execute if score #Physics.ContactCount Physics matches 0 run return run data remove storage physics:zprivate data.ContactGroups[-1]
+
+# Update or discard contacts
+# (Important): Contacts are discarded if their penetration depth is outside the threshold (small negative value). This keeps barely separated contacts that are likely to touch again in the next tick. Those are ignored in contact resolution. Contacts are also discarded if their object/block doesn't pass an extended (slightly larger to account for the threshold) AABB check.
+    # World
+    # (Important): The "Blocks" object entry is removed if the remaining world contacts were marked as invalid.
+    # (Important): The "ContactCount" score is reduced by 1 after this, so the check for "Are there any object contacts?" is simpler.
+    execute if data storage physics:zprivate data.ContactGroups[-1].Objects[0].Blocks run function physics:zprivate/contact_generation/accumulate/update/world/main
+
+    # Object
+    execute if score #Physics.ContactCount Physics matches 1.. run function physics:zprivate/contact_generation/accumulate/update/object/main
+
+    # Give the tag if contacts are left, and remove remaining data if no contacts are left
+    execute if data storage physics:zprivate data.ContactGroups[-1].Objects[0] run return run tag @s add Physics.HasContacts
+    data remove storage physics:zprivate data.ContactGroups[-1]
