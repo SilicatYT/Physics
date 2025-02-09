@@ -87,3 +87,39 @@ execute if score #Physics.Projection.Block.CrossProductAxis.xx.Min Physics < #Ph
 
     # Penetration Depth
     # (Important): For edge-edge collisions, the penetration depth is the distance between the two edges. It's calculated by taking the distance from the contact point to the other edge.
+    # (Important): I calculate t and the closest point on ObjectB's edge to ObjectA's edge, then compute the distance between both points.
+        # Calculate t (On ObjectB's edge)
+        # (Important): Some values are set in the "get_edge_b" function.
+            # AE - CD
+            # (Important): AE condenses down to Value1, which isn't scaled high enough. I directly change its value, as I don't need it anymore after this.
+            # (Important): I calculate t directly inside the #Physics.Maths.Value1 score, as I don't want to waste an operation copying it over. I also adjust the scaling of D and overwrite it for the CD calculation, as I don't need it anymore after this.
+            scoreboard players operation #Physics.Maths.Value1 Physics *= #Physics.Constants.1000 Physics
+            scoreboard players operation #Physics.Maths.D Physics /= #Physics.Constants.1000 Physics
+            scoreboard players operation #Physics.Maths.D Physics *= @s Physics.Object.Axis.x.x
+            scoreboard players operation #Physics.Maths.Value1 Physics -= #Physics.Maths.D Physics
+
+            # t = (AE - CD) / (AB - CC)
+            scoreboard players operation #Physics.Maths.Value1 Physics /= #Physics.Maths.Value2 Physics
+
+        # Calculate the distance (Point calculation with t is interweaved for performance reasons)
+            # x2 - x1
+            scoreboard players operation #Physics.Maths.SquareRoot.Input Physics += #Physics.Maths.Value1 Physics
+            scoreboard players operation #Physics.Maths.SquareRoot.Input Physics -= #Physics.ContactPoint.x Physics
+            scoreboard players operation #Physics.Maths.SquareRoot.Input Physics *= #Physics.Maths.SquareRoot.Input Physics
+
+            # y2 - y1
+            scoreboard players operation #Physics.Maths.Value4 Physics -= #Physics.ContactPoint.y Physics
+            scoreboard players operation #Physics.Maths.Value4 Physics *= #Physics.Maths.Value4 Physics
+            scoreboard players operation #Physics.Maths.SquareRoot.Input Physics += #Physics.Maths.Value4 Physics
+
+            # z2 - z1
+            scoreboard players operation #Physics.Maths.Value5 Physics -= #Physics.ContactPoint.z Physics
+            scoreboard players operation #Physics.Maths.Value5 Physics *= #Physics.Maths.Value5 Physics
+            scoreboard players operation #Physics.Maths.SquareRoot.Input Physics += #Physics.Maths.Value5 Physics
+
+            # Square Root (= Distance, = Penetration Depth)
+            function physics:zprivate/maths/get_square_root
+#tellraw @p {"score":{"name":"#Physics.Maths.SquareRoot.Output","objective":"Physics"}}
+
+
+
