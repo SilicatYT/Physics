@@ -9,15 +9,15 @@ execute if score #Physics.ObjectA.Feature Physics matches 100 run scoreboard pla
 execute if score #Physics.ObjectA.Feature Physics matches 101 run scoreboard players operation #Physics.DeepestProjection Physics = #Physics.Projection.BlockBase.ObjectAxis.x.Min Physics
 
     # Set the feature
-    # (Important): There are only 8 corners, so everything is cached. Reduces duplicate files.
-    execute if score #Physics.DeepestProjection Physics = #Physics.Projection.BlockCornerBase0.ObjectAxis.x Physics run function physics:zprivate/contact_generation/new_contact/world/object_axis_x/get_corner/0
-    execute if score #Physics.DeepestProjection Physics = #Physics.Projection.BlockCornerBase1.ObjectAxis.x Physics run function physics:zprivate/contact_generation/new_contact/world/object_axis_x/get_corner/1
-    execute if score #Physics.DeepestProjection Physics = #Physics.Projection.BlockCornerBase2.ObjectAxis.x Physics run function physics:zprivate/contact_generation/new_contact/world/object_axis_x/get_corner/2
-    execute if score #Physics.DeepestProjection Physics = #Physics.Projection.BlockCornerBase3.ObjectAxis.x Physics run function physics:zprivate/contact_generation/new_contact/world/object_axis_x/get_corner/3
-    execute if score #Physics.DeepestProjection Physics = #Physics.Projection.BlockCornerBase4.ObjectAxis.x Physics run function physics:zprivate/contact_generation/new_contact/world/object_axis_x/get_corner/4
-    execute if score #Physics.DeepestProjection Physics = #Physics.Projection.BlockCornerBase5.ObjectAxis.x Physics run function physics:zprivate/contact_generation/new_contact/world/object_axis_x/get_corner/5
-    execute if score #Physics.DeepestProjection Physics = #Physics.Projection.BlockCornerBase6.ObjectAxis.x Physics run function physics:zprivate/contact_generation/new_contact/world/object_axis_x/get_corner/6
-    execute if score #Physics.DeepestProjection Physics = #Physics.Projection.BlockCornerBase7.ObjectAxis.x Physics run function physics:zprivate/contact_generation/new_contact/world/object_axis_x/get_corner/7
+    # (Important): There are only 8 corners (and unique macro variable combinations), so everything is cached. Reduces duplicate files.
+    execute if score #Physics.DeepestProjection Physics = #Physics.Projection.BlockCornerBase0.ObjectAxis.x Physics run function physics:zprivate/contact_generation/new_contact/world/object_axis_x/get_corner {Corner:0,x:"Min",y:"Min",z:"Min"}
+    execute if score #Physics.DeepestProjection Physics = #Physics.Projection.BlockCornerBase1.ObjectAxis.x Physics run function physics:zprivate/contact_generation/new_contact/world/object_axis_x/get_corner {Corner:1,x:"Min",y:"Min",z:"Max"}
+    execute if score #Physics.DeepestProjection Physics = #Physics.Projection.BlockCornerBase2.ObjectAxis.x Physics run function physics:zprivate/contact_generation/new_contact/world/object_axis_x/get_corner {Corner:2,x:"Max",y:"Min",z:"Min"}
+    execute if score #Physics.DeepestProjection Physics = #Physics.Projection.BlockCornerBase3.ObjectAxis.x Physics run function physics:zprivate/contact_generation/new_contact/world/object_axis_x/get_corner {Corner:3,x:"Max",y:"Min",z:"Max"}
+    execute if score #Physics.DeepestProjection Physics = #Physics.Projection.BlockCornerBase4.ObjectAxis.x Physics run function physics:zprivate/contact_generation/new_contact/world/object_axis_x/get_corner {Corner:4,x:"Min",y:"Max",z:"Min"}
+    execute if score #Physics.DeepestProjection Physics = #Physics.Projection.BlockCornerBase5.ObjectAxis.x Physics run function physics:zprivate/contact_generation/new_contact/world/object_axis_x/get_corner {Corner:5,x:"Min",y:"Max",z:"Max"}
+    execute if score #Physics.DeepestProjection Physics = #Physics.Projection.BlockCornerBase6.ObjectAxis.x Physics run function physics:zprivate/contact_generation/new_contact/world/object_axis_x/get_corner {Corner:6,x:"Max",y:"Max",z:"Min"}
+    execute if score #Physics.DeepestProjection Physics = #Physics.Projection.BlockCornerBase7.ObjectAxis.x Physics run function physics:zprivate/contact_generation/new_contact/world/object_axis_x/get_corner {Corner:7,x:"Max",y:"Max",z:"Max"}
 
 # Calculate Penetration Depth, Contact Normal, Contact Point & Separating Velocity
     # Penetration Depth

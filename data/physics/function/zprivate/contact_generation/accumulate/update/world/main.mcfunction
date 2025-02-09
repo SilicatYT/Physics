@@ -21,3 +21,8 @@ execute store result score #Physics.BlockCount Physics if data storage physics:z
 
 
 # AT THE END, REMOVE THE BLOCKS DATA IF NOTHING IS LEFT.
+
+
+
+
+# => Update world contacts directly after adding world contacts, because I do need the cross product to still be in the scores (To update the contact normal)
