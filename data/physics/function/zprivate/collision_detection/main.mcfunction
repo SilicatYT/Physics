@@ -1,6 +1,7 @@
 # Prepare the contacts storage & copy over this object's stored contacts from the previous tick (If there are any)
 # (Important): The ID in the data storage is also used when generating the new contact
-data modify storage physics:zprivate data.ContactGroups append value {A:-1,Objects:[{Blocks:[]}]}
+# (Important): I use a placeholder "MinSeparatingVelocity" so it doesn't get selected during resolution and is immediately replaced when a contact is found / updated.
+data modify storage physics:zprivate data.ContactGroups append value {A:-1,MinSeparatingVelocity:2147483647,Objects:[{Blocks:[]}]}
 execute store result storage physics:temp data.A int 1 store result storage physics:zprivate data.ContactGroups[-1].A int 1 run scoreboard players get @s Physics.Object.ID
 execute if entity @s[tag=Physics.HasContacts] run function physics:zprivate/contact_generation/accumulate/get_previous with storage physics:temp data
 

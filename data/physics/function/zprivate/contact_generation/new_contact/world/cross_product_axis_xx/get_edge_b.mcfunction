@@ -1,6 +1,6 @@
 # Get ObjectB's edge
 # (Important): There are 4 possible edges, so everything is cached.
-$scoreboard players set #Physics.ObjectB.Feature Physics $(Edge)
+$execute store result storage physics:temp data.NewContact.FeatureB int 1 store result storage physics:temp data.FeatureB int 1 run scoreboard players set #Physics.ObjectB.Feature Physics $(Edge)
 
 # Set the start point for calculating the distance between the two points (Penetration Depth)
 $scoreboard players operation #Physics.Maths.SquareRoot.Input Physics = #Physics.Projection.Block.WorldAxis.x.$(x) Physics

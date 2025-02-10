@@ -73,17 +73,17 @@ execute if score #Physics.Projection.Block.CrossProductAxis.xx.Min Physics < #Ph
         scoreboard players operation #Physics.ContactPoint.x Physics = @s Physics.Object.Axis.x.x
         scoreboard players operation #Physics.ContactPoint.x Physics *= #Physics.Maths.s Physics
         scoreboard players operation #Physics.ContactPoint.x Physics /= #Physics.Constants.1000 Physics
-        scoreboard players operation #Physics.ContactPoint.x Physics += #Physics.ObjectA.EdgeStart.x Physics
+        execute store result storage physics:temp data.NewContact.ContactPoint[0] int 1 run scoreboard players operation #Physics.ContactPoint.x Physics += #Physics.ObjectA.EdgeStart.x Physics
 
         scoreboard players operation #Physics.ContactPoint.y Physics = @s Physics.Object.Axis.x.y
         scoreboard players operation #Physics.ContactPoint.y Physics *= #Physics.Maths.s Physics
         scoreboard players operation #Physics.ContactPoint.y Physics /= #Physics.Constants.1000 Physics
-        scoreboard players operation #Physics.ContactPoint.y Physics += #Physics.ObjectA.EdgeStart.y Physics
+        execute store result storage physics:temp data.NewContact.ContactPoint[1] int 1 run scoreboard players operation #Physics.ContactPoint.y Physics += #Physics.ObjectA.EdgeStart.y Physics
 
         scoreboard players operation #Physics.ContactPoint.z Physics = @s Physics.Object.Axis.x.z
         scoreboard players operation #Physics.ContactPoint.z Physics *= #Physics.Maths.s Physics
         scoreboard players operation #Physics.ContactPoint.z Physics /= #Physics.Constants.1000 Physics
-        scoreboard players operation #Physics.ContactPoint.z Physics += #Physics.ObjectA.EdgeStart.z Physics
+        execute store result storage physics:temp data.NewContact.ContactPoint[2] int 1 run scoreboard players operation #Physics.ContactPoint.z Physics += #Physics.ObjectA.EdgeStart.z Physics
 
     # Penetration Depth
     # (Important): For edge-edge collisions, the penetration depth is the distance between the two edges. It's calculated by taking the distance from the contact point to the other edge.
@@ -119,7 +119,60 @@ execute if score #Physics.Projection.Block.CrossProductAxis.xx.Min Physics < #Ph
 
             # Square Root (= Distance, = Penetration Depth)
             function physics:zprivate/maths/get_square_root
-#tellraw @p {"score":{"name":"#Physics.Maths.SquareRoot.Output","objective":"Physics"}}
+            execute store result storage physics:temp data.NewContact.PenetrationDepth int 1 run scoreboard players get #Physics.Maths.SquareRoot.Output Physics
 
+    # Contact Normal
+    # (Important): For edge-edge collisions, the contact normal is the cross product.
+    # (Important): Because the block's x axis only has its x component set, the cross product has an x component of 0 (Not stored in the score).
+    data modify storage physics:temp data.NewContact.ContactNormal[0] set value 0
+    execute store result storage physics:temp data.NewContact.ContactNormal[1] int 1 run scoreboard players get #Physics.CrossProductAxis.xx.y Physics
+    execute store result storage physics:temp data.NewContact.ContactNormal[2] int 1 run scoreboard players get #Physics.CrossProductAxis.xx.z Physics
 
+    # Separating Velocity
+    # (Important): The separating velocity is the dot product between the contact point's relative velocity and the contact normal. The relative velocity is the cross product between the angular velocity and the contact point (relative to the object's center) that's added together with the object's linear velocity.
+        # Calculate relative contact point
+        execute store result score #Physics.PointVelocity.y Physics run scoreboard players operation #Physics.ContactPoint.x Physics -= @s Physics.Object.Pos.x
+        execute store result score #Physics.PointVelocity.z Physics run scoreboard players operation #Physics.ContactPoint.y Physics -= @s Physics.Object.Pos.y
+        scoreboard players operation #Physics.ContactPoint.z Physics -= @s Physics.Object.Pos.z
 
+        # Calculate cross product between relative contact point and angular velocity
+        # (Important): I overwrite the contact point scores here, as I don't need them anymore after this.
+        # (Important): Because the block's x axis component is 1, the contact normal's x component is 0. Because I only need the point velocity for the dot product later on, I can ignore calculating the x component.
+        scoreboard players operation #Physics.PointVelocity.y Physics *= @s Physics.Object.AngularVelocity.x
+        scoreboard players operation #Physics.ContactPoint.x Physics *= @s Physics.Object.AngularVelocity.z
+        scoreboard players operation #Physics.PointVelocity.y Physics -= #Physics.ContactPoint.x Physics
+        scoreboard players operation #Physics.PointVelocity.y Physics /= #Physics.Constants.1000 Physics
+
+        scoreboard players operation #Physics.PointVelocity.z Physics *= @s Physics.Object.AngularVelocity.y
+        scoreboard players operation #Physics.ContactPoint.y Physics *= @s Physics.Object.AngularVelocity.x
+        scoreboard players operation #Physics.PointVelocity.z Physics -= #Physics.ContactPoint.y Physics
+        scoreboard players operation #Physics.PointVelocity.z Physics /= #Physics.Constants.1000 Physics
+
+        # Add the linear velocity to obtain the relative velocity of the contact point
+        scoreboard players operation #Physics.PointVelocity.y Physics += @s Physics.Object.Velocity.y
+        scoreboard players operation #Physics.PointVelocity.z Physics += @s Physics.Object.Velocity.z
+
+        # Calculate the relative velocity's dot product with the contact normal to get the separation velocity (single number, not a vector) and store it
+        # (Important): Because the block's x axis component is 1, the contact normal's x component is 0. So this is simplified.
+        scoreboard players operation #Physics.PointVelocity.y Physics *= @s Physics.Object.Axis.x.y
+        scoreboard players operation #Physics.PointVelocity.z Physics *= @s Physics.Object.Axis.x.z
+
+        scoreboard players operation #Physics.PointVelocity.y Physics += #Physics.PointVelocity.z Physics
+        execute store result storage physics:temp data.NewContact.SeparatingVelocity int 1 run scoreboard players operation #Physics.PointVelocity.y Physics /= #Physics.Constants.1000 Physics
+
+# Store the new contact
+# (Important): The values are stored in their scaled up form, just like how I need them to process them.
+# (Important): Note that I don't store the block's position scaled up, because it makes no difference compared to storing the center coords. I can't store the min projection either, because that would bug out for different block hitbox sizes.
+# (Important): Because of rounding issues, I modify the BlockPos score here. It's not used after this anyway.
+execute store result storage physics:temp data.NewContact.Gametime int 1 run time query gametime
+
+execute store result storage physics:temp data.Pos[0] int 0.001 run scoreboard players remove #Physics.BlockPos.x Physics 500
+execute store result storage physics:temp data.Pos[1] int 0.001 run scoreboard players remove #Physics.BlockPos.y Physics 500
+execute store result storage physics:temp data.Pos[2] int 0.001 run scoreboard players remove #Physics.BlockPos.z Physics 500
+function physics:zprivate/contact_generation/new_contact/world/store with storage physics:temp data
+
+# Process the separating velocity (Keep track of the most negative separating velocity for the current ObjectA, as well as global for all ObjectA's)
+# (Important): The "#Physics.MinSeparatingVelocityTotal Physics" score keeps track of the overall most negative separating velocity across all ObjectA's, so I can efficiently target the most severe contact in contact resolution's 1st iteration.
+execute store result score #Physics.MinSeparatingVelocity Physics run data get storage physics:zprivate data.ContactGroups[0].MinSeparatingVelocity
+execute if score #Physics.MinSeparatingVelocity Physics <= #Physics.PointVelocity.y Physics run return 0
+execute store result storage physics:zprivate data.ContactGroups[0].MinSeparatingVelocity int 1 run scoreboard players operation #Physics.MinSeparatingVelocityTotal Physics = #Physics.PointVelocity.y Physics
