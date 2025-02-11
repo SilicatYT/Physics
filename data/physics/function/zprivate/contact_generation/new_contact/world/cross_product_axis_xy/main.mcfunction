@@ -1,24 +1,24 @@
 # Get the object's feature (Edge that's closest to the world-geometry block)
 # (Important): The edge is perpendicular to the axis with the minimum overlap, so it projects onto a single point. Meaning I only have to look at 1 corner point of each of the 4 candidate edges to see which one is farther along the axis.
-execute if score #Physics.Projection.Block.CrossProductAxis.xx.Min Physics >= #Physics.Projection.Object.CrossProductAxis.xx.Min Physics run scoreboard players operation #Physics.DeepestProjection Physics = #Physics.Projection.Object.CrossProductAxis.xx.Max Physics
-execute if score #Physics.Projection.Block.CrossProductAxis.xx.Min Physics < #Physics.Projection.Object.CrossProductAxis.xx.Min Physics run scoreboard players operation #Physics.DeepestProjection Physics = #Physics.Projection.Object.CrossProductAxis.xx.Min Physics
+execute if score #Physics.Projection.Block.CrossProductAxis.xy.Min Physics >= #Physics.Projection.Object.CrossProductAxis.xy.Min Physics run scoreboard players operation #Physics.DeepestProjection Physics = #Physics.Projection.Object.CrossProductAxis.xy.Max Physics
+execute if score #Physics.Projection.Block.CrossProductAxis.xy.Min Physics < #Physics.Projection.Object.CrossProductAxis.xy.Min Physics run scoreboard players operation #Physics.DeepestProjection Physics = #Physics.Projection.Object.CrossProductAxis.xy.Min Physics
 
     # Set the feature
-    execute if score #Physics.DeepestProjection Physics = #Physics.Projection.ObjectCorner0.CrossProductAxis.xx Physics run function physics:zprivate/contact_generation/new_contact/world/cross_product_axis_xx/get_edge_a {Edge:200,StartCorner:0,EndCorner:2}
-    execute if score #Physics.DeepestProjection Physics = #Physics.Projection.ObjectCorner1.CrossProductAxis.xx Physics run function physics:zprivate/contact_generation/new_contact/world/cross_product_axis_xx/get_edge_a {Edge:201,StartCorner:1,EndCorner:3}
-    execute if score #Physics.DeepestProjection Physics = #Physics.Projection.ObjectCorner4.CrossProductAxis.xx Physics run function physics:zprivate/contact_generation/new_contact/world/cross_product_axis_xx/get_edge_a {Edge:202,StartCorner:4,EndCorner:6}
-    execute if score #Physics.DeepestProjection Physics = #Physics.Projection.ObjectCorner5.CrossProductAxis.xx Physics run function physics:zprivate/contact_generation/new_contact/world/cross_product_axis_xx/get_edge_a {Edge:203,StartCorner:5,EndCorner:7}
+    execute if score #Physics.DeepestProjection Physics = #Physics.Projection.ObjectCorner0.CrossProductAxis.xy Physics run function physics:zprivate/contact_generation/new_contact/world/cross_product_axis_xy/get_edge_a {Edge:204,StartCorner:0,EndCorner:4}
+    execute if score #Physics.DeepestProjection Physics = #Physics.Projection.ObjectCorner1.CrossProductAxis.xy Physics run function physics:zprivate/contact_generation/new_contact/world/cross_product_axis_xy/get_edge_a {Edge:205,StartCorner:1,EndCorner:5}
+    execute if score #Physics.DeepestProjection Physics = #Physics.Projection.ObjectCorner2.CrossProductAxis.xy Physics run function physics:zprivate/contact_generation/new_contact/world/cross_product_axis_xy/get_edge_a {Edge:206,StartCorner:2,EndCorner:6}
+    execute if score #Physics.DeepestProjection Physics = #Physics.Projection.ObjectCorner3.CrossProductAxis.xy Physics run function physics:zprivate/contact_generation/new_contact/world/cross_product_axis_xy/get_edge_a {Edge:207,StartCorner:3,EndCorner:7}
 
 # Get the world-geometry block's feature (Edge that's closest to the object)
 # (Important): The edge is perpendicular to the axis with the minimum overlap, so it projects onto a single point. Meaning I only have to look at 1 corner point of each of the 4 candidate edges to see which one is farther along the axis.
-execute if score #Physics.Projection.Block.CrossProductAxis.xx.Min Physics >= #Physics.Projection.Object.CrossProductAxis.xx.Min Physics run scoreboard players operation #Physics.DeepestProjection Physics = #Physics.Projection.BlockBase.CrossProductAxis.xx.Min Physics
-execute if score #Physics.Projection.Block.CrossProductAxis.xx.Min Physics < #Physics.Projection.Object.CrossProductAxis.xx.Min Physics run scoreboard players operation #Physics.DeepestProjection Physics = #Physics.Projection.BlockBase.CrossProductAxis.xx.Max Physics
+execute if score #Physics.Projection.Block.CrossProductAxis.xy.Min Physics >= #Physics.Projection.Object.CrossProductAxis.xy.Min Physics run scoreboard players operation #Physics.DeepestProjection Physics = #Physics.Projection.BlockBase.CrossProductAxis.xy.Min Physics
+execute if score #Physics.Projection.Block.CrossProductAxis.xy.Min Physics < #Physics.Projection.Object.CrossProductAxis.xy.Min Physics run scoreboard players operation #Physics.DeepestProjection Physics = #Physics.Projection.BlockBase.CrossProductAxis.xy.Max Physics
 
     # Set the feature
-    execute if score #Physics.DeepestProjection Physics = #Physics.Projection.BlockCornerBase0.CrossProductAxis.xx Physics run function physics:zprivate/contact_generation/new_contact/world/cross_product_axis_xx/get_edge_b {Edge:200,x:"Min",y:"Min",z:"Min"}
-    execute if score #Physics.DeepestProjection Physics = #Physics.Projection.BlockCornerBase1.CrossProductAxis.xx Physics run function physics:zprivate/contact_generation/new_contact/world/cross_product_axis_xx/get_edge_b {Edge:201,x:"Min",y:"Min",z:"Max"}
-    execute if score #Physics.DeepestProjection Physics = #Physics.Projection.BlockCornerBase4.CrossProductAxis.xx Physics run function physics:zprivate/contact_generation/new_contact/world/cross_product_axis_xx/get_edge_b {Edge:202,x:"Min",y:"Max",z:"Min"}
-    execute if score #Physics.DeepestProjection Physics = #Physics.Projection.BlockCornerBase5.CrossProductAxis.xx Physics run function physics:zprivate/contact_generation/new_contact/world/cross_product_axis_xx/get_edge_b {Edge:203,x:"Min",y:"Max",z:"Max"}
+    execute if score #Physics.DeepestProjection Physics = #Physics.Projection.BlockCornerBase0.CrossProductAxis.xy Physics run function physics:zprivate/contact_generation/new_contact/world/cross_product_axis_xx/get_edge_b {Edge:200,x:"Min",y:"Min",z:"Min"}
+    execute if score #Physics.DeepestProjection Physics = #Physics.Projection.BlockCornerBase1.CrossProductAxis.xy Physics run function physics:zprivate/contact_generation/new_contact/world/cross_product_axis_xx/get_edge_b {Edge:201,x:"Min",y:"Min",z:"Max"}
+    execute if score #Physics.DeepestProjection Physics = #Physics.Projection.BlockCornerBase4.CrossProductAxis.xy Physics run function physics:zprivate/contact_generation/new_contact/world/cross_product_axis_xx/get_edge_b {Edge:202,x:"Min",y:"Max",z:"Min"}
+    execute if score #Physics.DeepestProjection Physics = #Physics.Projection.BlockCornerBase5.CrossProductAxis.xy Physics run function physics:zprivate/contact_generation/new_contact/world/cross_product_axis_xx/get_edge_b {Edge:203,x:"Min",y:"Max",z:"Max"}
 
 # Calculate Penetration Depth, Contact Normal, Contact Point & Separating Velocity
     # Contact Point
@@ -40,13 +40,13 @@ execute if score #Physics.Projection.Block.CrossProductAxis.xx.Min Physics < #Ph
             # (Important): Value1-3 are the three components of (u - m), as calculated in the "get_edge_?" functions.
             # (Important): Because I only need to keep the x component of (u - m) for the calculation of E, I can overwrite the other 2 components to save 2 scoreboard operations.
             # (Important): I need the numerator for s and t to be scaled 1,000x higher than the denominator. So keeping D scaled by 1,000x too much saves a few operations.
-            scoreboard players operation #Physics.Maths.D Physics = @s Physics.Object.Axis.x.x
+            scoreboard players operation #Physics.Maths.D Physics = @s Physics.Object.Axis.y.x
             scoreboard players operation #Physics.Maths.D Physics *= #Physics.Maths.Value1 Physics
 
-            scoreboard players operation #Physics.Maths.Value2 Physics *= @s Physics.Object.Axis.x.y
+            scoreboard players operation #Physics.Maths.Value2 Physics *= @s Physics.Object.Axis.y.y
             scoreboard players operation #Physics.Maths.D Physics += #Physics.Maths.Value2 Physics
 
-            scoreboard players operation #Physics.Maths.Value3 Physics *= @s Physics.Object.Axis.x.z
+            scoreboard players operation #Physics.Maths.Value3 Physics *= @s Physics.Object.Axis.y.z
             scoreboard players operation #Physics.Maths.D Physics += #Physics.Maths.Value3 Physics
 
             # E = n * (u - m)
@@ -54,7 +54,7 @@ execute if score #Physics.Projection.Block.CrossProductAxis.xx.Min Physics < #Ph
 
         # Calculate s (On ObjectA's edge)
             # CE - BD
-            execute store result score #Physics.Maths.Value2 Physics run scoreboard players operation #Physics.Maths.s Physics = @s Physics.Object.Axis.x.x
+            execute store result score #Physics.Maths.Value2 Physics run scoreboard players operation #Physics.Maths.s Physics = @s Physics.Object.Axis.y.x
             scoreboard players operation #Physics.Maths.s Physics *= #Physics.Maths.Value1 Physics
             scoreboard players operation #Physics.Maths.s Physics -= #Physics.Maths.D Physics
 
@@ -67,17 +67,17 @@ execute if score #Physics.Projection.Block.CrossProductAxis.xx.Min Physics < #Ph
             scoreboard players operation #Physics.Maths.s Physics /= #Physics.Maths.Value2 Physics
 
         # Calculate the contact point with s
-        scoreboard players operation #Physics.ContactPoint.x Physics = @s Physics.Object.Axis.x.x
+        scoreboard players operation #Physics.ContactPoint.x Physics = @s Physics.Object.Axis.y.x
         scoreboard players operation #Physics.ContactPoint.x Physics *= #Physics.Maths.s Physics
         scoreboard players operation #Physics.ContactPoint.x Physics /= #Physics.Constants.1000 Physics
         execute store result storage physics:temp data.NewContact.ContactPoint[0] int 1 run scoreboard players operation #Physics.ContactPoint.x Physics += #Physics.ObjectA.EdgeStart.x Physics
 
-        scoreboard players operation #Physics.ContactPoint.y Physics = @s Physics.Object.Axis.x.y
+        scoreboard players operation #Physics.ContactPoint.y Physics = @s Physics.Object.Axis.y.y
         scoreboard players operation #Physics.ContactPoint.y Physics *= #Physics.Maths.s Physics
         scoreboard players operation #Physics.ContactPoint.y Physics /= #Physics.Constants.1000 Physics
         execute store result storage physics:temp data.NewContact.ContactPoint[1] int 1 run scoreboard players operation #Physics.ContactPoint.y Physics += #Physics.ObjectA.EdgeStart.y Physics
 
-        scoreboard players operation #Physics.ContactPoint.z Physics = @s Physics.Object.Axis.x.z
+        scoreboard players operation #Physics.ContactPoint.z Physics = @s Physics.Object.Axis.y.z
         scoreboard players operation #Physics.ContactPoint.z Physics *= #Physics.Maths.s Physics
         scoreboard players operation #Physics.ContactPoint.z Physics /= #Physics.Constants.1000 Physics
         execute store result storage physics:temp data.NewContact.ContactPoint[2] int 1 run scoreboard players operation #Physics.ContactPoint.z Physics += #Physics.ObjectA.EdgeStart.z Physics
@@ -92,7 +92,7 @@ execute if score #Physics.Projection.Block.CrossProductAxis.xx.Min Physics < #Ph
             # (Important): I calculate t directly inside the #Physics.Maths.Value1 score, as I don't want to waste an operation copying it over. I also adjust the scaling of D and overwrite it for the CD calculation, as I don't need it anymore after this.
             scoreboard players operation #Physics.Maths.Value1 Physics *= #Physics.Constants.1000 Physics
             scoreboard players operation #Physics.Maths.D Physics /= #Physics.Constants.1000 Physics
-            scoreboard players operation #Physics.Maths.D Physics *= @s Physics.Object.Axis.x.x
+            scoreboard players operation #Physics.Maths.D Physics *= @s Physics.Object.Axis.y.x
             scoreboard players operation #Physics.Maths.Value1 Physics -= #Physics.Maths.D Physics
 
             # t = (AE - CD) / (AB - CC)
@@ -122,8 +122,8 @@ execute if score #Physics.Projection.Block.CrossProductAxis.xx.Min Physics < #Ph
     # (Important): For edge-edge collisions, the contact normal is the cross product.
     # (Important): Because the block's x axis only has its x component set, the cross product has an x component of 0 (Not stored in the score).
     data modify storage physics:temp data.NewContact.ContactNormal[0] set value 0
-    execute store result storage physics:temp data.NewContact.ContactNormal[1] int 1 run scoreboard players get #Physics.CrossProductAxis.xx.y Physics
-    execute store result storage physics:temp data.NewContact.ContactNormal[2] int 1 run scoreboard players get #Physics.CrossProductAxis.xx.z Physics
+    execute store result storage physics:temp data.NewContact.ContactNormal[1] int 1 run scoreboard players get #Physics.CrossProductAxis.xy.y Physics
+    execute store result storage physics:temp data.NewContact.ContactNormal[2] int 1 run scoreboard players get #Physics.CrossProductAxis.xy.z Physics
 
     # Separating Velocity
     # (Important): The separating velocity is the dot product between the contact point's relative velocity and the contact normal. The relative velocity is the cross product between the angular velocity and the contact point (relative to the object's center) that's added together with the object's linear velocity.
@@ -150,8 +150,8 @@ execute if score #Physics.Projection.Block.CrossProductAxis.xx.Min Physics < #Ph
 
         # Calculate the relative velocity's dot product with the contact normal to get the separation velocity (single number, not a vector) and store it
         # (Important): Because the block's x axis component is 1, the contact normal's x component is 0. So this is simplified.
-        scoreboard players operation #Physics.PointVelocity.y Physics *= @s Physics.Object.Axis.x.y
-        scoreboard players operation #Physics.PointVelocity.z Physics *= @s Physics.Object.Axis.x.z
+        scoreboard players operation #Physics.PointVelocity.y Physics *= @s Physics.Object.Axis.y.y
+        scoreboard players operation #Physics.PointVelocity.z Physics *= @s Physics.Object.Axis.y.z
 
         scoreboard players operation #Physics.PointVelocity.y Physics += #Physics.PointVelocity.z Physics
         execute store result storage physics:temp data.NewContact.SeparatingVelocity int 1 run scoreboard players operation #Physics.PointVelocity.y Physics /= #Physics.Constants.1000 Physics
