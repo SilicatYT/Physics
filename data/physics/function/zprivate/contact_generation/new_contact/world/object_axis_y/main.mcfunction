@@ -51,9 +51,9 @@ execute if score #Physics.ObjectA.Feature Physics matches 103 run scoreboard pla
     # Separating Velocity
     # (Important): The separating velocity is the dot product between the contact point's relative velocity and the contact normal. The relative velocity is the cross product between the angular velocity and the contact point (relative to the object's center) that's added together with the object's linear velocity.
         # Calculate relative contact point
-        execute store result score #Physics.PointVelocity.y Physics run scoreboard players operation #Physics.ContactPoint.x Physics -= @s Physics.Object.Pos.x
-        execute store result score #Physics.PointVelocity.z Physics run scoreboard players operation #Physics.ContactPoint.y Physics -= @s Physics.Object.Pos.y
-        execute store result score #Physics.PointVelocity.x Physics run scoreboard players operation #Physics.ContactPoint.z Physics -= @s Physics.Object.Pos.z
+        execute store result score #Physics.PointVelocity.z Physics run scoreboard players operation #Physics.ContactPoint.x Physics -= @s Physics.Object.Pos.x
+        execute store result score #Physics.PointVelocity.x Physics run scoreboard players operation #Physics.ContactPoint.y Physics -= @s Physics.Object.Pos.y
+        execute store result score #Physics.PointVelocity.y Physics run scoreboard players operation #Physics.ContactPoint.z Physics -= @s Physics.Object.Pos.z
 
         # Calculate cross product between relative contact point and angular velocity
         # (Important): I overwrite the contact point scores here, as I don't need them anymore after this.
@@ -93,8 +93,6 @@ execute if score #Physics.ObjectA.Feature Physics matches 103 run scoreboard pla
 # (Important): The values are stored in their scaled up form, just like how I need them to process them.
 # (Important): Note that I don't store the block's position scaled up, because it makes no difference compared to storing the center coords. I can't store the min projection either, because that would bug out for different block hitbox sizes.
 # (Important): Because of rounding issues, I modify the BlockPos score here. It's not used after this anyway.
-execute store result storage physics:temp data.NewContact.Gametime int 1 run time query gametime
-
 execute store result storage physics:temp data.Pos[0] int 0.001 run scoreboard players remove #Physics.BlockPos.x Physics 500
 execute store result storage physics:temp data.Pos[1] int 0.001 run scoreboard players remove #Physics.BlockPos.y Physics 500
 execute store result storage physics:temp data.Pos[2] int 0.001 run scoreboard players remove #Physics.BlockPos.z Physics 500

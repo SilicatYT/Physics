@@ -13,10 +13,10 @@ scoreboard players operation #Physics.Maths.Value2 Physics -= #Physics.Maths.Val
 scoreboard players operation #Physics.Maths.Value3 Physics -= #Physics.Maths.Value5 Physics
 
 # Get the edge's projection (For inverting the contact normal if necessary)
-$scoreboard players operation #Physics.ObjectB.EdgeProjection Physics = #Physics.Projection.BlockCornerBase$(StartCorner).CrossProductAxis.yx Physics
-scoreboard players operation #Physics.ObjectB.EdgeProjection Physics += #Physics.Projection.BlockCenter.CrossProductAxis.yx Physics
+$scoreboard players operation #Physics.ObjectB.EdgeProjection Physics = #Physics.Projection.BlockCornerBase$(StartCorner).CrossProductAxis.zz Physics
+scoreboard players operation #Physics.ObjectB.EdgeProjection Physics += #Physics.Projection.BlockCenter.CrossProductAxis.zz Physics
 
 # Invert the contact normal if ObjectA's edge projection is larger than ObjectB's edge projection
 execute if score #Physics.ObjectA.EdgeProjection Physics < #Physics.ObjectB.EdgeProjection Physics run return 0
-execute store result storage physics:temp data.NewContact.ContactNormal[0] int -1 run scoreboard players get #Physics.CrossProductAxis.yx.x Physics
-execute store result storage physics:temp data.NewContact.ContactNormal[2] int -1 run scoreboard players get #Physics.CrossProductAxis.yx.z Physics
+execute store result storage physics:temp data.NewContact.ContactNormal[0] int -1 run scoreboard players get #Physics.CrossProductAxis.zz.x Physics
+execute store result storage physics:temp data.NewContact.ContactNormal[1] int -1 run scoreboard players get #Physics.CrossProductAxis.zz.y Physics
