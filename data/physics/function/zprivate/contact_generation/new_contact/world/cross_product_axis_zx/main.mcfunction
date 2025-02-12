@@ -17,7 +17,7 @@ execute if score #Physics.Projection.Block.CrossProductAxis.zx.Min Physics < #Ph
     # Set the feature
     execute if score #Physics.DeepestProjection Physics = #Physics.Projection.BlockCornerBase0.CrossProductAxis.zx Physics run function physics:zprivate/contact_generation/new_contact/world/cross_product_axis_zx/get_edge_b {Edge:208,StartCorner:0,x:"Min",y:"Min",z:"Min"}
     execute if score #Physics.DeepestProjection Physics = #Physics.Projection.BlockCornerBase2.CrossProductAxis.zx Physics run function physics:zprivate/contact_generation/new_contact/world/cross_product_axis_zx/get_edge_b {Edge:209,StartCorner:2,x:"Max",y:"Min",z:"Min"}
-    execute if score #Physics.DeepestProjection Physics = #Physics.Projection.BlockCornerBase4.CrossProductAxis.zx Physics run function physics:zprivate/contact_generation/new_contact/world/cross_product_axis_zx/get_edge_b {Edge:210,StartCorner:4,x:"Max",y:"Max",z:"Min"}
+    execute if score #Physics.DeepestProjection Physics = #Physics.Projection.BlockCornerBase4.CrossProductAxis.zx Physics run function physics:zprivate/contact_generation/new_contact/world/cross_product_axis_zx/get_edge_b {Edge:210,StartCorner:4,x:"Min",y:"Max",z:"Min"}
     execute if score #Physics.DeepestProjection Physics = #Physics.Projection.BlockCornerBase6.CrossProductAxis.zx Physics run function physics:zprivate/contact_generation/new_contact/world/cross_product_axis_zx/get_edge_b {Edge:211,StartCorner:6,x:"Max",y:"Max",z:"Min"}
 
 # Calculate Penetration Depth, Contact Normal, Contact Point & Separating Velocity
@@ -34,7 +34,7 @@ execute if score #Physics.Projection.Block.CrossProductAxis.zx.Min Physics < #Ph
             # (Important): As the block is axis-aligned, this is defined as 1.
 
             # C = v * n
-            # (Important): Because the block is axis-aligned, its edge's directional vector only has one component that is also 1. So C is the same as that component from ObjectA's axis, which is the x component in this case.
+            # (Important): Because the block is axis-aligned, its edge's directional vector only has one component that is also 1. So C is the same as that component from ObjectA's axis, which is the z component in this case.
 
             # D = v * (u - m)
             # (Important): Value1-3 are the three components of (u - m), as calculated in the "get_edge_?" functions.
@@ -163,10 +163,9 @@ execute if score #Physics.Projection.Block.CrossProductAxis.zx.Min Physics < #Ph
 # Store the new contact
 # (Important): The values are stored in their scaled up form, just like how I need them to process them.
 # (Important): Note that I don't store the block's position scaled up, because it makes no difference compared to storing the center coords. I can't store the min projection either, because that would bug out for different block hitbox sizes.
-# (Important): Because of rounding issues, I modify the BlockPos score here. It's not used after this anyway.
-execute store result storage physics:temp data.Pos[0] int 0.001 run scoreboard players remove #Physics.BlockPos.x Physics 500
-execute store result storage physics:temp data.Pos[1] int 0.001 run scoreboard players remove #Physics.BlockPos.y Physics 500
-execute store result storage physics:temp data.Pos[2] int 0.001 run scoreboard players remove #Physics.BlockPos.z Physics 500
+execute store result storage physics:temp data.Pos[0] int 1 run scoreboard players get #Physics.BlockPos.x Physics
+execute store result storage physics:temp data.Pos[1] int 1 run scoreboard players get #Physics.BlockPos.y Physics
+execute store result storage physics:temp data.Pos[2] int 1 run scoreboard players get #Physics.BlockPos.z Physics
 function physics:zprivate/contact_generation/new_contact/world/store with storage physics:temp data
 
 # Process the separating velocity (Keep track of the most negative separating velocity for the current ObjectA, as well as global for all ObjectA's)

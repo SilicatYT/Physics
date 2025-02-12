@@ -5,9 +5,9 @@ execute if score #Physics.Projection.Block.CrossProductAxis.xz.Min Physics < #Ph
 
     # Set the feature
     execute if score #Physics.DeepestProjection Physics = #Physics.Projection.ObjectCorner0.CrossProductAxis.xz Physics run function physics:zprivate/contact_generation/new_contact/world/cross_product_axis_xz/get_edge_a {Edge:208,StartCorner:0,EndCorner:1}
-    execute if score #Physics.DeepestProjection Physics = #Physics.Projection.ObjectCorner1.CrossProductAxis.xz Physics run function physics:zprivate/contact_generation/new_contact/world/cross_product_axis_xz/get_edge_a {Edge:209,StartCorner:2,EndCorner:3}
+    execute if score #Physics.DeepestProjection Physics = #Physics.Projection.ObjectCorner2.CrossProductAxis.xz Physics run function physics:zprivate/contact_generation/new_contact/world/cross_product_axis_xz/get_edge_a {Edge:209,StartCorner:2,EndCorner:3}
     execute if score #Physics.DeepestProjection Physics = #Physics.Projection.ObjectCorner4.CrossProductAxis.xz Physics run function physics:zprivate/contact_generation/new_contact/world/cross_product_axis_xz/get_edge_a {Edge:210,StartCorner:4,EndCorner:5}
-    execute if score #Physics.DeepestProjection Physics = #Physics.Projection.ObjectCorner5.CrossProductAxis.xz Physics run function physics:zprivate/contact_generation/new_contact/world/cross_product_axis_xz/get_edge_a {Edge:211,StartCorner:6,EndCorner:7}
+    execute if score #Physics.DeepestProjection Physics = #Physics.Projection.ObjectCorner6.CrossProductAxis.xz Physics run function physics:zprivate/contact_generation/new_contact/world/cross_product_axis_xz/get_edge_a {Edge:211,StartCorner:6,EndCorner:7}
 
 # Get the world-geometry block's feature (Edge that's closest to the object)
 # (Important): The edge is perpendicular to the axis with the minimum overlap, so it projects onto a single point. Meaning I only have to look at 1 corner point of each of the 4 candidate edges to see which one is farther along the axis.
@@ -163,10 +163,9 @@ execute if score #Physics.Projection.Block.CrossProductAxis.xz.Min Physics < #Ph
 # Store the new contact
 # (Important): The values are stored in their scaled up form, just like how I need them to process them.
 # (Important): Note that I don't store the block's position scaled up, because it makes no difference compared to storing the center coords. I can't store the min projection either, because that would bug out for different block hitbox sizes.
-# (Important): Because of rounding issues, I modify the BlockPos score here. It's not used after this anyway.
-execute store result storage physics:temp data.Pos[0] int 0.001 run scoreboard players remove #Physics.BlockPos.x Physics 500
-execute store result storage physics:temp data.Pos[1] int 0.001 run scoreboard players remove #Physics.BlockPos.y Physics 500
-execute store result storage physics:temp data.Pos[2] int 0.001 run scoreboard players remove #Physics.BlockPos.z Physics 500
+execute store result storage physics:temp data.Pos[0] int 1 run scoreboard players get #Physics.BlockPos.x Physics
+execute store result storage physics:temp data.Pos[1] int 1 run scoreboard players get #Physics.BlockPos.y Physics
+execute store result storage physics:temp data.Pos[2] int 1 run scoreboard players get #Physics.BlockPos.z Physics
 function physics:zprivate/contact_generation/new_contact/world/store with storage physics:temp data
 
 # Process the separating velocity (Keep track of the most negative separating velocity for the current ObjectA, as well as global for all ObjectA's)
