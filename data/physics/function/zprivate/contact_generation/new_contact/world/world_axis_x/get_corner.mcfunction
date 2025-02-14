@@ -8,7 +8,7 @@ $execute store result storage physics:temp data.NewContact.ContactPoint[2] int 1
 # Calculate penetration depth (& copy the remaining contact point coordinates)
 # (Important): The penetration depth depends on the contact normal, so if that one needs to be inverted, so does the penetration depth.
 execute if score #Physics.ObjectB.Feature Physics matches 101 store result storage physics:temp data.NewContact.ContactPoint[0] int 1 run scoreboard players operation #Physics.PenetrationDepth Physics = #Physics.Projection.Block.WorldAxis.x.Max Physics
-$execute if score #Physics.ObjectB.Feature Physics matches 101 run return run execute store result storage physics:temp data.NewContact.PenetrationDepth int 1 run scoreboard players operation #Physics.PenetrationDepth Physics -= @s Physics.Object.CornerPosGlobal.$(Corner).x
+$execute if score #Physics.ObjectB.Feature Physics matches 101 store result storage physics:temp data.NewContact.PenetrationDepth int 1 run return run scoreboard players operation #Physics.PenetrationDepth Physics -= @s Physics.Object.CornerPosGlobal.$(Corner).x
 
 execute store result storage physics:temp data.NewContact.ContactPoint[0] int 1 run scoreboard players operation #Physics.PenetrationDepth Physics = #Physics.Projection.Block.WorldAxis.x.Min Physics
 $scoreboard players operation #Physics.PenetrationDepth Physics -= @s Physics.Object.CornerPosGlobal.$(Corner).x

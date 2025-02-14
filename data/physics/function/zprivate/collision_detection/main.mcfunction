@@ -1079,7 +1079,7 @@ execute if entity @s[tag=Physics.HasContacts] run function physics:zprivate/cont
             scoreboard players operation #Physics.Projection.Object.CrossProductAxis.zz.Min Physics += #Physics.Projection.ObjectCenter.CrossProductAxis.zz Physics
             scoreboard players operation #Physics.Projection.Object.CrossProductAxis.zz.Max Physics += #Physics.Projection.ObjectCenter.CrossProductAxis.zz Physics
 
-# Iterate through every minecraft block that intersects with the interaction entity's hitbox (AABB), so I can then perform the Separating Axes Theorem (SAT) to check for fine collisions
+# Iterate over every minecraft block that intersects with the interaction entity's hitbox (AABB), so I can then perform the Separating Axes Theorem (SAT) to check for fine collisions
 # (Important): I only have the global coords for the bounding box, so instead of using a few scoreboard commands, I just don't use relative coordinates here. If I do need the relative coordinates later, I will change that
 execute store result storage physics:temp data.StartX double 0.001 run scoreboard players get @s Physics.Object.BoundingBoxGlobalMin.x
 execute store result storage physics:temp data.StartY double 0.001 run scoreboard players get @s Physics.Object.BoundingBoxGlobalMin.y
@@ -1105,6 +1105,14 @@ tag @s add Physics.Checked
     scoreboard players operation #Physics.ThisObject Physics.Object.Pos.y = @s Physics.Object.Pos.y
     scoreboard players operation #Physics.ThisObject Physics.Object.Pos.z = @s Physics.Object.Pos.z
 
+    scoreboard players operation #Physics.ThisObject Physics.Object.Velocity.x = @s Physics.Object.Velocity.x
+    scoreboard players operation #Physics.ThisObject Physics.Object.Velocity.y = @s Physics.Object.Velocity.y
+    scoreboard players operation #Physics.ThisObject Physics.Object.Velocity.z = @s Physics.Object.Velocity.z
+
+    scoreboard players operation #Physics.ThisObject Physics.Object.AngularVelocity.x = @s Physics.Object.AngularVelocity.x
+    scoreboard players operation #Physics.ThisObject Physics.Object.AngularVelocity.y = @s Physics.Object.AngularVelocity.y
+    scoreboard players operation #Physics.ThisObject Physics.Object.AngularVelocity.z = @s Physics.Object.AngularVelocity.z
+
     scoreboard players operation #Physics.ThisObject Physics.Object.CornerPosRelative.0.x = @s Physics.Object.CornerPosRelative.0.x
     scoreboard players operation #Physics.ThisObject Physics.Object.CornerPosRelative.0.y = @s Physics.Object.CornerPosRelative.0.y
     scoreboard players operation #Physics.ThisObject Physics.Object.CornerPosRelative.0.z = @s Physics.Object.CornerPosRelative.0.z
@@ -1117,6 +1125,31 @@ tag @s add Physics.Checked
     scoreboard players operation #Physics.ThisObject Physics.Object.CornerPosRelative.3.x = @s Physics.Object.CornerPosRelative.3.x
     scoreboard players operation #Physics.ThisObject Physics.Object.CornerPosRelative.3.y = @s Physics.Object.CornerPosRelative.3.y
     scoreboard players operation #Physics.ThisObject Physics.Object.CornerPosRelative.3.z = @s Physics.Object.CornerPosRelative.3.z
+
+    scoreboard players operation #Physics.ThisObject Physics.Object.CornerPosGlobal.0.x = @s Physics.Object.CornerPosGlobal.0.x
+    scoreboard players operation #Physics.ThisObject Physics.Object.CornerPosGlobal.0.y = @s Physics.Object.CornerPosGlobal.0.y
+    scoreboard players operation #Physics.ThisObject Physics.Object.CornerPosGlobal.0.z = @s Physics.Object.CornerPosGlobal.0.z
+    scoreboard players operation #Physics.ThisObject Physics.Object.CornerPosGlobal.1.x = @s Physics.Object.CornerPosGlobal.1.x
+    scoreboard players operation #Physics.ThisObject Physics.Object.CornerPosGlobal.1.y = @s Physics.Object.CornerPosGlobal.1.y
+    scoreboard players operation #Physics.ThisObject Physics.Object.CornerPosGlobal.1.z = @s Physics.Object.CornerPosGlobal.1.z
+    scoreboard players operation #Physics.ThisObject Physics.Object.CornerPosGlobal.2.x = @s Physics.Object.CornerPosGlobal.2.x
+    scoreboard players operation #Physics.ThisObject Physics.Object.CornerPosGlobal.2.y = @s Physics.Object.CornerPosGlobal.2.y
+    scoreboard players operation #Physics.ThisObject Physics.Object.CornerPosGlobal.2.z = @s Physics.Object.CornerPosGlobal.2.z
+    scoreboard players operation #Physics.ThisObject Physics.Object.CornerPosGlobal.3.x = @s Physics.Object.CornerPosGlobal.3.x
+    scoreboard players operation #Physics.ThisObject Physics.Object.CornerPosGlobal.3.y = @s Physics.Object.CornerPosGlobal.3.y
+    scoreboard players operation #Physics.ThisObject Physics.Object.CornerPosGlobal.3.z = @s Physics.Object.CornerPosGlobal.3.z
+    scoreboard players operation #Physics.ThisObject Physics.Object.CornerPosGlobal.4.x = @s Physics.Object.CornerPosGlobal.4.x
+    scoreboard players operation #Physics.ThisObject Physics.Object.CornerPosGlobal.4.y = @s Physics.Object.CornerPosGlobal.4.y
+    scoreboard players operation #Physics.ThisObject Physics.Object.CornerPosGlobal.4.z = @s Physics.Object.CornerPosGlobal.4.z
+    scoreboard players operation #Physics.ThisObject Physics.Object.CornerPosGlobal.5.x = @s Physics.Object.CornerPosGlobal.5.x
+    scoreboard players operation #Physics.ThisObject Physics.Object.CornerPosGlobal.5.y = @s Physics.Object.CornerPosGlobal.5.y
+    scoreboard players operation #Physics.ThisObject Physics.Object.CornerPosGlobal.5.z = @s Physics.Object.CornerPosGlobal.5.z
+    scoreboard players operation #Physics.ThisObject Physics.Object.CornerPosGlobal.6.x = @s Physics.Object.CornerPosGlobal.6.x
+    scoreboard players operation #Physics.ThisObject Physics.Object.CornerPosGlobal.6.y = @s Physics.Object.CornerPosGlobal.6.y
+    scoreboard players operation #Physics.ThisObject Physics.Object.CornerPosGlobal.6.z = @s Physics.Object.CornerPosGlobal.6.z
+    scoreboard players operation #Physics.ThisObject Physics.Object.CornerPosGlobal.7.x = @s Physics.Object.CornerPosGlobal.7.x
+    scoreboard players operation #Physics.ThisObject Physics.Object.CornerPosGlobal.7.y = @s Physics.Object.CornerPosGlobal.7.y
+    scoreboard players operation #Physics.ThisObject Physics.Object.CornerPosGlobal.7.z = @s Physics.Object.CornerPosGlobal.7.z
 
     scoreboard players operation #Physics.ThisObject Physics.Object.BoundingBoxGlobalMin.x = @s Physics.Object.BoundingBoxGlobalMin.x
     scoreboard players operation #Physics.ThisObject Physics.Object.BoundingBoxGlobalMax.x = @s Physics.Object.BoundingBoxGlobalMax.x
