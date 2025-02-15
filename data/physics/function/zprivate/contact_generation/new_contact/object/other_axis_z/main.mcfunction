@@ -5,32 +5,14 @@ execute if score #Physics.Projection.Object.OtherObjectAxis.z.Min Physics >= @s 
 
 # Get ObjectA's feature (Corner that's closest to ObjectB)
 # (Important): I check which of the 8 corners' projection is the closest to ObjectB along the axis (furthest along the axis), so I have to get either the min or the max.
-execute if score #Physics.ObjectB.Feature Physics matches 104 run scoreboard players operation #Physics.DeepestProjection Physics = #Physics.Projection.Object.OtherObjectAxis.z.Max Physics
-execute if score #Physics.ObjectB.Feature Physics matches 105 run scoreboard players operation #Physics.DeepestProjection Physics = #Physics.Projection.Object.OtherObjectAxis.z.Min Physics
+scoreboard players operation #Physics.DeepestProjection Physics = #Physics.Projection.Object.OtherObjectAxis.z.Max Physics
 
     # Set the feature
     # (Important): There are only 8 corners (and unique macro variable combinations), so everything is cached. Reduces duplicate files.
-    # (Important): Because only the min and max projections are scaled down, I need to scale the corner projections down here. In addition, to account for rounding errors that are different for positive and negative values, I invert DeepestProjection if the face is on the negative side of the axis. Because of this, I also change what corner projection corresponds to which corner.
-    scoreboard players operation #Physics.Projection.ObjectCorner0.OtherObjectAxis.z Physics /= #Physics.Constants.1000 Physics
-    scoreboard players operation #Physics.Projection.ObjectCorner1.OtherObjectAxis.z Physics /= #Physics.Constants.1000 Physics
-    scoreboard players operation #Physics.Projection.ObjectCorner2.OtherObjectAxis.z Physics /= #Physics.Constants.1000 Physics
-    scoreboard players operation #Physics.Projection.ObjectCorner3.OtherObjectAxis.z Physics /= #Physics.Constants.1000 Physics
-    scoreboard players operation #Physics.Projection.ObjectCorner4.OtherObjectAxis.z Physics /= #Physics.Constants.1000 Physics
-    scoreboard players operation #Physics.Projection.ObjectCorner5.OtherObjectAxis.z Physics /= #Physics.Constants.1000 Physics
-    scoreboard players operation #Physics.Projection.ObjectCorner6.OtherObjectAxis.z Physics /= #Physics.Constants.1000 Physics
-    scoreboard players operation #Physics.Projection.ObjectCorner7.OtherObjectAxis.z Physics /= #Physics.Constants.1000 Physics
-
+    # (Important): Because only the min and max projections are scaled down, I need to scale the corner projections down here and turn the DeepestProjection relative again. In addition, to account for rounding errors that are different for positive and negative values (It matters whether I first multiply by -1 and then divide, or the other way around), I turn the min back to the max and just invert which corner matches which corner projection if it tries to get the min projection's corner.
     scoreboard players operation #Physics.DeepestProjection Physics -= #Physics.Projection.ObjectCenter.OtherObjectAxis.z Physics
-    execute if score #Physics.ObjectB.Feature Physics matches 105 run scoreboard players operation #Physics.DeepestProjection Physics *= #Physics.Constants.-1 Physics
-
-    execute if score #Physics.DeepestProjection Physics = #Physics.Projection.ObjectCorner0.OtherObjectAxis.z Physics run function physics:zprivate/contact_generation/new_contact/object/other_axis_z/get_corner {Corner:7}
-    execute if score #Physics.DeepestProjection Physics = #Physics.Projection.ObjectCorner1.OtherObjectAxis.z Physics run function physics:zprivate/contact_generation/new_contact/object/other_axis_z/get_corner {Corner:6}
-    execute if score #Physics.DeepestProjection Physics = #Physics.Projection.ObjectCorner2.OtherObjectAxis.z Physics run function physics:zprivate/contact_generation/new_contact/object/other_axis_z/get_corner {Corner:5}
-    execute if score #Physics.DeepestProjection Physics = #Physics.Projection.ObjectCorner3.OtherObjectAxis.z Physics run function physics:zprivate/contact_generation/new_contact/object/other_axis_z/get_corner {Corner:4}
-    execute if score #Physics.DeepestProjection Physics = #Physics.Projection.ObjectCorner4.OtherObjectAxis.z Physics run function physics:zprivate/contact_generation/new_contact/object/other_axis_z/get_corner {Corner:3}
-    execute if score #Physics.DeepestProjection Physics = #Physics.Projection.ObjectCorner5.OtherObjectAxis.z Physics run function physics:zprivate/contact_generation/new_contact/object/other_axis_z/get_corner {Corner:2}
-    execute if score #Physics.DeepestProjection Physics = #Physics.Projection.ObjectCorner6.OtherObjectAxis.z Physics run function physics:zprivate/contact_generation/new_contact/object/other_axis_z/get_corner {Corner:1}
-    execute if score #Physics.DeepestProjection Physics = #Physics.Projection.ObjectCorner7.OtherObjectAxis.z Physics run function physics:zprivate/contact_generation/new_contact/object/other_axis_z/get_corner {Corner:0}
+    execute if score #Physics.ObjectB.Feature Physics matches 104 run function physics:zprivate/contact_generation/new_contact/object/other_axis_z/check_corner_max
+    execute if score #Physics.ObjectB.Feature Physics matches 105 run function physics:zprivate/contact_generation/new_contact/object/other_axis_z/check_corner_min
 
 # Calculate Penetration Depth, Contact Normal, Contact Point & Separating Velocity
     # Penetration Depth

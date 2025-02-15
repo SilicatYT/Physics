@@ -4,10 +4,10 @@ execute if score #Physics.Projection.Block.CrossProductAxis.zx.Min Physics >= #P
 execute if score #Physics.Projection.Block.CrossProductAxis.zx.Min Physics < #Physics.Projection.Object.CrossProductAxis.zx.Min Physics run scoreboard players operation #Physics.DeepestProjection Physics = #Physics.Projection.Object.CrossProductAxis.zx.Min Physics
 
     # Set the feature
-    execute if score #Physics.DeepestProjection Physics = #Physics.Projection.ObjectCorner0.CrossProductAxis.zx Physics run function physics:zprivate/contact_generation/new_contact/world/cross_product_axis_zx/get_edge_a {Edge:200,StartCorner:0,EndCorner:2}
-    execute if score #Physics.DeepestProjection Physics = #Physics.Projection.ObjectCorner1.CrossProductAxis.zx Physics run function physics:zprivate/contact_generation/new_contact/world/cross_product_axis_zx/get_edge_a {Edge:201,StartCorner:1,EndCorner:3}
-    execute if score #Physics.DeepestProjection Physics = #Physics.Projection.ObjectCorner4.CrossProductAxis.zx Physics run function physics:zprivate/contact_generation/new_contact/world/cross_product_axis_zx/get_edge_a {Edge:202,StartCorner:4,EndCorner:6}
-    execute if score #Physics.DeepestProjection Physics = #Physics.Projection.ObjectCorner5.CrossProductAxis.zx Physics run function physics:zprivate/contact_generation/new_contact/world/cross_product_axis_zx/get_edge_a {Edge:203,StartCorner:5,EndCorner:7}
+    execute if score #Physics.DeepestProjection Physics = #Physics.Projection.ObjectCorner0.CrossProductAxis.zx Physics run function physics:zprivate/contact_generation/new_contact/world/cross_product_axis_zx/get_edge_a {Edge:200,StartCorner:0}
+    execute if score #Physics.DeepestProjection Physics = #Physics.Projection.ObjectCorner1.CrossProductAxis.zx Physics run function physics:zprivate/contact_generation/new_contact/world/cross_product_axis_zx/get_edge_a {Edge:201,StartCorner:1}
+    execute if score #Physics.DeepestProjection Physics = #Physics.Projection.ObjectCorner4.CrossProductAxis.zx Physics run function physics:zprivate/contact_generation/new_contact/world/cross_product_axis_zx/get_edge_a {Edge:202,StartCorner:4}
+    execute if score #Physics.DeepestProjection Physics = #Physics.Projection.ObjectCorner5.CrossProductAxis.zx Physics run function physics:zprivate/contact_generation/new_contact/world/cross_product_axis_zx/get_edge_a {Edge:203,StartCorner:5}
 
 # Get the world-geometry block's feature (Edge that's closest to the object)
 # (Important): The edge is perpendicular to the axis with the minimum overlap, so it projects onto a single point. Meaning I only have to look at 1 corner point of each of the 4 candidate edges to see which one is farther along the axis.

@@ -597,16 +597,17 @@
             execute store result score #Physics.Maths.Value3 Physics run scoreboard players operation #Physics.CrossProductAxis2.xx.z Physics -= #Physics.Maths.Value1 Physics
 
             # Normalization
+            scoreboard players operation #Physics.Maths.SquareRoot.Input Physics /= #Physics.Constants.1000 Physics
+            scoreboard players operation #Physics.Maths.Value2 Physics /= #Physics.Constants.1000 Physics
+            scoreboard players operation #Physics.Maths.Value3 Physics /= #Physics.Constants.1000 Physics
+
             scoreboard players operation #Physics.Maths.SquareRoot.Input Physics *= #Physics.Maths.SquareRoot.Input Physics
-            scoreboard players operation #Physics.Maths.Value1 Physics *= #Physics.Maths.Value1 Physics
             scoreboard players operation #Physics.Maths.Value2 Physics *= #Physics.Maths.Value2 Physics
-            scoreboard players operation #Physics.Maths.SquareRoot.Input Physics += #Physics.Maths.Value1 Physics
+            scoreboard players operation #Physics.Maths.Value3 Physics *= #Physics.Maths.Value3 Physics
             scoreboard players operation #Physics.Maths.SquareRoot.Input Physics += #Physics.Maths.Value2 Physics
+            scoreboard players operation #Physics.Maths.SquareRoot.Input Physics += #Physics.Maths.Value3 Physics
             function physics:zprivate/maths/get_square_root
 
-            scoreboard players operation #Physics.CrossProductAxis2.xx.x Physics *= #Physics.Constants.1000 Physics
-            scoreboard players operation #Physics.CrossProductAxis2.xx.y Physics *= #Physics.Constants.1000 Physics
-            scoreboard players operation #Physics.CrossProductAxis2.xx.z Physics *= #Physics.Constants.1000 Physics
             scoreboard players operation #Physics.CrossProductAxis2.xx.x Physics /= #Physics.Maths.SquareRoot.Output Physics
             scoreboard players operation #Physics.CrossProductAxis2.xx.y Physics /= #Physics.Maths.SquareRoot.Output Physics
             scoreboard players operation #Physics.CrossProductAxis2.xx.z Physics /= #Physics.Maths.SquareRoot.Output Physics
@@ -746,16 +747,17 @@
             execute store result score #Physics.Maths.Value3 Physics run scoreboard players operation #Physics.CrossProductAxis2.xy.z Physics -= #Physics.Maths.Value1 Physics
 
             # Normalization
+            scoreboard players operation #Physics.Maths.SquareRoot.Input Physics /= #Physics.Constants.1000 Physics
+            scoreboard players operation #Physics.Maths.Value2 Physics /= #Physics.Constants.1000 Physics
+            scoreboard players operation #Physics.Maths.Value3 Physics /= #Physics.Constants.1000 Physics
+
             scoreboard players operation #Physics.Maths.SquareRoot.Input Physics *= #Physics.Maths.SquareRoot.Input Physics
-            scoreboard players operation #Physics.Maths.Value1 Physics *= #Physics.Maths.Value1 Physics
             scoreboard players operation #Physics.Maths.Value2 Physics *= #Physics.Maths.Value2 Physics
-            scoreboard players operation #Physics.Maths.SquareRoot.Input Physics += #Physics.Maths.Value1 Physics
+            scoreboard players operation #Physics.Maths.Value3 Physics *= #Physics.Maths.Value3 Physics
             scoreboard players operation #Physics.Maths.SquareRoot.Input Physics += #Physics.Maths.Value2 Physics
+            scoreboard players operation #Physics.Maths.SquareRoot.Input Physics += #Physics.Maths.Value3 Physics
             function physics:zprivate/maths/get_square_root
 
-            scoreboard players operation #Physics.CrossProductAxis2.xy.x Physics *= #Physics.Constants.1000 Physics
-            scoreboard players operation #Physics.CrossProductAxis2.xy.y Physics *= #Physics.Constants.1000 Physics
-            scoreboard players operation #Physics.CrossProductAxis2.xy.z Physics *= #Physics.Constants.1000 Physics
             scoreboard players operation #Physics.CrossProductAxis2.xy.x Physics /= #Physics.Maths.SquareRoot.Output Physics
             scoreboard players operation #Physics.CrossProductAxis2.xy.y Physics /= #Physics.Maths.SquareRoot.Output Physics
             scoreboard players operation #Physics.CrossProductAxis2.xy.z Physics /= #Physics.Maths.SquareRoot.Output Physics
@@ -895,16 +897,17 @@
             execute store result score #Physics.Maths.Value3 Physics run scoreboard players operation #Physics.CrossProductAxis2.xz.z Physics -= #Physics.Maths.Value1 Physics
 
             # Normalization
+            scoreboard players operation #Physics.Maths.SquareRoot.Input Physics /= #Physics.Constants.1000 Physics
+            scoreboard players operation #Physics.Maths.Value2 Physics /= #Physics.Constants.1000 Physics
+            scoreboard players operation #Physics.Maths.Value3 Physics /= #Physics.Constants.1000 Physics
+
             scoreboard players operation #Physics.Maths.SquareRoot.Input Physics *= #Physics.Maths.SquareRoot.Input Physics
-            scoreboard players operation #Physics.Maths.Value1 Physics *= #Physics.Maths.Value1 Physics
             scoreboard players operation #Physics.Maths.Value2 Physics *= #Physics.Maths.Value2 Physics
-            scoreboard players operation #Physics.Maths.SquareRoot.Input Physics += #Physics.Maths.Value1 Physics
+            scoreboard players operation #Physics.Maths.Value3 Physics *= #Physics.Maths.Value3 Physics
             scoreboard players operation #Physics.Maths.SquareRoot.Input Physics += #Physics.Maths.Value2 Physics
+            scoreboard players operation #Physics.Maths.SquareRoot.Input Physics += #Physics.Maths.Value3 Physics
             function physics:zprivate/maths/get_square_root
 
-            scoreboard players operation #Physics.CrossProductAxis2.xz.x Physics *= #Physics.Constants.1000 Physics
-            scoreboard players operation #Physics.CrossProductAxis2.xz.y Physics *= #Physics.Constants.1000 Physics
-            scoreboard players operation #Physics.CrossProductAxis2.xz.z Physics *= #Physics.Constants.1000 Physics
             scoreboard players operation #Physics.CrossProductAxis2.xz.x Physics /= #Physics.Maths.SquareRoot.Output Physics
             scoreboard players operation #Physics.CrossProductAxis2.xz.y Physics /= #Physics.Maths.SquareRoot.Output Physics
             scoreboard players operation #Physics.CrossProductAxis2.xz.z Physics /= #Physics.Maths.SquareRoot.Output Physics
@@ -1044,16 +1047,17 @@
             execute store result score #Physics.Maths.Value3 Physics run scoreboard players operation #Physics.CrossProductAxis2.yx.z Physics -= #Physics.Maths.Value1 Physics
 
             # Normalization
+            scoreboard players operation #Physics.Maths.SquareRoot.Input Physics /= #Physics.Constants.1000 Physics
+            scoreboard players operation #Physics.Maths.Value2 Physics /= #Physics.Constants.1000 Physics
+            scoreboard players operation #Physics.Maths.Value3 Physics /= #Physics.Constants.1000 Physics
+
             scoreboard players operation #Physics.Maths.SquareRoot.Input Physics *= #Physics.Maths.SquareRoot.Input Physics
-            scoreboard players operation #Physics.Maths.Value1 Physics *= #Physics.Maths.Value1 Physics
             scoreboard players operation #Physics.Maths.Value2 Physics *= #Physics.Maths.Value2 Physics
-            scoreboard players operation #Physics.Maths.SquareRoot.Input Physics += #Physics.Maths.Value1 Physics
+            scoreboard players operation #Physics.Maths.Value3 Physics *= #Physics.Maths.Value3 Physics
             scoreboard players operation #Physics.Maths.SquareRoot.Input Physics += #Physics.Maths.Value2 Physics
+            scoreboard players operation #Physics.Maths.SquareRoot.Input Physics += #Physics.Maths.Value3 Physics
             function physics:zprivate/maths/get_square_root
 
-            scoreboard players operation #Physics.CrossProductAxis2.yx.x Physics *= #Physics.Constants.1000 Physics
-            scoreboard players operation #Physics.CrossProductAxis2.yx.y Physics *= #Physics.Constants.1000 Physics
-            scoreboard players operation #Physics.CrossProductAxis2.yx.z Physics *= #Physics.Constants.1000 Physics
             scoreboard players operation #Physics.CrossProductAxis2.yx.x Physics /= #Physics.Maths.SquareRoot.Output Physics
             scoreboard players operation #Physics.CrossProductAxis2.yx.y Physics /= #Physics.Maths.SquareRoot.Output Physics
             scoreboard players operation #Physics.CrossProductAxis2.yx.z Physics /= #Physics.Maths.SquareRoot.Output Physics
@@ -1193,16 +1197,17 @@
             execute store result score #Physics.Maths.Value3 Physics run scoreboard players operation #Physics.CrossProductAxis2.yy.z Physics -= #Physics.Maths.Value1 Physics
 
             # Normalization
+            scoreboard players operation #Physics.Maths.SquareRoot.Input Physics /= #Physics.Constants.1000 Physics
+            scoreboard players operation #Physics.Maths.Value2 Physics /= #Physics.Constants.1000 Physics
+            scoreboard players operation #Physics.Maths.Value3 Physics /= #Physics.Constants.1000 Physics
+
             scoreboard players operation #Physics.Maths.SquareRoot.Input Physics *= #Physics.Maths.SquareRoot.Input Physics
-            scoreboard players operation #Physics.Maths.Value1 Physics *= #Physics.Maths.Value1 Physics
             scoreboard players operation #Physics.Maths.Value2 Physics *= #Physics.Maths.Value2 Physics
-            scoreboard players operation #Physics.Maths.SquareRoot.Input Physics += #Physics.Maths.Value1 Physics
+            scoreboard players operation #Physics.Maths.Value3 Physics *= #Physics.Maths.Value3 Physics
             scoreboard players operation #Physics.Maths.SquareRoot.Input Physics += #Physics.Maths.Value2 Physics
+            scoreboard players operation #Physics.Maths.SquareRoot.Input Physics += #Physics.Maths.Value3 Physics
             function physics:zprivate/maths/get_square_root
 
-            scoreboard players operation #Physics.CrossProductAxis2.yy.x Physics *= #Physics.Constants.1000 Physics
-            scoreboard players operation #Physics.CrossProductAxis2.yy.y Physics *= #Physics.Constants.1000 Physics
-            scoreboard players operation #Physics.CrossProductAxis2.yy.z Physics *= #Physics.Constants.1000 Physics
             scoreboard players operation #Physics.CrossProductAxis2.yy.x Physics /= #Physics.Maths.SquareRoot.Output Physics
             scoreboard players operation #Physics.CrossProductAxis2.yy.y Physics /= #Physics.Maths.SquareRoot.Output Physics
             scoreboard players operation #Physics.CrossProductAxis2.yy.z Physics /= #Physics.Maths.SquareRoot.Output Physics
@@ -1342,16 +1347,17 @@
             execute store result score #Physics.Maths.Value3 Physics run scoreboard players operation #Physics.CrossProductAxis2.yz.z Physics -= #Physics.Maths.Value1 Physics
 
             # Normalization
+            scoreboard players operation #Physics.Maths.SquareRoot.Input Physics /= #Physics.Constants.1000 Physics
+            scoreboard players operation #Physics.Maths.Value2 Physics /= #Physics.Constants.1000 Physics
+            scoreboard players operation #Physics.Maths.Value3 Physics /= #Physics.Constants.1000 Physics
+
             scoreboard players operation #Physics.Maths.SquareRoot.Input Physics *= #Physics.Maths.SquareRoot.Input Physics
-            scoreboard players operation #Physics.Maths.Value1 Physics *= #Physics.Maths.Value1 Physics
             scoreboard players operation #Physics.Maths.Value2 Physics *= #Physics.Maths.Value2 Physics
-            scoreboard players operation #Physics.Maths.SquareRoot.Input Physics += #Physics.Maths.Value1 Physics
+            scoreboard players operation #Physics.Maths.Value3 Physics *= #Physics.Maths.Value3 Physics
             scoreboard players operation #Physics.Maths.SquareRoot.Input Physics += #Physics.Maths.Value2 Physics
+            scoreboard players operation #Physics.Maths.SquareRoot.Input Physics += #Physics.Maths.Value3 Physics
             function physics:zprivate/maths/get_square_root
 
-            scoreboard players operation #Physics.CrossProductAxis2.yz.x Physics *= #Physics.Constants.1000 Physics
-            scoreboard players operation #Physics.CrossProductAxis2.yz.y Physics *= #Physics.Constants.1000 Physics
-            scoreboard players operation #Physics.CrossProductAxis2.yz.z Physics *= #Physics.Constants.1000 Physics
             scoreboard players operation #Physics.CrossProductAxis2.yz.x Physics /= #Physics.Maths.SquareRoot.Output Physics
             scoreboard players operation #Physics.CrossProductAxis2.yz.y Physics /= #Physics.Maths.SquareRoot.Output Physics
             scoreboard players operation #Physics.CrossProductAxis2.yz.z Physics /= #Physics.Maths.SquareRoot.Output Physics
@@ -1491,16 +1497,17 @@
             execute store result score #Physics.Maths.Value3 Physics run scoreboard players operation #Physics.CrossProductAxis2.zx.z Physics -= #Physics.Maths.Value1 Physics
 
             # Normalization
+            scoreboard players operation #Physics.Maths.SquareRoot.Input Physics /= #Physics.Constants.1000 Physics
+            scoreboard players operation #Physics.Maths.Value2 Physics /= #Physics.Constants.1000 Physics
+            scoreboard players operation #Physics.Maths.Value3 Physics /= #Physics.Constants.1000 Physics
+
             scoreboard players operation #Physics.Maths.SquareRoot.Input Physics *= #Physics.Maths.SquareRoot.Input Physics
-            scoreboard players operation #Physics.Maths.Value1 Physics *= #Physics.Maths.Value1 Physics
             scoreboard players operation #Physics.Maths.Value2 Physics *= #Physics.Maths.Value2 Physics
-            scoreboard players operation #Physics.Maths.SquareRoot.Input Physics += #Physics.Maths.Value1 Physics
+            scoreboard players operation #Physics.Maths.Value3 Physics *= #Physics.Maths.Value3 Physics
             scoreboard players operation #Physics.Maths.SquareRoot.Input Physics += #Physics.Maths.Value2 Physics
+            scoreboard players operation #Physics.Maths.SquareRoot.Input Physics += #Physics.Maths.Value3 Physics
             function physics:zprivate/maths/get_square_root
 
-            scoreboard players operation #Physics.CrossProductAxis2.zx.x Physics *= #Physics.Constants.1000 Physics
-            scoreboard players operation #Physics.CrossProductAxis2.zx.y Physics *= #Physics.Constants.1000 Physics
-            scoreboard players operation #Physics.CrossProductAxis2.zx.z Physics *= #Physics.Constants.1000 Physics
             scoreboard players operation #Physics.CrossProductAxis2.zx.x Physics /= #Physics.Maths.SquareRoot.Output Physics
             scoreboard players operation #Physics.CrossProductAxis2.zx.y Physics /= #Physics.Maths.SquareRoot.Output Physics
             scoreboard players operation #Physics.CrossProductAxis2.zx.z Physics /= #Physics.Maths.SquareRoot.Output Physics
@@ -1640,16 +1647,17 @@
             execute store result score #Physics.Maths.Value3 Physics run scoreboard players operation #Physics.CrossProductAxis2.zy.z Physics -= #Physics.Maths.Value1 Physics
 
             # Normalization
+            scoreboard players operation #Physics.Maths.SquareRoot.Input Physics /= #Physics.Constants.1000 Physics
+            scoreboard players operation #Physics.Maths.Value2 Physics /= #Physics.Constants.1000 Physics
+            scoreboard players operation #Physics.Maths.Value3 Physics /= #Physics.Constants.1000 Physics
+
             scoreboard players operation #Physics.Maths.SquareRoot.Input Physics *= #Physics.Maths.SquareRoot.Input Physics
-            scoreboard players operation #Physics.Maths.Value1 Physics *= #Physics.Maths.Value1 Physics
             scoreboard players operation #Physics.Maths.Value2 Physics *= #Physics.Maths.Value2 Physics
-            scoreboard players operation #Physics.Maths.SquareRoot.Input Physics += #Physics.Maths.Value1 Physics
+            scoreboard players operation #Physics.Maths.Value3 Physics *= #Physics.Maths.Value3 Physics
             scoreboard players operation #Physics.Maths.SquareRoot.Input Physics += #Physics.Maths.Value2 Physics
+            scoreboard players operation #Physics.Maths.SquareRoot.Input Physics += #Physics.Maths.Value3 Physics
             function physics:zprivate/maths/get_square_root
 
-            scoreboard players operation #Physics.CrossProductAxis2.zy.x Physics *= #Physics.Constants.1000 Physics
-            scoreboard players operation #Physics.CrossProductAxis2.zy.y Physics *= #Physics.Constants.1000 Physics
-            scoreboard players operation #Physics.CrossProductAxis2.zy.z Physics *= #Physics.Constants.1000 Physics
             scoreboard players operation #Physics.CrossProductAxis2.zy.x Physics /= #Physics.Maths.SquareRoot.Output Physics
             scoreboard players operation #Physics.CrossProductAxis2.zy.y Physics /= #Physics.Maths.SquareRoot.Output Physics
             scoreboard players operation #Physics.CrossProductAxis2.zy.z Physics /= #Physics.Maths.SquareRoot.Output Physics
@@ -1789,20 +1797,20 @@
             execute store result score #Physics.Maths.Value3 Physics run scoreboard players operation #Physics.CrossProductAxis2.zz.z Physics -= #Physics.Maths.Value1 Physics
 
             # Normalization
+            scoreboard players operation #Physics.Maths.SquareRoot.Input Physics /= #Physics.Constants.1000 Physics
+            scoreboard players operation #Physics.Maths.Value2 Physics /= #Physics.Constants.1000 Physics
+            scoreboard players operation #Physics.Maths.Value3 Physics /= #Physics.Constants.1000 Physics
+
             scoreboard players operation #Physics.Maths.SquareRoot.Input Physics *= #Physics.Maths.SquareRoot.Input Physics
-            scoreboard players operation #Physics.Maths.Value1 Physics *= #Physics.Maths.Value1 Physics
             scoreboard players operation #Physics.Maths.Value2 Physics *= #Physics.Maths.Value2 Physics
-            scoreboard players operation #Physics.Maths.SquareRoot.Input Physics += #Physics.Maths.Value1 Physics
+            scoreboard players operation #Physics.Maths.Value3 Physics *= #Physics.Maths.Value3 Physics
             scoreboard players operation #Physics.Maths.SquareRoot.Input Physics += #Physics.Maths.Value2 Physics
+            scoreboard players operation #Physics.Maths.SquareRoot.Input Physics += #Physics.Maths.Value3 Physics
             function physics:zprivate/maths/get_square_root
 
-            scoreboard players operation #Physics.CrossProductAxis2.zz.x Physics *= #Physics.Constants.1000 Physics
-            scoreboard players operation #Physics.CrossProductAxis2.zz.y Physics *= #Physics.Constants.1000 Physics
-            scoreboard players operation #Physics.CrossProductAxis2.zz.z Physics *= #Physics.Constants.1000 Physics
             scoreboard players operation #Physics.CrossProductAxis2.zz.x Physics /= #Physics.Maths.SquareRoot.Output Physics
             scoreboard players operation #Physics.CrossProductAxis2.zz.y Physics /= #Physics.Maths.SquareRoot.Output Physics
             scoreboard players operation #Physics.CrossProductAxis2.zz.z Physics /= #Physics.Maths.SquareRoot.Output Physics
-
             # Projection: This
             # (Important): Because the cross product is perpendicular to this object's z axis, points along that axis have the same projection. Because of this: Corner 1 = Corner 0 / Corner 3 = Corner 2 / Corner 5 = Corner 4 / Corner 7 = Corner 6
                 # Corner 0
@@ -1916,6 +1924,8 @@
             # Overlap check
             execute unless score #Physics.Projection.Object.CrossProductAxis2.zz.Min Physics <= #Physics.Projection.OtherObject.CrossProductAxis2.zz.Max Physics run return 0
             execute unless score #Physics.Projection.OtherObject.CrossProductAxis2.zz.Min Physics <= #Physics.Projection.Object.CrossProductAxis2.zz.Max Physics run return 0
+
+# HERE ITS WRONG. MIN AND MAX ARE OVERFLOWING?
 
 # Store the other object's ID for later
 execute store result storage physics:temp data.B int 1 run scoreboard players get @s Physics.Object.ID
