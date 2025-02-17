@@ -1147,9 +1147,6 @@ tag @s add Physics.Checked
     scoreboard players operation #Physics.ThisObject Physics.Object.CornerPosGlobal.6.x = @s Physics.Object.CornerPosGlobal.6.x
     scoreboard players operation #Physics.ThisObject Physics.Object.CornerPosGlobal.6.y = @s Physics.Object.CornerPosGlobal.6.y
     scoreboard players operation #Physics.ThisObject Physics.Object.CornerPosGlobal.6.z = @s Physics.Object.CornerPosGlobal.6.z
-    scoreboard players operation #Physics.ThisObject Physics.Object.CornerPosGlobal.7.x = @s Physics.Object.CornerPosGlobal.7.x
-    scoreboard players operation #Physics.ThisObject Physics.Object.CornerPosGlobal.7.y = @s Physics.Object.CornerPosGlobal.7.y
-    scoreboard players operation #Physics.ThisObject Physics.Object.CornerPosGlobal.7.z = @s Physics.Object.CornerPosGlobal.7.z
 
     scoreboard players operation #Physics.ThisObject Physics.Object.BoundingBoxGlobalMin.x = @s Physics.Object.BoundingBoxGlobalMin.x
     scoreboard players operation #Physics.ThisObject Physics.Object.BoundingBoxGlobalMax.x = @s Physics.Object.BoundingBoxGlobalMax.x
