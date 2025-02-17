@@ -18,6 +18,14 @@ scoreboard players operation #Physics.DeepestProjection Physics = #Physics.Proje
     execute if score #Physics.Projection.OtherObject.CrossProductAxis2.xx.Min Physics >= #Physics.Projection.Object.CrossProductAxis2.xx.Min Physics run function physics:zprivate/contact_generation/new_contact/object/cross_product_axis_xx/check_edge_b_min
     execute if score #Physics.Projection.OtherObject.CrossProductAxis2.xx.Min Physics < #Physics.Projection.Object.CrossProductAxis2.xx.Min Physics run function physics:zprivate/contact_generation/new_contact/object/cross_product_axis_xx/check_edge_b_max
 
+    # Contact Normal
+    # (Important): For edge-edge collisions, the contact normal is the cross product.
+    # (Important): Because the block's x axis only has its x component set, the cross product has an x component of 0 (Not stored in the score).
+    # (Important): In case ObjectA's projection is larger, it inverts the contact normal in "get_edge_b".
+    execute if score #Physics.ObjectA.EdgeProjection Physics < #Physics.ObjectB.EdgeProjection Physics store result storage physics:temp data.NewContact.ContactNormal[0] int 1 store result score #Physics.Offset.x Physics run scoreboard players get #Physics.CrossProductAxis2.xx.x Physics
+    execute if score #Physics.ObjectA.EdgeProjection Physics < #Physics.ObjectB.EdgeProjection Physics store result storage physics:temp data.NewContact.ContactNormal[1] int 1 store result score #Physics.Offset.y Physics run scoreboard players get #Physics.CrossProductAxis2.xx.y Physics
+    execute if score #Physics.ObjectA.EdgeProjection Physics < #Physics.ObjectB.EdgeProjection Physics store result storage physics:temp data.NewContact.ContactNormal[2] int 1 store result score #Physics.Offset.z Physics run scoreboard players get #Physics.CrossProductAxis2.xx.z Physics
+
 # Calculate Penetration Depth, Contact Normal, Contact Point & Separating Velocity
     # Contact Point
     # (Important): For edge-edge collisions, the contact point is the closest point on one edge to the other.
@@ -107,20 +115,31 @@ scoreboard players operation #Physics.DeepestProjection Physics = #Physics.Proje
             scoreboard players operation #Physics.Maths.Value1 Physics -= #Physics.Maths.C Physics
 
             # t = (AE - CD) / (AB - CC)
-            scoreboard players operation #Physics.Maths.Value1 Physics /= #Physics.Maths.Value9 Physics
+            execute store result score #Physics.Offset.y Physics store result score #Physics.Offset.z Physics run scoreboard players operation #Physics.Maths.Value1 Physics /= #Physics.Maths.Value9 Physics
 
         # Calculate the distance (Point calculation with t is interweaved for performance reasons)
+            # Calculate the offset for the 2nd contact point (On ObjectB's axis)
+            # (Important): To save an operation, I overwrite Value1 instead of creating Offset.x
+            scoreboard players operation #Physics.Maths.Value1 Physics *= @s Physics.Object.Axis.x.x
+            scoreboard players operation #Physics.Offset.y Physics *= @s Physics.Object.Axis.x.y
+            scoreboard players operation #Physics.Offset.z Physics *= @s Physics.Object.Axis.x.z
+            scoreboard players operation #Physics.Maths.Value1 Physics /= #Physics.Constants.1000 Physics
+            scoreboard players operation #Physics.Offset.y Physics /= #Physics.Constants.1000 Physics
+            scoreboard players operation #Physics.Offset.z Physics /= #Physics.Constants.1000 Physics
+
             # x2 - x1
             scoreboard players operation #Physics.Maths.SquareRoot.Input Physics += #Physics.Maths.Value1 Physics
             scoreboard players operation #Physics.Maths.SquareRoot.Input Physics -= #Physics.ContactPoint.x Physics
             scoreboard players operation #Physics.Maths.SquareRoot.Input Physics *= #Physics.Maths.SquareRoot.Input Physics
 
             # y2 - y1
+            scoreboard players operation #Physics.Maths.Value4 Physics += #Physics.Offset.y Physics
             scoreboard players operation #Physics.Maths.Value4 Physics -= #Physics.ContactPoint.y Physics
             scoreboard players operation #Physics.Maths.Value4 Physics *= #Physics.Maths.Value4 Physics
             scoreboard players operation #Physics.Maths.SquareRoot.Input Physics += #Physics.Maths.Value4 Physics
 
             # z2 - z1
+            scoreboard players operation #Physics.Maths.Value5 Physics += #Physics.Offset.z Physics
             scoreboard players operation #Physics.Maths.Value5 Physics -= #Physics.ContactPoint.z Physics
             scoreboard players operation #Physics.Maths.Value5 Physics *= #Physics.Maths.Value5 Physics
             scoreboard players operation #Physics.Maths.SquareRoot.Input Physics += #Physics.Maths.Value5 Physics
@@ -128,16 +147,6 @@ scoreboard players operation #Physics.DeepestProjection Physics = #Physics.Proje
             # Square Root (= Distance, = Penetration Depth)
             function physics:zprivate/maths/get_square_root
             execute store result storage physics:temp data.NewContact.PenetrationDepth int 1 run scoreboard players get #Physics.Maths.SquareRoot.Output Physics
-
-# CONTACT POINT IS CORRECT, PENETRATION DEPTH IS WRONG
-
-    # Contact Normal (EVERYTHING BELOW AND INCLUDING THIS HASNT BEEN UPDATED YET)
-    # (Important): For edge-edge collisions, the contact normal is the cross product.
-    # (Important): Because the block's x axis only has its x component set, the cross product has an x component of 0 (Not stored in the score).
-    # (Important): In case ObjectA's projection is larger, it inverts the contact normal in "get_edge_b".
-    data modify storage physics:temp data.NewContact.ContactNormal[0] set value 0
-    execute if score #Physics.ObjectA.EdgeProjection Physics < #Physics.ObjectB.EdgeProjection Physics store result storage physics:temp data.NewContact.ContactNormal[1] int 1 run scoreboard players get #Physics.CrossProductAxis.xx.y Physics
-    execute if score #Physics.ObjectA.EdgeProjection Physics < #Physics.ObjectB.EdgeProjection Physics store result storage physics:temp data.NewContact.ContactNormal[2] int 1 run scoreboard players get #Physics.CrossProductAxis.xx.z Physics
 
     # Separating Velocity
     # (Important): The separating velocity is the dot product between the contact point's relative velocity and the contact normal. The relative velocity is the cross product between the angular velocity and the contact point (relative to the object's center) that's added together with the object's linear velocity.
