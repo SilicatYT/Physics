@@ -7,5 +7,5 @@ $execute store result score #Physics.ObjectA.EdgeStart.y Physics run scoreboard 
 $execute store result score #Physics.ObjectA.EdgeStart.z Physics run scoreboard players operation #Physics.Maths.Value3 Physics = #Physics.ThisObject Physics.Object.CornerPosGlobal.$(StartCorner).z
 
 # Get the edge's projection (For inverting the contact normal if necessary)
-$scoreboard players operation #Physics.ObjectA.EdgeProjection Physics = #Physics.Projection.ObjectCorner$(StartCorner).CrossProductAxis2.zy Physics
-scoreboard players operation #Physics.ObjectA.EdgeProjection Physics += #Physics.Projection.ObjectCenter.CrossProductAxis2.zy Physics
+$scoreboard players operation #Physics.ObjectA.EdgeProjection Physics = #Physics.Projection.ObjectCorner$(StartCorner).CrossProductAxis.zy Physics
+scoreboard players operation #Physics.ObjectA.EdgeProjection Physics += #Physics.Projection.ObjectCenter.CrossProductAxis.zy Physics
