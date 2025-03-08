@@ -92,6 +92,14 @@ execute if score #Physics.ObjectA.Feature Physics matches 101 run scoreboard pla
 # Store the new contact
 # (Important): The values are stored in their scaled up form, just like how I need them to process them.
 # (Important): Note that I don't store the block's position scaled up, because it makes no difference compared to storing the center coords. I can't store the min projection either, because that would bug out for different block hitbox sizes.
+    # Update the hitbox data (Min_x, Max_x, Min_y, Max_y, Min_z, Max_z)
+    execute store result storage physics:temp data.BlockData.Hitbox[0] int 1 run scoreboard players get #Physics.Projection.Block.WorldAxis.x.Min Physics
+    execute store result storage physics:temp data.BlockData.Hitbox[1] int 1 run scoreboard players get #Physics.Projection.Block.WorldAxis.x.Max Physics
+    execute store result storage physics:temp data.BlockData.Hitbox[2] int 1 run scoreboard players get #Physics.Projection.Block.WorldAxis.y.Min Physics
+    execute store result storage physics:temp data.BlockData.Hitbox[3] int 1 run scoreboard players get #Physics.Projection.Block.WorldAxis.y.Max Physics
+    execute store result storage physics:temp data.BlockData.Hitbox[4] int 1 run scoreboard players get #Physics.Projection.Block.WorldAxis.z.Min Physics
+    execute store result storage physics:temp data.BlockData.Hitbox[5] int 1 run scoreboard players get #Physics.Projection.Block.WorldAxis.z.Max Physics
+
 execute store result storage physics:temp data.Pos[0] int 1 run scoreboard players get #Physics.BlockPos.x Physics
 execute store result storage physics:temp data.Pos[1] int 1 run scoreboard players get #Physics.BlockPos.y Physics
 execute store result storage physics:temp data.Pos[2] int 1 run scoreboard players get #Physics.BlockPos.z Physics

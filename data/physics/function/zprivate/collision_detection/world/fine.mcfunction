@@ -7,12 +7,12 @@
 # Note: Precalculation - The projection of the world-geometry block onto the 9 cross product axes and the axes of the object has to be done for each cube, but there's a trick: Precompute the projection of all 8 corner points of the block onto the axes, using only coordinates relative to the position of the cube (in this case the cube center, not the coordinate origin), then precompute the min and max for each axis. Then, for each block, add its position to the precomputed min and max values. If the block position were the coordinate origin, one of the block's corners would always be at [0, 0, 0], relatively speaking. So I wouldn't have to project that one onto the axes, as it would always result in [0, 0, 0]. But overall it's faster to use the center position, because then I only have to project half the corner points onto each axis, calculate the max, and then just change the sign to get the min for each axis.
 
 # Perform the Separating Axes Theorem (Simplified with pre-calculated values) to get whether there's a collision, the depth of the collision and what kind it is (Edge-Edge, Point-Face)
+    # Get the block's hitbox
+    function physics:zprivate/collision_detection/world/get_hitbox/main
+
     # Check the different axes
         # x_block
-            # Projection: Block
-            execute store result score #Physics.Projection.Block.WorldAxis.x.Max Physics run scoreboard players operation #Physics.Projection.Block.WorldAxis.x.Min Physics = #Physics.BlockPos.x Physics
-            scoreboard players remove #Physics.Projection.Block.WorldAxis.x.Min Physics 500
-            scoreboard players add #Physics.Projection.Block.WorldAxis.x.Max Physics 500
+            # Projection: Block (= Hitbox)
 
             # Projection: Object (= Global Bounding Box)
 
@@ -21,10 +21,7 @@
             execute unless score @s Physics.Object.BoundingBoxGlobalMin.x <= #Physics.Projection.Block.WorldAxis.x.Max Physics run return 0
 
         # y_block
-            # Projection: Block
-            execute store result score #Physics.Projection.Block.WorldAxis.y.Max Physics run scoreboard players operation #Physics.Projection.Block.WorldAxis.y.Min Physics = #Physics.BlockPos.y Physics
-            scoreboard players remove #Physics.Projection.Block.WorldAxis.y.Min Physics 500
-            scoreboard players add #Physics.Projection.Block.WorldAxis.y.Max Physics 500
+            # Projection: Block (= Hitbox)
 
             # Projection: Object (= Global Bounding Box)
 
@@ -33,10 +30,7 @@
             execute unless score @s Physics.Object.BoundingBoxGlobalMin.y <= #Physics.Projection.Block.WorldAxis.y.Max Physics run return 0
 
         # z_block
-            # Projection: Block
-            execute store result score #Physics.Projection.Block.WorldAxis.z.Max Physics run scoreboard players operation #Physics.Projection.Block.WorldAxis.z.Min Physics = #Physics.BlockPos.z Physics
-            scoreboard players remove #Physics.Projection.Block.WorldAxis.z.Min Physics 500
-            scoreboard players add #Physics.Projection.Block.WorldAxis.z.Max Physics 500
+            # Projection: Block (= Hitbox)
 
             # Projection: Object (= Global Bounding Box)
 

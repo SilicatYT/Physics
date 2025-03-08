@@ -6,3 +6,6 @@
     execute store result score #Physics.Contact.FeatureB Physics run data get storage physics:temp data.CurrentContact.FeatureB
 
 # Where is the hitbox size stored? Currently nowhere, right?
+
+# Temp
+#data modify storage physics:zprivate data.ContactGroups[-1].Objects[0].Blocks[-1].Contacts append from storage physics:temp data.CurrentContact
