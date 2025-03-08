@@ -1098,7 +1098,8 @@ execute unless data storage physics:temp data.Blocks[0] run data remove storage 
 # (Important): Contacts are discarded if their penetration depth is outside the threshold (small negative value). This keeps barely separated contacts that are likely to touch again in the next tick. Those are ignored in contact resolution. Contacts are also discarded if their object/block doesn't pass an extended (slightly larger to account for the threshold) AABB check.
 # (Important): The "Blocks" object entry will be removed if the remaining world contacts were marked as invalid.
 # (Important): Until now, the contacts are stored in physics:temp data.Blocks. Here, the contacts get updated (if necessary) and added to the actual final storage.
-execute if data storage physics:temp data.Blocks[0] run function physics:zprivate/contact_generation/accumulate/update/world/main
+execute store result score #Physics.BlockCount Physics if data storage physics:temp data.Blocks[]
+execute if score #Physics.BlockCount Physics matches 1.. run function physics:zprivate/contact_generation/accumulate/update/world/main
 
 # Check for coarse collisions with other dynamic objects, so I can then perform the SAT to check for fine collisions
 # (Important): Only checks objects in a range of 6.929 blocks, which is the sum of both objects' maximum supported bounding box divided by 2 (so from the center of both entities), assuming I cap the dimensions at 4 blocks. The reasoning is explained in the set_attributes/dimension function.
