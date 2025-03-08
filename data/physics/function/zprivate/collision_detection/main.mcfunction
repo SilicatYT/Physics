@@ -1,6 +1,7 @@
 # Prepare the contacts storage & copy over this object's stored contacts from the previous tick (If there are any)
 # (Important): The ID in the data storage is also used when generating the new contact
 # (Important): I use a placeholder "MinSeparatingVelocity" so it doesn't get selected during resolution and is immediately replaced when a contact is found / updated.
+data modify storage physics:temp data.Blocks set value []
 data modify storage physics:zprivate data.ContactGroups append value {A:-1,MinSeparatingVelocity:2147483647,Objects:[{Blocks:[]}]}
 execute store result storage physics:temp data.A int 1 store result storage physics:zprivate data.ContactGroups[-1].A int 1 run scoreboard players get @s Physics.Object.ID
 execute if entity @s[tag=Physics.HasContacts] run function physics:zprivate/contact_generation/accumulate/get_previous with storage physics:temp data
@@ -1091,12 +1092,13 @@ execute store result storage physics:temp data.StepCountZ byte 1 run scoreboard 
 execute at @s run function physics:zprivate/collision_detection/world/main with storage physics:temp data
 
 # Delete the "Blocks" entry in the object's contacts if no world collision was found
-execute unless data storage physics:zprivate data.ContactGroups[-1].Objects[0].Blocks[0] run data remove storage physics:zprivate data.ContactGroups[-1].Objects[0]
+execute unless data storage physics:temp data.Blocks[0] run data remove storage physics:zprivate data.ContactGroups[-1].Objects[0]
 
 # Update or discard contacts (World)
 # (Important): Contacts are discarded if their penetration depth is outside the threshold (small negative value). This keeps barely separated contacts that are likely to touch again in the next tick. Those are ignored in contact resolution. Contacts are also discarded if their object/block doesn't pass an extended (slightly larger to account for the threshold) AABB check.
 # (Important): The "Blocks" object entry will be removed if the remaining world contacts were marked as invalid.
-execute if data storage physics:zprivate data.ContactGroups[-1].Objects[0].Blocks run function physics:zprivate/contact_generation/accumulate/update/world/main
+# (Important): Until now, the contacts are stored in physics:temp data.Blocks. Here, the contacts get updated (if necessary) and added to the actual final storage.
+execute if data storage physics:temp data.Blocks[0] run function physics:zprivate/contact_generation/accumulate/update/world/main
 
 # Check for coarse collisions with other dynamic objects, so I can then perform the SAT to check for fine collisions
 # (Important): Only checks objects in a range of 6.929 blocks, which is the sum of both objects' maximum supported bounding box divided by 2 (so from the center of both entities), assuming I cap the dimensions at 4 blocks. The reasoning is explained in the set_attributes/dimension function.
