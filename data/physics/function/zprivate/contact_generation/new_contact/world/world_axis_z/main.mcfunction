@@ -26,7 +26,7 @@ execute if score #Physics.ObjectB.Feature Physics matches 105 run scoreboard pla
 
     # Contact Normal
     # (Important): For point-face collisions, the contact normal is the face's normal. So it's the axis of minimum overlap.
-    execute if score #Physics.ObjectB.Feature Physics matches 105 run data modify storage physics:temp data.NewContact.ContactNormal set value [I;0,0,-1000]
+    execute if score #Physics.ObjectB.Feature Physics matches 105 run data modify storage physics:temp data.NewContact.ContactNormal set value [I;0,0,1000]
 
     # Contact Point
     # (Important): For point-face collisions, the contact point is the point projected onto the surface (= moved along contact normal with the penetration depth as the amount).
@@ -74,6 +74,6 @@ function physics:zprivate/contact_generation/new_contact/world/store with storag
 # Process the separating velocity (Keep track of the most negative separating velocity for the current ObjectA, as well as global for all ObjectA's)
 # (Important): The "#Physics.MinSeparatingVelocityTotal Physics" score keeps track of the overall most negative separating velocity across all ObjectA's, so I can efficiently target the most severe contact in contact resolution's 1st iteration.
 execute store result score #Physics.MinSeparatingVelocity Physics run data get storage physics:zprivate data.ContactGroups[-1].MinSeparatingVelocity
-execute if score #Physics.MinSeparatingVelocity Physics <= #Physics.PointVelocity.x Physics run return 0
-execute if score #Physics.PointVelocity.x Physics < #Physics.MinSeparatingVelocityTotal Physics store result storage physics:zprivate data.ContactGroups[-1].MinSeparatingVelocity int 1 run return run scoreboard players operation #Physics.MinSeparatingVelocityTotal Physics = #Physics.PointVelocity.x Physics
-execute store result storage physics:zprivate data.ContactGroups[-1].MinSeparatingVelocity int 1 run scoreboard players get #Physics.PointVelocity.x Physics
+execute if score #Physics.MinSeparatingVelocity Physics <= #Physics.ContactPoint.x Physics run return 0
+execute if score #Physics.ContactPoint.x Physics < #Physics.MinSeparatingVelocityTotal Physics store result storage physics:zprivate data.ContactGroups[-1].MinSeparatingVelocity int 1 run return run scoreboard players operation #Physics.MinSeparatingVelocityTotal Physics = #Physics.ContactPoint.x Physics
+execute store result storage physics:zprivate data.ContactGroups[-1].MinSeparatingVelocity int 1 run scoreboard players get #Physics.ContactPoint.x Physics

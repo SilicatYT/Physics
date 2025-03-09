@@ -13,4 +13,4 @@ $execute if score #Physics.ObjectB.Feature Physics matches 101 store result stor
 execute store result storage physics:temp data.NewContact.ContactPoint[0] int 1 run scoreboard players operation #Physics.PenetrationDepth Physics = #Physics.Projection.Block.WorldAxis.x.Min Physics
 $scoreboard players operation #Physics.PenetrationDepth Physics -= @s Physics.Object.CornerPosGlobal.$(Corner).x
 execute store result storage physics:temp data.NewContact.PenetrationDepth int 1 run scoreboard players operation #Physics.PenetrationDepth Physics *= #Physics.Constants.-1 Physics
-data modify storage physics:temp data.NewContact.ContactNormal set value [I;1000,0,0]
+data modify storage physics:temp data.NewContact.ContactNormal set value [I;-1000,0,0]

@@ -26,7 +26,7 @@ execute if score #Physics.ObjectB.Feature Physics matches 101 run scoreboard pla
 
     # Contact Normal
     # (Important): For point-face collisions, the contact normal is the face's normal. So it's the axis of minimum overlap.
-    execute if score #Physics.ObjectB.Feature Physics matches 101 run data modify storage physics:temp data.NewContact.ContactNormal set value [I;-1000,0,0]
+    execute if score #Physics.ObjectB.Feature Physics matches 101 run data modify storage physics:temp data.NewContact.ContactNormal set value [I;1000,0,0]
 
     # Contact Point
     # (Important): For point-face collisions, the contact point is the point projected onto the surface (= moved along contact normal with the penetration depth as the amount).
@@ -42,7 +42,7 @@ execute if score #Physics.ObjectB.Feature Physics matches 101 run scoreboard pla
         # Calculate cross product between relative contact point and angular velocity
         # (Important): I overwrite the contact point scores here, as I don't need them anymore after this.
         # (Important): Because the contact normal only has 1 component and I take the dot product afterwards, I only calculate the point velocity's x component.
-        # (Important): I store the final PointVelocity in ContactPoint.x to avoid a scoreboard operation.
+        # (Important): I store the final PointVelocity in ContactPoint.y to avoid a scoreboard operation.
         scoreboard players operation #Physics.ContactPoint.y Physics *= @s Physics.Object.AngularVelocity.z
         scoreboard players operation #Physics.ContactPoint.z Physics *= @s Physics.Object.AngularVelocity.y
         scoreboard players operation #Physics.ContactPoint.y Physics -= #Physics.ContactPoint.z Physics
@@ -53,7 +53,7 @@ execute if score #Physics.ObjectB.Feature Physics matches 101 run scoreboard pla
 
         # Take the dot product with the contact normal
         execute if score #Physics.ObjectB.Feature Physics matches 100 run scoreboard players operation #Physics.ContactPoint.y Physics *= #Physics.Constants.-1 Physics
-        execute store result storage physics:temp data.NewContact.SeparatingVelocity int 1 run scoreboard players get #Physics.PointVelocity.y Physics
+        execute store result storage physics:temp data.NewContact.SeparatingVelocity int 1 run scoreboard players get #Physics.ContactPoint.y Physics
 
 # Store the new contact
 # (Important): The values are stored in their scaled up form, just like how I need them to process them.
