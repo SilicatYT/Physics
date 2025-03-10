@@ -4,7 +4,6 @@ execute if score #Physics.Debug.ShowAxes Physics matches 1 as @e[type=minecraft:
 # Contact Generation: Setup
 data modify storage physics:temp data.ContactGroupsPrevious set from storage physics:zprivate data.ContactGroups
 data modify storage physics:zprivate data.ContactGroups set value []
-execute store result storage physics:temp data.NewContact.Gametime int 1 store result score #Physics.Gametime Physics run time query gametime
 
 # Collision Detection (Minecraft blocks & Dynamic objects) & Contact Generation
 execute as @e[type=minecraft:item_display,tag=Physics.Object] run function physics:zprivate/collision_detection/main

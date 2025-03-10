@@ -146,7 +146,7 @@ execute if score #Physics.ObjectA.EdgeProjection Physics < #Physics.ObjectB.Edge
 
             # Square Root (= Distance, = Penetration Depth)
             function physics:zprivate/maths/get_square_root
-            execute store result storage physics:temp data.NewContact.PenetrationDepth int 1 run scoreboard players get #Physics.Maths.SquareRoot.Output Physics
+            execute store result storage physics:temp data.NewContact.PenetrationDepth short 1 run scoreboard players get #Physics.Maths.SquareRoot.Output Physics
 
     # Separating Velocity
     # (Important): The separating velocity for one object is the dot product between the contact point (relative to that object)'s relative velocity and the contact normal. The relative velocity is the cross product between the object's angular velocity and the contact point (relative to the object's center) that's added together with the object's linear velocity.

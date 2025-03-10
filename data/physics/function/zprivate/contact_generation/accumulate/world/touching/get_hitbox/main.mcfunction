@@ -3,4 +3,4 @@ execute store result storage physics:temp data.BlockPos.x double 0.001 run data 
 execute store result storage physics:temp data.BlockPos.y double 0.001 run data get storage physics:temp data.Blocks[-1].Pos[1]
 execute store result storage physics:temp data.BlockPos.z double 0.001 run data get storage physics:temp data.Blocks[-1].Pos[2]
 
-function physics:zprivate/contact_generation/accumulate/update/world/get_hitbox/get with storage physics:temp data.BlockPos
+function physics:zprivate/contact_generation/accumulate/world/touching/get_hitbox/get with storage physics:temp data.BlockPos
