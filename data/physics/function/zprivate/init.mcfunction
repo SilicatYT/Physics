@@ -160,6 +160,7 @@ scoreboard players set #Physics.Constants.141 Physics 141
 scoreboard players set #Physics.Constants.500 Physics 500
 scoreboard players set #Physics.Constants.833 Physics 833
 scoreboard players set #Physics.Constants.1000 Physics 1000
+scoreboard players set #Physics.Constants.1732 Physics 1732
 scoreboard players set #Physics.Constants.2000 Physics 2000
 scoreboard players set #Physics.Constants.7775 Physics 7775
 scoreboard players set #Physics.Constants.10000 Physics 10000
