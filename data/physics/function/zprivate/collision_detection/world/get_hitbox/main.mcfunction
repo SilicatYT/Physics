@@ -6,7 +6,7 @@ execute store result score #Physics.Projection.Block.WorldAxis.y.Max Physics sto
 execute store result score #Physics.Projection.Block.WorldAxis.z.Max Physics store result score #Physics.BlockCenterPos.z Physics run scoreboard players operation #Physics.Projection.Block.WorldAxis.z.Min Physics = #Physics.BlockPos.z Physics
 
     # Full block
-    execute store result storage physics:temp data.HitboxType byte 1 run scoreboard players set #Physics.HitboxType Physics 5
+    execute store result storage physics:temp data.HitboxType byte 1 run scoreboard players set #Physics.HitboxType Physics 1
     scoreboard players set #Physics.BlockDiagonalLength Physics 1732
 
         # Block Center Pos Offset (None here)

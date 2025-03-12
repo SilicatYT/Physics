@@ -1,12 +1,12 @@
 # Get the object's feature (Face that's closest to the world-geometry block)
 # (Important): There are 2 candidate faces (those normal to the axis), and I select the correct one by looking at the projection of a single point of them and looking which is closer. If I look at the same point for both faces, I can easily get which face is closer.
-execute if score @s Physics.Object.BoundingBoxGlobalMin.z < #Physics.Projection.Block.WorldAxis.z.Min Physics store result storage physics:temp data.NewContact.FeatureB int 1 store result storage physics:temp data.FeatureB int 1 run scoreboard players set #Physics.ObjectB.Feature Physics 104
-execute if score @s Physics.Object.BoundingBoxGlobalMin.z >= #Physics.Projection.Block.WorldAxis.z.Min Physics store result storage physics:temp data.NewContact.FeatureB int 1 store result storage physics:temp data.FeatureB int 1 run scoreboard players set #Physics.ObjectB.Feature Physics 105
+execute if score @s Physics.Object.BoundingBoxGlobalMin.z < #Physics.Projection.Block.WorldAxis.z.Min Physics store result storage physics:temp data.NewContact.FeatureB byte 1 store result storage physics:temp data.FeatureB byte 1 run scoreboard players set #Physics.FeatureB Physics 14
+execute if score @s Physics.Object.BoundingBoxGlobalMin.z >= #Physics.Projection.Block.WorldAxis.z.Min Physics store result storage physics:temp data.NewContact.FeatureB byte 1 store result storage physics:temp data.FeatureB byte 1 run scoreboard players set #Physics.FeatureB Physics 15
 
 # Get the world-geometry block's feature (Corner that's closest to the object)
 # (Important): I check which of the 8 corners' projection is the closest to the object along the axis (furthest along the axis), so I have to get either the min or the max.
-execute if score #Physics.ObjectB.Feature Physics matches 104 run scoreboard players operation #Physics.DeepestProjection Physics = @s Physics.Object.BoundingBoxGlobalMax.z
-execute if score #Physics.ObjectB.Feature Physics matches 105 run scoreboard players operation #Physics.DeepestProjection Physics = @s Physics.Object.BoundingBoxGlobalMin.z
+execute if score #Physics.FeatureB Physics matches 14 run scoreboard players operation #Physics.DeepestProjection Physics = @s Physics.Object.BoundingBoxGlobalMax.z
+execute if score #Physics.FeatureB Physics matches 15 run scoreboard players operation #Physics.DeepestProjection Physics = @s Physics.Object.BoundingBoxGlobalMin.z
 
     # Set the feature
     # (Important): There are only 8 corners (and unique macro variable combinations), so everything is cached. Reduces duplicate files.
@@ -26,7 +26,7 @@ execute if score #Physics.ObjectB.Feature Physics matches 105 run scoreboard pla
 
     # Contact Normal
     # (Important): For point-face collisions, the contact normal is the face's normal. So it's the axis of minimum overlap.
-    execute if score #Physics.ObjectB.Feature Physics matches 105 run data modify storage physics:temp data.NewContact.ContactNormal set value [I;0,0,1000]
+    execute if score #Physics.FeatureB Physics matches 15 run data modify storage physics:temp data.NewContact.ContactNormal set value [I;0,0,1000]
 
     # Contact Point
     # (Important): For point-face collisions, the contact point is the point projected onto the surface (= moved along contact normal with the penetration depth as the amount).
@@ -52,7 +52,7 @@ execute if score #Physics.ObjectB.Feature Physics matches 105 run scoreboard pla
         scoreboard players operation #Physics.ContactPoint.x Physics += @s Physics.Object.Velocity.z
 
         # Take the dot product with the contact normal
-        execute if score #Physics.ObjectB.Feature Physics matches 104 run scoreboard players operation #Physics.ContactPoint.x Physics *= #Physics.Constants.-1 Physics
+        execute if score #Physics.FeatureB Physics matches 14 run scoreboard players operation #Physics.ContactPoint.x Physics *= #Physics.Constants.-1 Physics
         execute store result storage physics:temp data.NewContact.SeparatingVelocity int 1 run scoreboard players get #Physics.ContactPoint.x Physics
 
 # Store the new contact
