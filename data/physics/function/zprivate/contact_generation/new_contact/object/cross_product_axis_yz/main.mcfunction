@@ -232,11 +232,11 @@ execute if score #Physics.ObjectA.EdgeProjection Physics < #Physics.ObjectB.Edge
 
 # Store the new contact
 # (Important): The values are stored in their scaled up form, just like how I need them to process them.
-# (Important): Note that I don't store the block's position scaled up, because it makes no difference compared to storing the center coords. I can't store the min projection either, because that would bug out for different block hitbox sizes.
-execute store result storage physics:temp data.Pos[0] int 1 run scoreboard players get #Physics.BlockPos.x Physics
-execute store result storage physics:temp data.Pos[1] int 1 run scoreboard players get #Physics.BlockPos.y Physics
-execute store result storage physics:temp data.Pos[2] int 1 run scoreboard players get #Physics.BlockPos.z Physics
-function physics:zprivate/contact_generation/new_contact/object/store with storage physics:temp data
+# (Important): The object's entry in the final storage is already created after the SAT.
+data modify storage physics:zprivate data.ContactGroups[-1].Objects[-1].Contacts append from storage physics:temp data.NewContact
+
+# Set up contact accumulation for that object
+function physics:zprivate/contact_generation/new_contact/object/get_previous_contacts with storage physics:zprivate data.ContactGroups[-1].Objects[-1]
 
 # Process the separating velocity (Keep track of the most negative separating velocity for the current ObjectA, as well as global for all ObjectA's)
 # (Important): The "#Physics.MinSeparatingVelocityTotal Physics" score keeps track of the overall most negative separating velocity across all ObjectA's, so I can efficiently target the most severe contact in contact resolution's 1st iteration.

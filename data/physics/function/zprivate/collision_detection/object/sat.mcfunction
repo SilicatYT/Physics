@@ -1925,10 +1925,9 @@
             execute unless score #Physics.Projection.Object.CrossProductAxis.zz.Min Physics <= #Physics.Projection.OtherObject.CrossProductAxis.zz.Max Physics run return 0
             execute unless score #Physics.Projection.OtherObject.CrossProductAxis.zz.Min Physics <= #Physics.Projection.Object.CrossProductAxis.zz.Max Physics run return 0
 
-# HERE ITS WRONG. MIN AND MAX ARE OVERFLOWING?
-
-# Store the other object's ID for later
-execute store result storage physics:temp data.B int 1 run scoreboard players get @s Physics.Object.ID
+# Create an entry in the final storage
+data modify storage physics:zprivate data.ContactGroups[-1].Objects append value {}
+execute store result storage physics:zprivate data.ContactGroups[-1].Objects[-1].B int 1 run scoreboard players get @s Physics.Object.ID
 
 # Get how much each axis is overlapping & get the least overlap
 # (Important): If two axes are exactly parallel to each other (Like if the objects are resting ontop of each other), their cross product is [0,0,0]. I'm unsure if discarding cross products with an overlap of 0 or with a value of [0,0,0] is more stable, so I'll revisit it once the resolver is done. For now, I discard cross products with an overlap of 0.
