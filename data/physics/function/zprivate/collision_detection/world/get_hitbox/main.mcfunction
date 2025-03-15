@@ -7,16 +7,10 @@ execute store result score #Physics.Projection.Block.WorldAxis.x.Max Physics sto
 execute store result score #Physics.Projection.Block.WorldAxis.y.Max Physics store result score #Physics.BlockCenterPos.y Physics run scoreboard players operation #Physics.Projection.Block.WorldAxis.y.Min Physics = #Physics.BlockPos.y Physics
 execute store result score #Physics.Projection.Block.WorldAxis.z.Max Physics store result score #Physics.BlockCenterPos.z Physics run scoreboard players operation #Physics.Projection.Block.WorldAxis.z.Min Physics = #Physics.BlockPos.z Physics
 
-# Add the block to the final storage
-data modify storage physics:zprivate data.ContactGroups[-1].Objects[-1].Blocks append value {Pos:[I;0,0,0],Hitboxes:[{ID:1b}]}
-execute store result storage physics:zprivate data.ContactGroups[-1].Objects[-1].Blocks[-1].Pos[0] int 1 run scoreboard players get #Physics.BlockPos.x Physics
-execute store result storage physics:zprivate data.ContactGroups[-1].Objects[-1].Blocks[-1].Pos[1] int 1 run scoreboard players get #Physics.BlockPos.y Physics
-execute store result storage physics:zprivate data.ContactGroups[-1].Objects[-1].Blocks[-1].Pos[2] int 1 run scoreboard players get #Physics.BlockPos.z Physics
-
 # Check blocks
 execute if block ~ ~ ~ minecraft:water run return run function physics:zprivate/collision_detection/world/get_hitbox/temporary/water
 execute if block ~ ~ ~ minecraft:oak_slab run return run function physics:zprivate/collision_detection/world/get_hitbox/temporary/oak_slab
 function physics:zprivate/collision_detection/world/get_hitbox/temporary/full_block
 
 # W.I.P.
-# NOTE: You could make it so the max/min/center and the "add block to final storage" commands do not run when it's a block that has no hitbox because of its blockstate. But it probably wouldn't be worth it: Tons of duplicated commands for a performance gain when inside blocks that don't cause much lag anyway
+# NOTE: You could make it so the max/min/center commands do not run when it's a block that has no hitbox because of its blockstate. But it probably wouldn't be worth it: Tons of duplicated commands for a performance gain when inside blocks that don't cause much lag anyway

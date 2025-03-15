@@ -19,8 +19,8 @@ execute if block ~ ~ ~ minecraft:oak_slab[type=double] run scoreboard players se
 # (Important): Make sure that HitboxID and HitboxType are correct if you return early (Type can be accomplished by always running the waterlogged blockstate last)
 execute if block ~ ~ ~ minecraft:oak_slab[waterlogged=false] run return 0
 
-    # Add the hitbox to the final storage
-    data modify storage physics:zprivate data.ContactGroups[-1].Objects[-1].Blocks[-1].Hitboxes append value {ID:2b}
+    # Add the hitbox to the final storage (Not necessary because it's fluid)
+    #data modify storage physics:zprivate data.ContactGroups[-1].Objects[-1].Blocks[-1].Hitboxes append value {ID:2b}
 
     # Reset Min, Max and CenterPos (Could be optimized, this is temporary)
     execute store result score #Physics.Projection.Block.WorldAxis.x.Max Physics store result score #Physics.BlockCenterPos.x Physics run scoreboard players operation #Physics.Projection.Block.WorldAxis.x.Min Physics = #Physics.BlockPos.x Physics

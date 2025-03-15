@@ -1092,7 +1092,7 @@ execute store result storage physics:temp data.StepCountZ byte 1 run scoreboard 
 execute at @s run function physics:zprivate/collision_detection/world/main with storage physics:temp data
 
 # Delete the "Blocks" entry in the object's contacts if no world collision was found or carried over from the last tick
-execute unless data storage physics:zprivate data.ContactGroups[-1].Objects[0].Blocks[0] unless data storage physics:temp data.Blocks[0] run data remove storage physics:zprivate data.ContactGroups[-1].Objects[0]
+execute unless data storage physics:temp data.Blocks[0] unless data storage physics:zprivate data.ContactGroups[-1].Objects[0].Blocks[0] run data remove storage physics:zprivate data.ContactGroups[-1].Objects[0]
 
 # Update or discard contacts (World)
 # (Important): Contacts for blocks that are in contact are already updated directly after their respective SAT, so this only updates contacts for blocks that were in contact last tick but aren't anymore.
