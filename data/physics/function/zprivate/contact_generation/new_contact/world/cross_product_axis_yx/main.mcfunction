@@ -160,17 +160,6 @@ execute if score #Physics.Projection.Block.CrossProductAxis.yx.Min Physics < #Ph
         execute if score #Physics.ObjectA.EdgeProjection Physics >= #Physics.ObjectB.EdgeProjection Physics run scoreboard players operation #Physics.PointVelocity.x Physics *= #Physics.Constants.-1 Physics
         execute store result storage physics:temp data.NewContact.SeparatingVelocity short 1 run scoreboard players operation #Physics.PointVelocity.x Physics /= #Physics.Constants.1000 Physics
 
-# Store the new contact
-# (Important): The values are stored in their scaled up form, just like how I need them to process them.
-data modify storage physics:zprivate data.ContactGroups[-1].Objects[-1].Blocks append value {Pos:[I;0,0,0]}
-execute store result storage physics:zprivate data.ContactGroups[-1].Objects[-1].Blocks[-1].Pos[0] int 1 run scoreboard players get #Physics.BlockPos.x Physics
-execute store result storage physics:zprivate data.ContactGroups[-1].Objects[-1].Blocks[-1].Pos[1] int 1 run scoreboard players get #Physics.BlockPos.y Physics
-execute store result storage physics:zprivate data.ContactGroups[-1].Objects[-1].Blocks[-1].Pos[2] int 1 run scoreboard players get #Physics.BlockPos.z Physics
-data modify storage physics:zprivate data.ContactGroups[-1].Objects[-1].Blocks[-1].Contacts append from storage physics:temp data.NewContact
-
-# Set up contact accumulation for that block
-function physics:zprivate/contact_generation/new_contact/world/get_previous_contacts with storage physics:zprivate data.ContactGroups[-1].Objects[-1].Blocks[-1]
-
 # Process the separating velocity (Keep track of the most negative separating velocity for the current ObjectA, as well as global for all ObjectA's)
 # (Important): The "#Physics.MinSeparatingVelocityTotal Physics" score keeps track of the overall most negative separating velocity across all ObjectA's, so I can efficiently target the most severe contact in contact resolution's 1st iteration.
 execute store result score #Physics.MinSeparatingVelocity Physics run data get storage physics:zprivate data.ContactGroups[-1].MinSeparatingVelocity

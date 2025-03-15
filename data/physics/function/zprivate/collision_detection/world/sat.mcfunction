@@ -442,3 +442,16 @@
 
 # Run different actions depending on the hitbox type (Solid, fluid, etc)
 function physics:zprivate/collision_detection/world/hitbox_type/check with storage physics:temp data
+
+# Additional "Solid" commands
+# (Important): This is done here so I can still use "return run" in hitbox_type/1
+execute unless score #Physics.HitboxType Physics matches 1 run return 0
+
+    # Store the new contact
+    data modify storage physics:zprivate data.ContactGroups[-1].Objects[-1].Blocks[-1].Hitboxes[-1].Contacts append from storage physics:temp data.NewContact
+
+    # Get the block's contacts from the previous tick for all hitboxes (If this is the first successful SAT for this block)
+    # (Important): This is setup for contact accumulation for touching blocks.
+    execute if score #Physics.Touching Physics matches 1 run return 0
+    scoreboard players set #Physics.Touching Physics 1
+    function physics:zprivate/contact_generation/new_contact/world/get_previous_contacts with storage physics:zprivate data.ContactGroups[-1].Objects[-1].Blocks[-1]
