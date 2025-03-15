@@ -440,15 +440,16 @@
             execute unless score #Physics.Projection.Block.CrossProductAxis.zz.Min Physics <= #Physics.Projection.Object.CrossProductAxis.zz.Max Physics run return 0
             execute unless score #Physics.Projection.Object.CrossProductAxis.zz.Min Physics <= #Physics.Projection.Block.CrossProductAxis.zz.Max Physics run return 0
 
-# Run different actions depending on the hitbox type (Solid, fluid, etc)
+# Run different actions depending on the hitbox type (fluid, sticky etc) except Solid
+# (Important): Because this is only run when HitboxType is not 1, the 1 doesn't have to be stored in the storage and be run with this macro.
 execute unless score #Physics.HitboxType Physics matches 1 run return run function physics:zprivate/collision_detection/world/hitbox_type/check with storage physics:temp data
 
 # Additional "Solid" commands
 # (Important): This is done here so I can still use "return run" in hitbox_type/1
 
-    # Run the action for "solid" if it's not the 1st hitbox for the block & store the new contact
+    # Run contact generation if it's not the 1st hitbox for the block & store the new contact
     # (Important): The "return run" and this section in general is necessary because the block should only be added to the final storage once, as well as getting the block's contacts from the previous tick.
-    execute if score #Physics.Touching Physics matches 1 run function physics:zprivate/collision_detection/world/hitbox_type/check with storage physics:temp data
+    execute if score #Physics.Touching Physics matches 1 run function physics:zprivate/collision_detection/world/hitbox_type/1
     execute if score #Physics.Touching Physics matches 1 run return run data modify storage physics:zprivate data.ContactGroups[-1].Objects[-1].Blocks[-1].Hitboxes[-1].Contacts append from storage physics:temp data.NewContact
 
     # Add the block to the final storage
@@ -456,6 +457,9 @@ execute unless score #Physics.HitboxType Physics matches 1 run return run functi
     execute store result storage physics:zprivate data.ContactGroups[-1].Objects[-1].Blocks[-1].Pos[0] int 1 run scoreboard players get #Physics.BlockPos.x Physics
     execute store result storage physics:zprivate data.ContactGroups[-1].Objects[-1].Blocks[-1].Pos[1] int 1 run scoreboard players get #Physics.BlockPos.y Physics
     execute store result storage physics:zprivate data.ContactGroups[-1].Objects[-1].Blocks[-1].Pos[2] int 1 run scoreboard players get #Physics.BlockPos.z Physics
+
+    # Run contact generation
+    function physics:zprivate/collision_detection/world/hitbox_type/1
 
     # Store the new contact
     data modify storage physics:zprivate data.ContactGroups[-1].Objects[-1].Blocks[-1].Hitboxes[-1].Contacts append from storage physics:temp data.NewContact

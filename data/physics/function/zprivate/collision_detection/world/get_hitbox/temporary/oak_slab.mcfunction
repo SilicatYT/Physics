@@ -48,4 +48,4 @@ execute if block ~ ~ ~ minecraft:oak_slab[waterlogged=false] run return 0
 
 # Reset HitboxType
 # (Important): This is done after every non-1 HitboxType, so it doesn't have to set it to 1 constantly (Lowers the cost of solid hitboxes, which are already the most expensive type)
-execute store result storage physics:temp data.HitboxType byte 1 run scoreboard players set #Physics.HitboxType Physics 1
+scoreboard players set #Physics.HitboxType Physics 1
