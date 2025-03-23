@@ -2,6 +2,8 @@ scoreboard players set #Physics.BlockDiagonalLength Physics 1500
 execute if block ~ ~ ~ minecraft:oak_slab[type=double] run scoreboard players set #Physics.BlockDiagonalLength Physics 1732
 
 # Hitbox 1 (Solid)
+scoreboard players set #Physics.HitboxIsTouching Physics 0
+
     # Block Hitbox
     scoreboard players remove #Physics.Projection.Block.WorldAxis.x.Min Physics 500
     scoreboard players add #Physics.Projection.Block.WorldAxis.x.Max Physics 500
@@ -14,6 +16,9 @@ execute if block ~ ~ ~ minecraft:oak_slab[type=double] run scoreboard players se
 
     # Run SAT
     function physics:zprivate/collision_detection/world/sat
+
+    # Update the previous tick's contacts with that hitbox
+    execute if score #Physics.HitboxIsTouching Physics matches 1 run function physics:zprivate/contact_generation/accumulate/world/touching/main
 
 # Hitbox 2 (Fluid)
 # (Important): Make sure that HitboxID and HitboxType are correct if you return early (Type can be accomplished by always running the waterlogged blockstate last)

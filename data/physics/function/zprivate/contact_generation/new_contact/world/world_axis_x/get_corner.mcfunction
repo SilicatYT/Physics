@@ -2,7 +2,7 @@
 $execute store result storage physics:temp data.NewContact.FeatureA byte 1 store result storage physics:temp data.FeatureA byte 1 run scoreboard players set #Physics.FeatureA Physics $(Corner)
 
 # Copy the coordinates (For getting the Contact Point later)
-$execute store result storage physics:temp data.NewContact.ContactPoint[1] int 1 run scoreboard players get @s Physics.Object.CornerPosGlobal.$(Corner).y
+$execute store result storage physics:temp data.NewContact.ContactPoint[1] int 1 run scoreboard players operation #Physics.ContactPoint.y Physics = @s Physics.Object.CornerPosGlobal.$(Corner).y
 $execute store result storage physics:temp data.NewContact.ContactPoint[2] int 1 run scoreboard players operation #Physics.ContactPoint.z Physics = @s Physics.Object.CornerPosGlobal.$(Corner).z
 
 # Calculate penetration depth (& copy the remaining contact point coordinates)
@@ -10,7 +10,7 @@ $execute store result storage physics:temp data.NewContact.ContactPoint[2] int 1
 execute if score #Physics.FeatureB Physics matches 11 store result storage physics:temp data.NewContact.ContactPoint[0] int 1 run scoreboard players operation #Physics.PenetrationDepth Physics = #Physics.Projection.Block.WorldAxis.x.Max Physics
 $execute if score #Physics.FeatureB Physics matches 11 store result storage physics:temp data.NewContact.PenetrationDepth short 1 run return run scoreboard players operation #Physics.PenetrationDepth Physics -= @s Physics.Object.CornerPosGlobal.$(Corner).x
 
-execute store result storage physics:temp data.NewContact.ContactPoint[0] int 1 run scoreboard players operation #Physics.PenetrationDepth Physics = #Physics.Projection.Block.WorldAxis.x.Min Physics
-$scoreboard players operation #Physics.PenetrationDepth Physics -= @s Physics.Object.CornerPosGlobal.$(Corner).x
-execute store result storage physics:temp data.NewContact.PenetrationDepth short 1 run scoreboard players operation #Physics.PenetrationDepth Physics *= #Physics.Constants.-1 Physics
+execute store result storage physics:temp data.NewContact.ContactPoint[0] int 1 run scoreboard players get #Physics.Projection.Block.WorldAxis.x.Min Physics
+$scoreboard players operation #Physics.PenetrationDepth Physics = @s Physics.Object.CornerPosGlobal.$(Corner).x
+execute store result storage physics:temp data.NewContact.PenetrationDepth short 1 run scoreboard players operation #Physics.PenetrationDepth Physics -= #Physics.Projection.Block.WorldAxis.x.Min Physics
 data modify storage physics:temp data.NewContact.ContactNormal set value [I;-1000,0,0]

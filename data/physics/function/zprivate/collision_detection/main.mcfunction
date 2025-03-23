@@ -2,9 +2,11 @@
 # (Important): The ID in the data storage is also used when generating the new contact
 # (Important): I use a placeholder "MinSeparatingVelocity" so it doesn't get selected during resolution and is immediately replaced when a contact is found / updated.
 data modify storage physics:temp data.Blocks set value []
-data modify storage physics:zprivate data.ContactGroups append value {A:0,MinSeparatingVelocity:32767s,Objects:[{Blocks:[]}]}
+data modify storage physics:zprivate data.ContactGroups append value {A:0,Objects:[{Blocks:[]}]}
 execute store result storage physics:temp data.A int 1 store result storage physics:zprivate data.ContactGroups[-1].A int 1 run scoreboard players get @s Physics.Object.ID
 execute if entity @s[tag=Physics.HasContacts] run function physics:zprivate/contact_generation/accumulate/get_previous_contacts with storage physics:temp data
+
+scoreboard players set #Physics.MinSeparatingVelocity Physics 32767
 
 # Pre-calculate as much as possible for the world SAT (Collisions with regular blocks)
     # 9 cross products of the 3 axes of the object and the world-geometry block

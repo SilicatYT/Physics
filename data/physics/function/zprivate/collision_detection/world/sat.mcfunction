@@ -446,6 +446,7 @@ execute unless score #Physics.HitboxType Physics matches 1 run return run functi
 
 # Additional "Solid" commands
 # (Important): This is done here so I can still use "return run" in hitbox_type/1
+scoreboard players set #Physics.HitboxIsTouching Physics 1
 
     # Run contact generation if it's not the 1st hitbox for the block & store the new contact
     # (Important): The "return run" and this section in general is necessary because the block should only be added to the final storage once, as well as getting the block's contacts from the previous tick.
