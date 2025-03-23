@@ -467,5 +467,6 @@ scoreboard players set #Physics.HitboxIsTouching Physics 1
 
     # Get the block's contacts from the previous tick for all hitboxes (If this is the first successful SAT for this block)
     # (Important): This is setup for contact accumulation for touching blocks.
+    # (Important): If there is no data for this block from the previous tick, it will fail to copy over the data, so it keeps the previous block's data. This is not a problem, however, because the data is always emptied during contact accumulation anyway. So it'll just be empty. And it can be handled without much overhead if the data is empty.
     scoreboard players set #Physics.Touching Physics 1
     function physics:zprivate/contact_generation/new_contact/world/get_previous_contacts with storage physics:zprivate data.ContactGroups[-1].Objects[-1].Blocks[-1]

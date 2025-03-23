@@ -18,7 +18,7 @@ scoreboard players set #Physics.HitboxIsTouching Physics 0
     function physics:zprivate/collision_detection/world/sat
 
     # Update the previous tick's contacts with that hitbox
-    execute if score #Physics.HitboxIsTouching Physics matches 1 run function physics:zprivate/contact_generation/accumulate/world/touching/main
+    # ??????
 
 # Hitbox 2 (Fluid)
 # (Important): Make sure that HitboxID and HitboxType are correct if you return early (Type can be accomplished by always running the waterlogged blockstate last)
