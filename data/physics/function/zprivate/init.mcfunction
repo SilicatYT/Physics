@@ -1,6 +1,6 @@
 # Init
 scoreboard players set #Physics.Init Physics 1
-tellraw @a ["",{"text":"Physics >> ","color":"#99EAD6"},"Installed Physics (v0.1.0)\n"]
+tellraw @a ["",{text:"Physics >> ",color:"#99EAD6"},"Installed Physics (v0.1.0)\n"]
 
 # Add object attributes
 scoreboard objectives add Physics.Object.ID dummy
