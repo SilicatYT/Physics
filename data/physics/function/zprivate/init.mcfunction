@@ -173,6 +173,7 @@ data modify storage physics:temp data.IntersectionPosGlobal set value [0d,0d,0d]
 data modify storage physics:maths processing.Distance set value [0f,0f,0f,0f,0f,0f,0f,0f,0f,0f,0f,0f,0f,0f,0f,1f]
 data modify storage physics:temp data.NewContact.ContactNormal set value [I;0,0,0]
 data modify storage physics:temp data.NewContact.ContactPoint set value [I;0,0,0]
+data modify storage physics:temp data.BlockCorner set value [{x:"Min",y:"Min",z:"Min"},{x:"Min",y:"Min",z:"Max"},{x:"Max",y:"Min",z:"Min"},{x:"Max",y:"Min",z:"Max"},{x:"Min",y:"Max",z:"Min"},{x:"Min",y:"Max",z:"Max"},{x:"Max",y:"Max",z:"Min"},{x:"Max",y:"Max",z:"Max"}]
 
 # Set gamerules
 gamerule maxCommandChainLength 2147483647
