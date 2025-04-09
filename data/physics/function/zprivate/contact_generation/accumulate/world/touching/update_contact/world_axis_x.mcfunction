@@ -1,4 +1,3 @@
-$say $(FeatureA) $(FeatureB)
 # Check if the contact should be discarded
 # (Important): Everything is cached, because there are only 8 possible corners.
 # (Important): If the penetration depth is negative or the contact point is not inside the other object, the contact is just appended (so it can still be updated during resolution) without being updated. In that case, the separating velocity data is removed to avoid potential bugs.
