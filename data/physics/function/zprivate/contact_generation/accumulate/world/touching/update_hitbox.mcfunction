@@ -15,7 +15,6 @@ execute store result score #Physics.Contact.FeatureB Physics run data get storag
 execute unless score #Physics.Contact.FeatureA Physics = #Physics.FeatureA Physics run function physics:zprivate/contact_generation/accumulate/world/touching/update_contact/main {Index:-2b}
 execute if score #Physics.Contact.FeatureA Physics = #Physics.FeatureA Physics unless score #Physics.Contact.FeatureB Physics = #Physics.FeatureB Physics run function physics:zprivate/contact_generation/accumulate/world/touching/update_contact/main {Index:-2b}
 execute if score #Physics.ContactCount Physics matches 2 run return 0
-data remove storage physics:temp data.Hitbox.Contacts[-1]
 
 # Contact 3
 execute store result score #Physics.Contact.FeatureA Physics run data get storage physics:temp data.Hitbox.Contacts[-3].FeatureA
@@ -23,7 +22,6 @@ execute store result score #Physics.Contact.FeatureB Physics run data get storag
 execute unless score #Physics.Contact.FeatureA Physics = #Physics.FeatureA Physics run function physics:zprivate/contact_generation/accumulate/world/touching/update_contact/main {Index:-3b}
 execute if score #Physics.Contact.FeatureA Physics = #Physics.FeatureA Physics unless score #Physics.Contact.FeatureB Physics = #Physics.FeatureB Physics run function physics:zprivate/contact_generation/accumulate/world/touching/update_contact/main {Index:-3b}
 execute if score #Physics.ContactCount Physics matches 3 run return 0
-data remove storage physics:temp data.Hitbox.Contacts[-1]
 
 # Contact 4
 execute store result score #Physics.Contact.FeatureA Physics run data get storage physics:temp data.Hitbox.Contacts[-4].FeatureA
@@ -31,7 +29,6 @@ execute store result score #Physics.Contact.FeatureB Physics run data get storag
 execute unless score #Physics.Contact.FeatureA Physics = #Physics.FeatureA Physics run function physics:zprivate/contact_generation/accumulate/world/touching/update_contact/main {Index:-4b}
 execute if score #Physics.Contact.FeatureA Physics = #Physics.FeatureA Physics unless score #Physics.Contact.FeatureB Physics = #Physics.FeatureB Physics run function physics:zprivate/contact_generation/accumulate/world/touching/update_contact/main {Index:-4b}
 execute if score #Physics.ContactCount Physics matches 4 run return 0
-data remove storage physics:temp data.Hitbox.Contacts[-1]
 
 # Contact 5
 execute store result score #Physics.Contact.FeatureA Physics run data get storage physics:temp data.Hitbox.Contacts[-5].FeatureA
@@ -39,7 +36,6 @@ execute store result score #Physics.Contact.FeatureB Physics run data get storag
 execute unless score #Physics.Contact.FeatureA Physics = #Physics.FeatureA Physics run function physics:zprivate/contact_generation/accumulate/world/touching/update_contact/main {Index:-5b}
 execute if score #Physics.Contact.FeatureA Physics = #Physics.FeatureA Physics unless score #Physics.Contact.FeatureB Physics = #Physics.FeatureB Physics run function physics:zprivate/contact_generation/accumulate/world/touching/update_contact/main {Index:-5b}
 execute if score #Physics.ContactCount Physics matches 5 run return 0
-data remove storage physics:temp data.Hitbox.Contacts[-1]
 
 # Contact 6
 execute store result score #Physics.Contact.FeatureA Physics run data get storage physics:temp data.Hitbox.Contacts[-6].FeatureA

@@ -33,4 +33,3 @@ execute if score #Physics.ContactCount Physics matches 1.. run function physics:
 
 
 # NOTE: IT SHOULD NOT REMOVE THE BLOCK FROM THE HITBOXES IF IT'S THERE'S ONLY ONE HITBOX (remaining?) ANYWAY.
-# NOTE: ALSO, THERE ARE TOO MANY "HitboxIsTouching" CHECKS. SEPARATE FUNCTION MAYBE? OR CAN IT BE REDUCED?

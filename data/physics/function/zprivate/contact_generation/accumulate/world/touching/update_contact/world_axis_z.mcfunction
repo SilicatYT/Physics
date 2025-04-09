@@ -9,8 +9,8 @@
 
     # Check if the Penetration Depth is within the threshold (Can be slightly negative)
     execute if score #Physics.PenetrationDepth Physics < #Physics.Global.MinPenetrationDepth Physics run return 0
-    execute if score #Physics.PenetrationDepth Physics matches ..-1  run data remove storage physics:temp data.NewContact.SeparatingVelocity
-    execute if score #Physics.PenetrationDepth Physics matches ..-1  run return run data modify storage physics:zprivate data.ContactGroups[-1].Objects[-1].Blocks[-1].Hitboxes[-1].Contacts append from storage physics:temp data.NewContact
+    execute if score #Physics.PenetrationDepth Physics matches ..-1 run data remove storage physics:temp data.NewContact.SeparatingVelocity
+    execute if score #Physics.PenetrationDepth Physics matches ..-1 run return run data modify storage physics:zprivate data.ContactGroups[-1].Objects[-1].Blocks[-1].Hitboxes[-1].Contacts append from storage physics:temp data.NewContact
 
 # Check if the Contact Corner is within the hitbox
 # (Important): This is necessary because the penetration depth could be positive even if the hitboxes aren't touching. So if they aren't touching, the contact should be ignored during resolution, but it should still be stored because we can't be sure whether the hitboxes are only slightly distanced or far away.

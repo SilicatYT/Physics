@@ -1,3 +1,4 @@
+$say $(FeatureA) $(FeatureB)
 # Check if the contact should be discarded
 # (Important): Everything is cached, because there are only 8 possible corners.
 # (Important): If the penetration depth is negative or the contact point is not inside the other object, the contact is just appended (so it can still be updated during resolution) without being updated. In that case, the separating velocity data is removed to avoid potential bugs.
@@ -9,8 +10,8 @@
 
     # Check if the Penetration Depth is within the threshold (Can be slightly negative)
     execute if score #Physics.PenetrationDepth Physics < #Physics.Global.MinPenetrationDepth Physics run return 0
-    execute if score #Physics.PenetrationDepth Physics matches ..-1  run data remove storage physics:temp data.NewContact.SeparatingVelocity
-    execute if score #Physics.PenetrationDepth Physics matches ..-1  run return run data modify storage physics:zprivate data.ContactGroups[-1].Objects[-1].Blocks[-1].Hitboxes[-1].Contacts append from storage physics:temp data.NewContact
+    execute if score #Physics.PenetrationDepth Physics matches ..-1 run data remove storage physics:temp data.NewContact.SeparatingVelocity
+    execute if score #Physics.PenetrationDepth Physics matches ..-1 run return run data modify storage physics:zprivate data.ContactGroups[-1].Objects[-1].Blocks[-1].Hitboxes[-1].Contacts append from storage physics:temp data.NewContact
 
 # Check if the Contact Corner is within the hitbox
 # (Important): This is necessary because the penetration depth could be positive even if the hitboxes aren't touching. So if they aren't touching, the contact should be ignored during resolution, but it should still be stored because we can't be sure whether the hitboxes are only slightly distanced or far away.
