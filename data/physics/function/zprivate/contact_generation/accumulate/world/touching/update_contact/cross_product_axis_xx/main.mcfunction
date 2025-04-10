@@ -13,19 +13,3 @@
     execute if score #Physics.Contact.FeatureB matches 21 run return run function physics:zprivate/contact_generation/accumulate/world/touching/update_contact/cross_product_axis_xx/get_edge_b {StartCorner:1,x:"Min",y:"Min",z:"Max"}
     execute if score #Physics.Contact.FeatureB matches 22 run return run function physics:zprivate/contact_generation/accumulate/world/touching/update_contact/cross_product_axis_xx/get_edge_b {StartCorner:4,x:"Min",y:"Max",z:"Min"}
     function physics:zprivate/contact_generation/accumulate/world/touching/update_contact/cross_product_axis_xx/get_edge_b {StartCorner:5,x:"Min",y:"Max",z:"Max"}
-
-
-
-# Check if the contact should be discarded
-
-# Update the contact point
-
-# Check if the Contact Point is within the hitbox
-# @@@@@@@@@@@@@@@@@@@@@ NEED TO CALCULATE THE CONTACT POINT FIRST
-
-# Update the contact
-
-
-
-
-# IMPORTANT: Invert the penetration depth if the contact point is NOT in the block.... But actually, it doesn't need to be updated at all then. So I don't need to account for that xD

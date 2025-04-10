@@ -7,6 +7,7 @@ execute store result storage physics:temp data.A int 1 store result storage phys
 execute if entity @s[tag=Physics.HasContacts] run function physics:zprivate/contact_generation/accumulate/get_previous_contacts with storage physics:temp data
 
 scoreboard players set #Physics.MinSeparatingVelocity Physics 32767
+scoreboard players set #Physics.MaxPenetrationDepth Physics -1
 
 # Pre-calculate as much as possible for the world SAT (Collisions with regular blocks)
     # 9 cross products of the 3 axes of the object and the world-geometry block

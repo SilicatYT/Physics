@@ -148,6 +148,10 @@ execute if score #Physics.ObjectA.EdgeProjection Physics < #Physics.ObjectB.Edge
             function physics:zprivate/maths/get_square_root
             execute store result storage physics:temp data.NewContact.PenetrationDepth short 1 run scoreboard players get #Physics.Maths.SquareRoot.Output Physics
 
+        # Update the MaxPenetrationDepth
+        execute if score #Physics.Maths.SquareRoot.Output Physics > #Physics.MaxPenetrationDepthTotal Physics store result storage physics:zprivate data.ContactGroups[-1].MaxPenetrationDepth short 1 store result score #Physics.MaxPenetrationDepth Physics run scoreboard players operation #Physics.MaxPenetrationDepthTotal Physics = #Physics.Maths.SquareRoot.Output Physics
+        execute if score #Physics.Maths.SquareRoot.Output Physics > #Physics.MaxPenetrationDepth Physics store result storage physics:zprivate data.ContactGroups[-1].MaxPenetrationDepth short 1 run scoreboard players operation #Physics.MaxPenetrationDepth Physics = #Physics.Maths.SquareRoot.Output Physics
+
     # Separating Velocity
     # (Important): The separating velocity for one object is the dot product between the contact point (relative to that object)'s relative velocity and the contact normal. The relative velocity is the cross product between the object's angular velocity and the contact point (relative to the object's center) that's added together with the object's linear velocity.
     # (Important): To get the actual separating velocity, I subtract ObjectA's separating velocity from ObjectB's (because they face different directions, they're sign-flipped), as both objects may be moving or rotating.

@@ -82,19 +82,20 @@
 
             # Square Root (= Distance, = Penetration Depth)
             function physics:zprivate/maths/get_square_root
-            execute store result storage physics:temp data.NewContact.PenetrationDepth short 1 run scoreboard players get #Physics.Maths.SquareRoot.Output Physics
 
 # Check if the contact is valid
-    # Check if the Penetration Depth is within the threshold (Can be slightly negative)
-    execute if score #Physics.PenetrationDepth Physics < #Physics.Global.MinPenetrationDepth Physics run return 0
-    execute if score #Physics.PenetrationDepth Physics matches ..-1 run data remove storage physics:temp data.NewContact.SeparatingVelocity
-    execute if score #Physics.PenetrationDepth Physics matches ..-1 run return run data modify storage physics:zprivate data.ContactGroups[-1].Objects[-1].Blocks[-1].Hitboxes[-1].Contacts append from storage physics:temp data.NewContact
-
     # Check if the Contact Point is within the hitbox
     scoreboard players set #Physics.IsInside Physics 0
     execute if score #Physics.Projection.Block.WorldAxis.x.Min Physics <= #Physics.ContactPoint.x Physics if score #Physics.ContactPoint.x Physics <= #Physics.Projection.Block.WorldAxis.x.Max Physics if score #Physics.Projection.Block.WorldAxis.y.Min Physics <= #Physics.ContactPoint.y Physics if score #Physics.ContactPoint.y Physics <= #Physics.Projection.Block.WorldAxis.y.Max Physics if score #Physics.Projection.Block.WorldAxis.z.Min Physics <= #Physics.ContactPoint.z Physics if score #Physics.ContactPoint.z Physics <= #Physics.Projection.Block.WorldAxis.z.Max Physics run scoreboard players set #Physics.IsInside Physics 1
-    execute if score #Physics.IsInside Physics matches 0 run data remove storage physics:temp data.NewContact.SeparatingVelocity
-    execute if score #Physics.IsInside Physics matches 0 run return run data modify storage physics:zprivate data.ContactGroups[-1].Objects[-1].Blocks[-1].Hitboxes[-1].Contacts append from storage physics:temp data.NewContact
+    execute if score #Physics.IsInside Physics matches 0 run scoreboard players operation #Physics.Maths.SquareRoot.Output Physics *= #Physics.Constants.-1 Physics
+
+    # Check if the Penetration Depth is within the threshold (Can be slightly negative)
+    # (Important): A negative PenetrationDepth accounts for the "Is not inside" case too, because it's only multiplied by -1 if it's not inside the block.
+    execute if score #Physics.Maths.SquareRoot.Output Physics < #Physics.Global.MinPenetrationDepth Physics run return 0
+    $execute if score #Physics.Maths.SquareRoot.Output Physics matches ..-1 run data modify storage physics:zprivate data.ContactGroups[-1].Objects[-1].Blocks[-1].Hitboxes[-1].Contacts append value {FeatureA:$(FeatureA)b}
+    execute if score #Physics.Maths.SquareRoot.Output Physics matches ..-1 store result storage physics:zprivate data.ContactGroups[-1].Objects[-1].Blocks[-1].Hitboxes[-1].Contacts[-1].FeatureB byte 1 run return run scoreboard players get #Physics.Contact.FeatureB Physics
+
+execute store result storage physics:temp data.NewContact.PenetrationDepth short 1 run scoreboard players get #Physics.Maths.SquareRoot.Output Physics
 
 # Get Edge B (Part 2: Electric boogaloo)
     # Get the edge's projection (For inverting the contact normal if necessary)
@@ -140,6 +141,10 @@
 
 # Store the contact
 data modify storage physics:zprivate data.ContactGroups[-1].Objects[-1].Blocks[-1].Hitboxes[-1].Contacts append from storage physics:temp data.NewContact
+
+# Update the MaxPenetrationDepth
+execute if score #Physics.Maths.SquareRoot.Output Physics > #Physics.MaxPenetrationDepthTotal Physics store result storage physics:zprivate data.ContactGroups[-1].MaxPenetrationDepth short 1 store result score #Physics.MaxPenetrationDepth Physics run scoreboard players operation #Physics.MaxPenetrationDepthTotal Physics = #Physics.Maths.SquareRoot.Output Physics
+execute if score #Physics.Maths.SquareRoot.Output Physics > #Physics.MaxPenetrationDepth Physics store result storage physics:zprivate data.ContactGroups[-1].MaxPenetrationDepth short 1 run scoreboard players operation #Physics.MaxPenetrationDepth Physics = #Physics.Maths.SquareRoot.Output Physics
 
 # Update the MinSeparatingVelocity
 execute if score #Physics.MinSeparatingVelocity Physics <= #Physics.ContactPoint.z Physics run return 0

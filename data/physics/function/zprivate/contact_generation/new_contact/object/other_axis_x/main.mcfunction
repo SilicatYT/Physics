@@ -18,6 +18,9 @@ scoreboard players operation #Physics.DeepestProjection Physics = #Physics.Proje
     # Penetration Depth
     # (Important): For point-face collisions, the penetration depth is the projection of (point - <any point on the face>) onto the contact normal. It's distributive, so I can also subtract the projection of any point on the face from the (already calculated) projection of the corner.
     # (Important): Calculations are done in "get_corner/..." to avoid redundant score checks and to utilize "return run".
+        # Update the MaxPenetrationDepth
+        execute if score #Physics.PenetrationDepth Physics > #Physics.MaxPenetrationDepthTotal Physics store result storage physics:zprivate data.ContactGroups[-1].MaxPenetrationDepth short 1 store result score #Physics.MaxPenetrationDepth Physics run scoreboard players operation #Physics.MaxPenetrationDepthTotal Physics = #Physics.PenetrationDepth Physics
+        execute if score #Physics.PenetrationDepth Physics > #Physics.MaxPenetrationDepth Physics store result storage physics:zprivate data.ContactGroups[-1].MaxPenetrationDepth short 1 run scoreboard players operation #Physics.MaxPenetrationDepth Physics = #Physics.PenetrationDepth Physics
 
     # Contact Normal
     # (Important): For point-face collisions, the contact normal is the face's normal. So it's the axis of minimum overlap.
