@@ -1,3 +1,4 @@
+return 0
 # Update world contacts
 # (Important): Instead of updating the contacts for one block and then calling the function again using recursion, I hardcode 100 blocks and use recursion if there are more than 100. This saves a lot of function calls, data and scoreboard operations. Once there are no more blocks, I just exit early.
 # (Important): The updated contacts are stored in CurrentBlockContacts, because I don't know the index of the entry in data.Blocks[...] from inside the contacts_main function.
