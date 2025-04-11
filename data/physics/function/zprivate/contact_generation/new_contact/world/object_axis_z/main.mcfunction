@@ -29,9 +29,6 @@ execute if score #Physics.FeatureA Physics matches 15 run scoreboard players ope
 
     # Contact Normal
     # (Important): For point-face collisions, the contact normal is the face's normal. So it's the axis of minimum overlap.
-    execute if score #Physics.FeatureA Physics matches 14 store result storage physics:temp data.NewContact.ContactNormal[0] int -1 run scoreboard players operation #Physics.Maths.Value1 Physics = @s Physics.Object.Axis.z.x
-    execute if score #Physics.FeatureA Physics matches 14 store result storage physics:temp data.NewContact.ContactNormal[1] int -1 run scoreboard players operation #Physics.Maths.Value2 Physics = @s Physics.Object.Axis.z.y
-    execute if score #Physics.FeatureA Physics matches 14 store result storage physics:temp data.NewContact.ContactNormal[2] int -1 run scoreboard players operation #Physics.Maths.Value3 Physics = @s Physics.Object.Axis.z.z
 
     # Contact Point
     # (Important): For point-face collisions, the contact point is the point projected onto the surface (= moved along contact normal with the penetration depth as the amount).

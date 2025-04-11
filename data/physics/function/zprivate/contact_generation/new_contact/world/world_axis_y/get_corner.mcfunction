@@ -14,3 +14,4 @@ execute store result storage physics:temp data.NewContact.ContactPoint[1] int 1 
 $scoreboard players operation #Physics.PenetrationDepth Physics = @s Physics.Object.CornerPosGlobal.$(Corner).y
 execute store result storage physics:temp data.NewContact.PenetrationDepth short 1 run scoreboard players operation #Physics.PenetrationDepth Physics -= #Physics.Projection.Block.WorldAxis.y.Min Physics
 data modify storage physics:temp data.NewContact.ContactNormal set value [I;0,-1000,0]
+scoreboard players set #Physics.ContactNormal.y Physics -1000

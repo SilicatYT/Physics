@@ -20,3 +20,5 @@ scoreboard players operation #Physics.ObjectB.EdgeProjection Physics += #Physics
 execute if score #Physics.ObjectA.EdgeProjection Physics < #Physics.ObjectB.EdgeProjection Physics run return 0
 execute store result storage physics:temp data.NewContact.ContactNormal[0] int -1 run scoreboard players get #Physics.CrossProductAxis.zz.x Physics
 execute store result storage physics:temp data.NewContact.ContactNormal[1] int -1 run scoreboard players get #Physics.CrossProductAxis.zz.y Physics
+scoreboard players operation #Physics.ContactNormal.x Physics *= #Physics.Constants.-1 Physics
+scoreboard players operation #Physics.ContactNormal.y Physics *= #Physics.Constants.-1 Physics

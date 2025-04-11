@@ -18,5 +18,5 @@ scoreboard players operation #Physics.ObjectB.EdgeProjection Physics += #Physics
 
 # Invert the contact normal if ObjectA's edge projection is larger than ObjectB's edge projection
 execute if score #Physics.ObjectA.EdgeProjection Physics < #Physics.ObjectB.EdgeProjection Physics run return 0
-execute store result storage physics:temp data.NewContact.ContactNormal[1] int -1 run scoreboard players get #Physics.CrossProductAxis.xx.y Physics
-execute store result storage physics:temp data.NewContact.ContactNormal[2] int -1 run scoreboard players get #Physics.CrossProductAxis.xx.z Physics
+execute store result storage physics:temp data.NewContact.ContactNormal[1] int -1 store result score #Physics.ContactNormal.y Physics run scoreboard players get #Physics.CrossProductAxis.xx.y Physics
+execute store result storage physics:temp data.NewContact.ContactNormal[2] int -1 store result score #Physics.ContactNormal.z Physics run scoreboard players get #Physics.CrossProductAxis.xx.z Physics

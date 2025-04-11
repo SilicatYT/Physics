@@ -126,9 +126,10 @@ execute if score #Physics.Projection.Block.CrossProductAxis.xy.Min Physics < #Ph
     # (Important): For edge-edge collisions, the contact normal is the cross product.
     # (Important): Because the block's x axis only has its x component set, the cross product has an x component of 0 (Not stored in the score).
     # (Important): In case ObjectA's projection is larger, it inverts the contact normal in "get_edge_b".
-    data modify storage physics:temp data.NewContact.ContactNormal[0] set value 0
-    execute if score #Physics.ObjectA.EdgeProjection Physics < #Physics.ObjectB.EdgeProjection Physics store result storage physics:temp data.NewContact.ContactNormal[1] int 1 run scoreboard players get #Physics.CrossProductAxis.xy.y Physics
-    execute if score #Physics.ObjectA.EdgeProjection Physics < #Physics.ObjectB.EdgeProjection Physics store result storage physics:temp data.NewContact.ContactNormal[2] int 1 run scoreboard players get #Physics.CrossProductAxis.xy.z Physics
+    # (Important): The contact normal scores are set for accumulation later.
+    execute store result score #Physics.ContactNormal.x Physics run data modify storage physics:temp data.NewContact.ContactNormal[0] set value 0
+    execute if score #Physics.ObjectA.EdgeProjection Physics < #Physics.ObjectB.EdgeProjection Physics store result storage physics:temp data.NewContact.ContactNormal[1] int 1 store result score #Physics.ContactNormal.y Physics run scoreboard players get #Physics.CrossProductAxis.xy.y Physics
+    execute if score #Physics.ObjectA.EdgeProjection Physics < #Physics.ObjectB.EdgeProjection Physics store result storage physics:temp data.NewContact.ContactNormal[2] int 1 store result score #Physics.ContactNormal.z Physics run scoreboard players get #Physics.CrossProductAxis.xy.z Physics
 
     # Separating Velocity
     # (Important): The separating velocity is the dot product between the contact point's relative velocity and the contact normal. The relative velocity is the cross product between the angular velocity and the contact point (relative to the object's center) that's added together with the object's linear velocity.
