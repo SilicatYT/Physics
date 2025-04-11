@@ -4,10 +4,10 @@ execute if score #Physics.Projection.Block.CrossProductAxis.yy.Min Physics >= #P
 execute if score #Physics.Projection.Block.CrossProductAxis.yy.Min Physics < #Physics.Projection.Object.CrossProductAxis.yy.Min Physics run scoreboard players operation #Physics.DeepestProjection Physics = #Physics.Projection.Object.CrossProductAxis.yy.Min Physics
 
     # Set the feature
-    execute if score #Physics.DeepestProjection Physics = #Physics.Projection.ObjectCorner0.CrossProductAxis.yy Physics run function physics:zprivate/contact_generation/new_contact/world/cross_product_axis_yy/get_edge_a {Edge:24,StartCorner:0}
-    execute if score #Physics.DeepestProjection Physics = #Physics.Projection.ObjectCorner1.CrossProductAxis.yy Physics run function physics:zprivate/contact_generation/new_contact/world/cross_product_axis_yy/get_edge_a {Edge:25,StartCorner:1}
-    execute if score #Physics.DeepestProjection Physics = #Physics.Projection.ObjectCorner2.CrossProductAxis.yy Physics run function physics:zprivate/contact_generation/new_contact/world/cross_product_axis_yy/get_edge_a {Edge:26,StartCorner:2}
-    execute if score #Physics.DeepestProjection Physics = #Physics.Projection.ObjectCorner3.CrossProductAxis.yy Physics run function physics:zprivate/contact_generation/new_contact/world/cross_product_axis_yy/get_edge_a {Edge:27,StartCorner:3}
+    execute if score #Physics.DeepestProjection Physics = #Physics.Projection.ObjectCorner0.CrossProductAxis.yy Physics run function physics:zprivate/contact_generation/new_contact/world/cross_product_axis_yy/get_edge_a {Edge:24b,StartCorner:0b}
+    execute if score #Physics.DeepestProjection Physics = #Physics.Projection.ObjectCorner1.CrossProductAxis.yy Physics run function physics:zprivate/contact_generation/new_contact/world/cross_product_axis_yy/get_edge_a {Edge:25b,StartCorner:1b}
+    execute if score #Physics.DeepestProjection Physics = #Physics.Projection.ObjectCorner2.CrossProductAxis.yy Physics run function physics:zprivate/contact_generation/new_contact/world/cross_product_axis_yy/get_edge_a {Edge:26b,StartCorner:2b}
+    execute if score #Physics.DeepestProjection Physics = #Physics.Projection.ObjectCorner3.CrossProductAxis.yy Physics run function physics:zprivate/contact_generation/new_contact/world/cross_product_axis_yy/get_edge_a {Edge:27b,StartCorner:3b}
 
 # Get the world-geometry block's feature (Edge that's closest to the object)
 # (Important): The edge is perpendicular to the axis with the minimum overlap, so it projects onto a single point. Meaning I only have to look at 1 corner point of each of the 4 candidate edges to see which one is farther along the axis.
@@ -15,10 +15,10 @@ execute if score #Physics.Projection.Block.CrossProductAxis.yy.Min Physics >= #P
 execute if score #Physics.Projection.Block.CrossProductAxis.yy.Min Physics < #Physics.Projection.Object.CrossProductAxis.yy.Min Physics run scoreboard players operation #Physics.DeepestProjection Physics = #Physics.Projection.BlockBase.CrossProductAxis.yy.Max Physics
 
     # Set the feature
-    execute if score #Physics.DeepestProjection Physics = #Physics.Projection.BlockCornerBase0.CrossProductAxis.yy Physics run function physics:zprivate/contact_generation/new_contact/world/cross_product_axis_yy/get_edge_b {Edge:24,StartCorner:0,x:"Min",y:"Min",z:"Min"}
-    execute if score #Physics.DeepestProjection Physics = #Physics.Projection.BlockCornerBase1.CrossProductAxis.yy Physics run function physics:zprivate/contact_generation/new_contact/world/cross_product_axis_yy/get_edge_b {Edge:25,StartCorner:1,x:"Min",y:"Min",z:"Max"}
-    execute if score #Physics.DeepestProjection Physics = #Physics.Projection.BlockCornerBase2.CrossProductAxis.yy Physics run function physics:zprivate/contact_generation/new_contact/world/cross_product_axis_yy/get_edge_b {Edge:26,StartCorner:2,x:"Max",y:"Min",z:"Min"}
-    execute if score #Physics.DeepestProjection Physics = #Physics.Projection.BlockCornerBase3.CrossProductAxis.yy Physics run function physics:zprivate/contact_generation/new_contact/world/cross_product_axis_yy/get_edge_b {Edge:27,StartCorner:3,x:"Max",y:"Min",z:"Max"}
+    execute if score #Physics.DeepestProjection Physics = #Physics.Projection.BlockCornerBase0.CrossProductAxis.yy Physics run function physics:zprivate/contact_generation/new_contact/world/cross_product_axis_yy/get_edge_b {Edge:24b,StartCorner:0b,x:"Min",y:"Min",z:"Min"}
+    execute if score #Physics.DeepestProjection Physics = #Physics.Projection.BlockCornerBase1.CrossProductAxis.yy Physics run function physics:zprivate/contact_generation/new_contact/world/cross_product_axis_yy/get_edge_b {Edge:25b,StartCorner:1b,x:"Min",y:"Min",z:"Max"}
+    execute if score #Physics.DeepestProjection Physics = #Physics.Projection.BlockCornerBase2.CrossProductAxis.yy Physics run function physics:zprivate/contact_generation/new_contact/world/cross_product_axis_yy/get_edge_b {Edge:26b,StartCorner:2b,x:"Max",y:"Min",z:"Min"}
+    execute if score #Physics.DeepestProjection Physics = #Physics.Projection.BlockCornerBase3.CrossProductAxis.yy Physics run function physics:zprivate/contact_generation/new_contact/world/cross_product_axis_yy/get_edge_b {Edge:27b,StartCorner:3b,x:"Max",y:"Min",z:"Max"}
 
 # Calculate Penetration Depth, Contact Normal, Contact Point & Separating Velocity
     # Contact Point

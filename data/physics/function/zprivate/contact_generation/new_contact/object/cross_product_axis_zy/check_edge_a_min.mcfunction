@@ -1,12 +1,12 @@
 # Get the edge (The deepest projection is the min)
 scoreboard players operation #Physics.Projection.ObjectCorner0.CrossProductAxis.zy Physics /= #Physics.Constants.1000 Physics
-execute if score #Physics.DeepestProjection Physics = #Physics.Projection.ObjectCorner0.CrossProductAxis.zy Physics run return run function physics:zprivate/contact_generation/new_contact/object/cross_product_axis_zy/get_edge_a {Edge:31,StartCorner:6}
+execute if score #Physics.DeepestProjection Physics = #Physics.Projection.ObjectCorner0.CrossProductAxis.zy Physics run return run function physics:zprivate/contact_generation/new_contact/object/cross_product_axis_zy/get_edge_a {Edge:31b,StartCorner:6b}
 
 scoreboard players operation #Physics.Projection.ObjectCorner2.CrossProductAxis.zy Physics /= #Physics.Constants.1000 Physics
-execute if score #Physics.DeepestProjection Physics = #Physics.Projection.ObjectCorner2.CrossProductAxis.zy Physics run return run function physics:zprivate/contact_generation/new_contact/object/cross_product_axis_zy/get_edge_a {Edge:30,StartCorner:4}
+execute if score #Physics.DeepestProjection Physics = #Physics.Projection.ObjectCorner2.CrossProductAxis.zy Physics run return run function physics:zprivate/contact_generation/new_contact/object/cross_product_axis_zy/get_edge_a {Edge:30b,StartCorner:4b}
 
 scoreboard players operation #Physics.Projection.ObjectCorner4.CrossProductAxis.zy Physics /= #Physics.Constants.1000 Physics
-execute if score #Physics.DeepestProjection Physics = #Physics.Projection.ObjectCorner4.CrossProductAxis.zy Physics run return run function physics:zprivate/contact_generation/new_contact/object/cross_product_axis_zy/get_edge_a {Edge:29,StartCorner:2}
+execute if score #Physics.DeepestProjection Physics = #Physics.Projection.ObjectCorner4.CrossProductAxis.zy Physics run return run function physics:zprivate/contact_generation/new_contact/object/cross_product_axis_zy/get_edge_a {Edge:29b,StartCorner:2b}
 
 scoreboard players operation #Physics.Projection.ObjectCorner6.CrossProductAxis.zy Physics /= #Physics.Constants.1000 Physics
-function physics:zprivate/contact_generation/new_contact/object/cross_product_axis_zy/get_edge_a {Edge:28,StartCorner:0}
+function physics:zprivate/contact_generation/new_contact/object/cross_product_axis_zy/get_edge_a {Edge:28b,StartCorner:0b}
