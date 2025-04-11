@@ -3,8 +3,6 @@ $execute store result score #Physics.ContactCorner.x Physics run scoreboard play
 $execute store result score #Physics.ContactCorner.y Physics run scoreboard players operation #Physics.ContactPoint.y Physics = #Physics.Projection.Block.WorldAxis.y.$(y) Physics
 $execute store result score #Physics.ContactCorner.z Physics run scoreboard players operation #Physics.ContactPoint.z Physics = #Physics.Projection.Block.WorldAxis.z.$(z) Physics
 
-execute if score #Physics.PenetrationDepth Physics matches ..-1 run return 0
-
 # Update the penetration depth storage, contact normal, contact point & separating velocity
 # (Important): Only update them if the penetration depth is positive.
     # Penetration Depth

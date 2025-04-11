@@ -1,7 +1,16 @@
 # Check if the contact should be discarded
-# (Important): Everything is cached, because there are only 8 possible corners.
-# (Important): If the penetration depth is negative or the contact point is not inside the other object, the contact is just appended (so it can still be updated during resolution) without being updated. In that case, the separating velocity data is removed to avoid potential bugs.
+    # Check if the contact is still relevant
+    # (Important): I project this contact's normal onto the current tick's contact's normal. If it's less than 70%, the contact is discarded completely for stability and performance reasons. If it's less than 90%, just carry over the contact without updating it (invalid contact).
+    scoreboard players operation #Physics.DotProduct Physics = #Physics.ContactNormal.y Physics
+    execute if score #Physics.Contact.FeatureB Physics matches 12 run scoreboard players operation #Physics.DotProduct Physics *= #Physics.Constants.-1 Physics
+
+    execute if score #Physics.DotProduct Physics matches ..700 run return 0
+    $execute if score #Physics.DotProduct Physics matches ..900 run data modify storage physics:zprivate data.ContactGroups[-1].Objects[-1].Blocks[-1].Hitboxes[-1].Contacts append value {FeatureA:$(FeatureA)b}
+    execute if score #Physics.DotProduct Physics matches ..900 store result storage physics:zprivate data.ContactGroups[-1].Objects[-1].Blocks[-1].Hitboxes[-1].Contacts[-1].FeatureB byte 1 run return run scoreboard players get #Physics.Contact.FeatureB Physics
+
     # Calculate the Penetration Depth
+    # (Important): Everything is cached, because there are only 8 possible corners.
+    # (Important): If the penetration depth is negative or the contact point is not inside the other object, the contact is just appended (so it can still be updated during resolution) without being updated. In that case, the separating velocity data is removed to avoid potential bugs.
     $execute if score #Physics.Contact.FeatureB Physics matches 12 run scoreboard players operation #Physics.PenetrationDepth Physics = @s Physics.Object.CornerPosGlobal.$(FeatureA).y
     execute if score #Physics.Contact.FeatureB Physics matches 12 run scoreboard players operation #Physics.PenetrationDepth Physics -= #Physics.Projection.Block.WorldAxis.y.Min Physics
     execute if score #Physics.Contact.FeatureB Physics matches 13 run scoreboard players operation #Physics.PenetrationDepth Physics = #Physics.Projection.Block.WorldAxis.y.Max Physics

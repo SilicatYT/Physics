@@ -1,3 +1,18 @@
+# Check if the contact is still relevant
+# (Important): I project this contact's normal onto the current tick's contact's normal. If it's less than 70%, the contact is discarded completely for stability and performance reasons. If it's less than 90%, just carry over the contact without updating it (invalid contact).
+scoreboard players operation #Physics.DotProduct Physics = #Physics.CrossProductAxis.xx.y Physics
+scoreboard players operation #Physics.DotProduct Physics *= #Physics.ContactNormal.y Physics
+
+scoreboard players operation #Physics.Maths.Value1 Physics = #Physics.CrossProductAxis.xx.z Physics
+scoreboard players operation #Physics.Maths.Value1 Physics *= #Physics.ContactNormal.z Physics
+scoreboard players operation #Physics.DotProduct Physics += #Physics.Maths.Value1 Physics
+
+execute if score #Physics.ObjectA.EdgeProjection Physics > #Physics.ObjectB.EdgeProjection run scoreboard players operation #Physics.DotProduct Physics *= #Physics.Constants.-1 Physics
+
+execute if score #Physics.DotProduct Physics matches ..700000 run return 0
+$execute if score #Physics.DotProduct Physics matches ..900000 run data modify storage physics:zprivate data.ContactGroups[-1].Objects[-1].Blocks[-1].Hitboxes[-1].Contacts append value {FeatureB:$(FeatureB)b}
+execute if score #Physics.DotProduct Physics matches ..900000 store result storage physics:zprivate data.ContactGroups[-1].Objects[-1].Blocks[-1].Hitboxes[-1].Contacts[-1].FeatureA byte 1 run return run scoreboard players get #Physics.Contact.FeatureA Physics
+
 # Get the features
     # Edge A
     # (Important): Everything's cached, as there are only 4 possible values. So no "get_edge_a" function is necessary.
