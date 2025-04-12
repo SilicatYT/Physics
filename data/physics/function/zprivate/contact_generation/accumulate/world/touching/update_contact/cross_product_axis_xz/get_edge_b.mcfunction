@@ -14,18 +14,18 @@
     # Contact Point
         # Calculate intermediate results (Dot products)
             # D = v * (u - m)
-            scoreboard players operation #Physics.Maths.D Physics = @s Physics.Object.Axis.x.x
+            scoreboard players operation #Physics.Maths.D Physics = @s Physics.Object.Axis.z.x
             scoreboard players operation #Physics.Maths.D Physics *= #Physics.Maths.Value1 Physics
 
-            scoreboard players operation #Physics.Maths.Value2 Physics *= @s Physics.Object.Axis.x.y
+            scoreboard players operation #Physics.Maths.Value2 Physics *= @s Physics.Object.Axis.z.y
             scoreboard players operation #Physics.Maths.D Physics += #Physics.Maths.Value2 Physics
 
-            scoreboard players operation #Physics.Maths.Value3 Physics *= @s Physics.Object.Axis.x.z
+            scoreboard players operation #Physics.Maths.Value3 Physics *= @s Physics.Object.Axis.z.z
             scoreboard players operation #Physics.Maths.D Physics += #Physics.Maths.Value3 Physics
 
         # Calculate s (On ObjectA's edge)
             # CE - BD
-            execute store result score #Physics.Maths.Value2 Physics run scoreboard players operation #Physics.Maths.s Physics = @s Physics.Object.Axis.x.x
+            execute store result score #Physics.Maths.Value2 Physics run scoreboard players operation #Physics.Maths.s Physics = @s Physics.Object.Axis.z.x
             scoreboard players operation #Physics.Maths.s Physics *= #Physics.Maths.Value1 Physics
             scoreboard players operation #Physics.Maths.s Physics -= #Physics.Maths.D Physics
 
@@ -38,17 +38,17 @@
             scoreboard players operation #Physics.Maths.s Physics /= #Physics.Maths.Value2 Physics
 
         # Calculate the contact point with s
-        scoreboard players operation #Physics.ContactPoint.x Physics = @s Physics.Object.Axis.x.x
+        scoreboard players operation #Physics.ContactPoint.x Physics = @s Physics.Object.Axis.z.x
         scoreboard players operation #Physics.ContactPoint.x Physics *= #Physics.Maths.s Physics
         scoreboard players operation #Physics.ContactPoint.x Physics /= #Physics.Constants.1000 Physics
         execute store result storage physics:temp data.NewContact.ContactPoint[0] int 1 run scoreboard players operation #Physics.ContactPoint.x Physics += #Physics.ObjectA.EdgeStart.x Physics
 
-        scoreboard players operation #Physics.ContactPoint.y Physics = @s Physics.Object.Axis.x.y
+        scoreboard players operation #Physics.ContactPoint.y Physics = @s Physics.Object.Axis.z.y
         scoreboard players operation #Physics.ContactPoint.y Physics *= #Physics.Maths.s Physics
         scoreboard players operation #Physics.ContactPoint.y Physics /= #Physics.Constants.1000 Physics
         execute store result storage physics:temp data.NewContact.ContactPoint[1] int 1 run scoreboard players operation #Physics.ContactPoint.y Physics += #Physics.ObjectA.EdgeStart.y Physics
 
-        scoreboard players operation #Physics.ContactPoint.z Physics = @s Physics.Object.Axis.x.z
+        scoreboard players operation #Physics.ContactPoint.z Physics = @s Physics.Object.Axis.z.z
         scoreboard players operation #Physics.ContactPoint.z Physics *= #Physics.Maths.s Physics
         scoreboard players operation #Physics.ContactPoint.z Physics /= #Physics.Constants.1000 Physics
         execute store result storage physics:temp data.NewContact.ContactPoint[2] int 1 run scoreboard players operation #Physics.ContactPoint.z Physics += #Physics.ObjectA.EdgeStart.z Physics
@@ -58,7 +58,7 @@
             # AE - CD
             scoreboard players operation #Physics.Maths.Value1 Physics *= #Physics.Constants.1000 Physics
             scoreboard players operation #Physics.Maths.D Physics /= #Physics.Constants.1000 Physics
-            scoreboard players operation #Physics.Maths.D Physics *= @s Physics.Object.Axis.x.x
+            scoreboard players operation #Physics.Maths.D Physics *= @s Physics.Object.Axis.z.x
             scoreboard players operation #Physics.Maths.Value1 Physics -= #Physics.Maths.D Physics
 
             # t = (AE - CD) / (AB - CC)
@@ -99,16 +99,16 @@ execute store result storage physics:temp data.NewContact.PenetrationDepth short
 
 # Get Edge B (Part 2: Electric boogaloo)
     # Get the edge's projection (For inverting the contact normal if necessary)
-    $scoreboard players operation #Physics.ObjectB.EdgeProjection Physics = #Physics.Projection.BlockCornerBase$(StartCorner).CrossProductAxis.xx Physics
-    scoreboard players operation #Physics.ObjectB.EdgeProjection Physics += #Physics.Projection.BlockCenter.CrossProductAxis.xx Physics
+    $scoreboard players operation #Physics.ObjectB.EdgeProjection Physics = #Physics.Projection.BlockCornerBase$(StartCorner).CrossProductAxis.xz Physics
+    scoreboard players operation #Physics.ObjectB.EdgeProjection Physics += #Physics.Projection.BlockCenter.CrossProductAxis.xz Physics
 
 # Calculate Contact Normal & Separating Velocity
     # Contact Normal
     data modify storage physics:temp data.NewContact.ContactNormal[0] set value 0
-    execute if score #Physics.ObjectA.EdgeProjection Physics < #Physics.ObjectB.EdgeProjection Physics store result storage physics:temp data.NewContact.ContactNormal[1] int 1 run scoreboard players get #Physics.CrossProductAxis.xx.y Physics
-    execute if score #Physics.ObjectA.EdgeProjection Physics < #Physics.ObjectB.EdgeProjection Physics store result storage physics:temp data.NewContact.ContactNormal[2] int 1 run scoreboard players get #Physics.CrossProductAxis.xx.z Physics
-    execute if score #Physics.ObjectA.EdgeProjection Physics > #Physics.ObjectB.EdgeProjection Physics store result storage physics:temp data.NewContact.ContactNormal[1] int -1 run scoreboard players get #Physics.CrossProductAxis.xx.y Physics
-    execute if score #Physics.ObjectA.EdgeProjection Physics > #Physics.ObjectB.EdgeProjection Physics store result storage physics:temp data.NewContact.ContactNormal[2] int -1 run scoreboard players get #Physics.CrossProductAxis.xx.z Physics
+    execute if score #Physics.ObjectA.EdgeProjection Physics < #Physics.ObjectB.EdgeProjection Physics store result storage physics:temp data.NewContact.ContactNormal[1] int 1 run scoreboard players get #Physics.CrossProductAxis.xz.y Physics
+    execute if score #Physics.ObjectA.EdgeProjection Physics < #Physics.ObjectB.EdgeProjection Physics store result storage physics:temp data.NewContact.ContactNormal[2] int 1 run scoreboard players get #Physics.CrossProductAxis.xz.z Physics
+    execute if score #Physics.ObjectA.EdgeProjection Physics > #Physics.ObjectB.EdgeProjection Physics store result storage physics:temp data.NewContact.ContactNormal[1] int -1 run scoreboard players get #Physics.CrossProductAxis.xz.y Physics
+    execute if score #Physics.ObjectA.EdgeProjection Physics > #Physics.ObjectB.EdgeProjection Physics store result storage physics:temp data.NewContact.ContactNormal[2] int -1 run scoreboard players get #Physics.CrossProductAxis.xz.z Physics
 
     # Separating Velocity
         # Calculate relative contact point
@@ -132,8 +132,8 @@ execute store result storage physics:temp data.NewContact.PenetrationDepth short
         scoreboard players operation #Physics.PointVelocity.z Physics += @s Physics.Object.Velocity.z
 
         # Calculate the relative velocity's dot product with the contact normal to get the separation velocity (single number, not a vector) and store it
-        scoreboard players operation #Physics.ContactPoint.z Physics *= #Physics.CrossProductAxis.xx.y Physics
-        scoreboard players operation #Physics.PointVelocity.z Physics *= #Physics.CrossProductAxis.xx.z Physics
+        scoreboard players operation #Physics.ContactPoint.z Physics *= #Physics.CrossProductAxis.xz.y Physics
+        scoreboard players operation #Physics.PointVelocity.z Physics *= #Physics.CrossProductAxis.xz.z Physics
 
         scoreboard players operation #Physics.ContactPoint.z Physics += #Physics.PointVelocity.z Physics
         execute if score #Physics.ObjectA.EdgeProjection Physics >= #Physics.ObjectB.EdgeProjection Physics run scoreboard players operation #Physics.ContactPoint.z Physics *= #Physics.Constants.-1 Physics

@@ -20,7 +20,7 @@ execute if score #Physics.DotProduct Physics matches ..900000 store result stora
 
     # Edge B
     # (Important): To save scoreboard checks and to avoid further calculations if the contact is invalid anyway, the rest of the logic is performed in this function.
-    execute if score #Physics.Contact.FeatureB matches 20 run return run function physics:zprivate/contact_generation/accumulate/world/touching/update_contact/cross_product_axis_xx/get_edge_b {FeatureB:20b,StartCorner:0b,x:"Min",y:"Min",z:"Min"}
-    execute if score #Physics.Contact.FeatureB matches 21 run return run function physics:zprivate/contact_generation/accumulate/world/touching/update_contact/cross_product_axis_xx/get_edge_b {FeatureB:21b,StartCorner:1b,x:"Min",y:"Min",z:"Max"}
-    execute if score #Physics.Contact.FeatureB matches 22 run return run function physics:zprivate/contact_generation/accumulate/world/touching/update_contact/cross_product_axis_xx/get_edge_b {FeatureB:22b,StartCorner:4b,x:"Min",y:"Max",z:"Min"}
-    function physics:zprivate/contact_generation/accumulate/world/touching/update_contact/cross_product_axis_xx/get_edge_b {FeatureB:23b,StartCorner:5b,x:"Min",y:"Max",z:"Max"}
+    execute if score #Physics.Contact.FeatureB matches 20 run return run function physics:zprivate/contact_generation/accumulate/world/touching/update_contact/cross_product_axis_xx/get_edge_b {Edge:20b,StartCorner:0b,x:"Min",y:"Min",z:"Min"}
+    execute if score #Physics.Contact.FeatureB matches 21 run return run function physics:zprivate/contact_generation/accumulate/world/touching/update_contact/cross_product_axis_xx/get_edge_b {Edge:21b,StartCorner:1b,x:"Min",y:"Min",z:"Max"}
+    execute if score #Physics.Contact.FeatureB matches 22 run return run function physics:zprivate/contact_generation/accumulate/world/touching/update_contact/cross_product_axis_xx/get_edge_b {Edge:22b,StartCorner:4b,x:"Min",y:"Max",z:"Min"}
+    function physics:zprivate/contact_generation/accumulate/world/touching/update_contact/cross_product_axis_xx/get_edge_b {Edge:23b,StartCorner:5b,x:"Min",y:"Max",z:"Max"}
