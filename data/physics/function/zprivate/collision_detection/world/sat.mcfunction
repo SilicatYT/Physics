@@ -465,6 +465,6 @@ execute unless score #Physics.HitboxType Physics matches 1 run return run functi
 
     # Get the block's contacts from the previous tick for all hitboxes (If this is the first successful SAT for this block)
     # (Important): This is setup for contact accumulation for touching blocks.
-    # (Important): If there is no data for this block from the previous tick, it will fail to copy over the data (still uses 2 macros...), so it keeps the previous block's data. This is why the data is set to {} beforehand.
+    # (Important): If there is no data for this block from the previous tick, it will fail to copy over the data (still uses 2 macros...), so it keeps the previous block's data. This is why the data is cleared beforehand.
     scoreboard players set #Physics.Touching Physics 1
     function physics:zprivate/contact_generation/new_contact/world/get_previous_contacts with storage physics:zprivate ContactGroups[-1].Objects[-1].Blocks[-1]

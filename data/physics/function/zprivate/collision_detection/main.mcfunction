@@ -1095,12 +1095,11 @@ execute store result storage physics:temp data.StepCountZ byte 1 run scoreboard 
 execute at @s run function physics:zprivate/collision_detection/world/main with storage physics:temp data
 
 # Update or discard contacts (World)
-# (Important): Contacts for blocks that are in contact are already updated directly after their respective SAT, so this only updates contacts for blocks that were in contact last tick but aren't anymore.
-# (Important): Contacts are discarded if their penetration depth is outside the threshold (small negative value). This keeps barely separated contacts that are likely to touch again in the next tick. Those are ignored in contact resolution. Contacts are also discarded if their object/block doesn't pass an extended (slightly larger to account for the threshold) AABB check.
-# (Important): The "Blocks" object entry will be removed if the remaining world contacts were marked as invalid.
-# (Important): Until now, the contacts are stored in physics:temp data.Blocks. Here, the contacts get updated (if necessary) and added to the actual final storage.
+# (Important): Contacts for blocks that are in contact are already updated directly after their respective SAT, so this only updates contacts for blocks that had contacts in the previous tick but aren't in contact now.
+# (Important): The "Blocks" object entry will be removed if no contacts were found or carried over.
+# (Important): Until now, the remaining unupdated contacts are stored in physics:temp data.Blocks. Here, the contacts get updated (if necessary) and added to the actual final storage.
 execute store result score #Physics.BlockCount Physics if data storage physics:temp data.Blocks[]
-#execute if score #Physics.BlockCount Physics matches 1.. run function physics:zprivate/contact_generation/accumulate/update/world/main
+execute if score #Physics.BlockCount Physics matches 1.. run function physics:zprivate/contact_generation/accumulate/world/not_touching/main
 
 # Delete the "Blocks" entry in the object's contacts if no world collision was found or carried over from the last tick
 execute unless data storage physics:zprivate ContactGroups[-1].Objects[0].Blocks[0] run data remove storage physics:zprivate ContactGroups[-1].Objects[0]
