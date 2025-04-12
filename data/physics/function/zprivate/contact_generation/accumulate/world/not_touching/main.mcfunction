@@ -14,13 +14,13 @@ return 0
         # Iterate over the contacts and add the updated ones to the final storage
         data modify storage physics:temp data.Contacts set from storage physics:temp data.Blocks[-1].Contacts
         execute store result score #Physics.ContactCount Physics if data storage physics:temp data.Contacts[]
-        data modify storage physics:zprivate data.ContactGroups[-1].Objects[0].Blocks append value {Contacts:[]}
-        data modify storage physics:zprivate data.ContactGroups[-1].Objects[0].Blocks[-1].Pos set from storage physics:temp data.Blocks[-1].Pos
+        data modify storage physics:zprivate ContactGroups[-1].Objects[0].Blocks append value {Contacts:[]}
+        data modify storage physics:zprivate ContactGroups[-1].Objects[0].Blocks[-1].Pos set from storage physics:temp data.Blocks[-1].Pos
 
         execute if score #Physics.NoHitbox Physics matches 0 unless data storage physics:temp data.Blocks[-1].InContact run function physics:zprivate/contact_generation/accumulate/world/not_touching/contacts_main
         execute if score #Physics.NoHitbox Physics matches 0 if data storage physics:temp data.Blocks[-1].InContact run function physics:zprivate/contact_generation/accumulate/world/not_touching/contacts_main_in_contact
 
-        execute unless data storage physics:zprivate data.ContactGroups[-1].Objects[0].Blocks[-1].Contacts[0] run data remove storage physics:zprivate data.ContactGroups[-1].Objects[0].Blocks[-1]
+        execute unless data storage physics:zprivate ContactGroups[-1].Objects[0].Blocks[-1].Contacts[0] run data remove storage physics:zprivate ContactGroups[-1].Objects[0].Blocks[-1]
 
     execute if score #Physics.BlockCount Physics matches 1 run return 0
 

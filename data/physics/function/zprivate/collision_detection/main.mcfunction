@@ -2,8 +2,8 @@
 # (Important): The ID in the data storage is also used when generating the new contact
 # (Important): I use a placeholder "MinSeparatingVelocity" so it doesn't get selected during resolution and is immediately replaced when a contact is found / updated.
 data modify storage physics:temp data.Blocks set value []
-data modify storage physics:zprivate data.ContactGroups append value {Objects:[{Blocks:[]}]}
-execute store result storage physics:temp data.A int 1 store result storage physics:zprivate data.ContactGroups[-1].A int 1 run scoreboard players get @s Physics.Object.ID
+data modify storage physics:zprivate ContactGroups append value {Objects:[{Blocks:[]}]}
+execute store result storage physics:temp data.A int 1 store result storage physics:zprivate ContactGroups[-1].A int 1 run scoreboard players get @s Physics.Object.ID
 execute if entity @s[tag=Physics.HasContacts] run function physics:zprivate/contact_generation/accumulate/get_previous_contacts with storage physics:temp data
 
 scoreboard players set #Physics.MinSeparatingVelocity Physics 32767
@@ -1103,7 +1103,7 @@ execute store result score #Physics.BlockCount Physics if data storage physics:t
 #execute if score #Physics.BlockCount Physics matches 1.. run function physics:zprivate/contact_generation/accumulate/update/world/main
 
 # Delete the "Blocks" entry in the object's contacts if no world collision was found or carried over from the last tick
-execute unless data storage physics:zprivate data.ContactGroups[-1].Objects[0].Blocks[0] run data remove storage physics:zprivate data.ContactGroups[-1].Objects[0]
+execute unless data storage physics:zprivate ContactGroups[-1].Objects[0].Blocks[0] run data remove storage physics:zprivate ContactGroups[-1].Objects[0]
 
 # Check for coarse collisions with other dynamic objects, so I can then perform the SAT to check for fine collisions
 # (Important): Only checks objects in a range of 6.929 blocks, which is the sum of both objects' maximum supported bounding box divided by 2 (so from the center of both entities), assuming I cap the dimensions at 4 blocks. The reasoning is explained in the set_attributes/dimension function.
@@ -1182,5 +1182,5 @@ execute if data storage physics:temp data.ContactsPrevious[0] run function physi
 
 # Update the "HasContacts" tag
 tag @s remove Physics.HasContacts
-execute unless data storage physics:zprivate data.ContactGroups[-1].Objects[0] run return run data remove storage physics:zprivate data.ContactGroups[-1]
+execute unless data storage physics:zprivate ContactGroups[-1].Objects[0] run return run data remove storage physics:zprivate ContactGroups[-1]
 tag @s add Physics.HasContacts

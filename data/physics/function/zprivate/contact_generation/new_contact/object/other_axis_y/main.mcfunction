@@ -19,8 +19,8 @@ scoreboard players operation #Physics.DeepestProjection Physics = #Physics.Proje
     # (Important): For point-face collisions, the penetration depth is the projection of (point - <any point on the face>) onto the contact normal. It's distributive, so I can also subtract the projection of any point on the face from the (already calculated) projection of the corner.
     # (Important): Calculations are done in "get_corner/..." to avoid redundant score checks and to utilize "return run".
         # Update the MaxPenetrationDepth
-        execute if score #Physics.PenetrationDepth Physics > #Physics.MaxPenetrationDepthTotal Physics store result storage physics:zprivate data.ContactGroups[-1].MaxPenetrationDepth short 1 store result score #Physics.MaxPenetrationDepth Physics run scoreboard players operation #Physics.MaxPenetrationDepthTotal Physics = #Physics.PenetrationDepth Physics
-        execute if score #Physics.PenetrationDepth Physics > #Physics.MaxPenetrationDepth Physics store result storage physics:zprivate data.ContactGroups[-1].MaxPenetrationDepth short 1 run scoreboard players operation #Physics.MaxPenetrationDepth Physics = #Physics.PenetrationDepth Physics
+        execute if score #Physics.PenetrationDepth Physics > #Physics.MaxPenetrationDepthTotal Physics store result storage physics:zprivate ContactGroups[-1].MaxPenetrationDepth short 1 store result score #Physics.MaxPenetrationDepth Physics run scoreboard players operation #Physics.MaxPenetrationDepthTotal Physics = #Physics.PenetrationDepth Physics
+        execute if score #Physics.PenetrationDepth Physics > #Physics.MaxPenetrationDepth Physics store result storage physics:zprivate ContactGroups[-1].MaxPenetrationDepth short 1 run scoreboard players operation #Physics.MaxPenetrationDepth Physics = #Physics.PenetrationDepth Physics
 
     # Contact Normal
     # (Important): For point-face collisions, the contact normal is the face's normal. So it's the axis of minimum overlap.
@@ -129,13 +129,13 @@ scoreboard players operation #Physics.DeepestProjection Physics = #Physics.Proje
 # Store the new contact
 # (Important): The values are stored in their scaled up form, just like how I need them to process them.
 # (Important): The object's entry in the final storage is already created after the SAT.
-data modify storage physics:zprivate data.ContactGroups[-1].Objects[-1].Contacts append from storage physics:temp data.NewContact
+data modify storage physics:zprivate ContactGroups[-1].Objects[-1].Contacts append from storage physics:temp data.NewContact
 
 # Set up contact accumulation for that object
-function physics:zprivate/contact_generation/new_contact/object/get_previous_contacts with storage physics:zprivate data.ContactGroups[-1].Objects[-1]
+function physics:zprivate/contact_generation/new_contact/object/get_previous_contacts with storage physics:zprivate ContactGroups[-1].Objects[-1]
 
 # Process the separating velocity (Keep track of the most negative separating velocity for the current ObjectA, as well as global for all ObjectA's)
 # (Important): The "#Physics.MinSeparatingVelocityTotal Physics" score keeps track of the overall most negative separating velocity across all ObjectA's, so I can efficiently target the most severe contact in contact resolution's 1st iteration.
 execute if score #Physics.MinSeparatingVelocity Physics <= #Physics.SeparatingVelocity.x Physics run return 0
-execute if score #Physics.SeparatingVelocity.x Physics < #Physics.MinSeparatingVelocityTotal Physics store result storage physics:zprivate data.ContactGroups[-1].MinSeparatingVelocity short 1 store result score #Physics.MinSeparatingVelocity Physics run return run scoreboard players operation #Physics.MinSeparatingVelocityTotal Physics = #Physics.SeparatingVelocity.x Physics
-execute store result storage physics:zprivate data.ContactGroups[-1].MinSeparatingVelocity short 1 run scoreboard players operation #Physics.MinSeparatingVelocity Physics = #Physics.SeparatingVelocity.x Physics
+execute if score #Physics.SeparatingVelocity.x Physics < #Physics.MinSeparatingVelocityTotal Physics store result storage physics:zprivate ContactGroups[-1].MinSeparatingVelocity short 1 store result score #Physics.MinSeparatingVelocity Physics run return run scoreboard players operation #Physics.MinSeparatingVelocityTotal Physics = #Physics.SeparatingVelocity.x Physics
+execute store result storage physics:zprivate ContactGroups[-1].MinSeparatingVelocity short 1 run scoreboard players operation #Physics.MinSeparatingVelocity Physics = #Physics.SeparatingVelocity.x Physics

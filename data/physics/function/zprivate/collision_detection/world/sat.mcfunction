@@ -449,22 +449,22 @@ execute unless score #Physics.HitboxType Physics matches 1 run return run functi
     # Run contact generation if it's not the 1st hitbox for the block & store the new contact
     # (Important): The "return run" and this section in general is necessary because the block should only be added to the final storage once, as well as getting the block's contacts from the previous tick.
     execute if score #Physics.Touching Physics matches 1 run function physics:zprivate/collision_detection/world/hitbox_type/1
-    execute if score #Physics.Touching Physics matches 1 run return run data modify storage physics:zprivate data.ContactGroups[-1].Objects[-1].Blocks[-1].Hitboxes[-1].Contacts append from storage physics:temp data.NewContact
+    execute if score #Physics.Touching Physics matches 1 run return run data modify storage physics:zprivate ContactGroups[-1].Objects[-1].Blocks[-1].Hitboxes[-1].Contacts append from storage physics:temp data.NewContact
 
     # Add the block to the final storage
-    data modify storage physics:zprivate data.ContactGroups[-1].Objects[-1].Blocks append value {Pos:[I;0,0,0],Hitboxes:[{ID:1b}]}
-    execute store result storage physics:zprivate data.ContactGroups[-1].Objects[-1].Blocks[-1].Pos[0] int 1 run scoreboard players get #Physics.BlockPos.x Physics
-    execute store result storage physics:zprivate data.ContactGroups[-1].Objects[-1].Blocks[-1].Pos[1] int 1 run scoreboard players get #Physics.BlockPos.y Physics
-    execute store result storage physics:zprivate data.ContactGroups[-1].Objects[-1].Blocks[-1].Pos[2] int 1 run scoreboard players get #Physics.BlockPos.z Physics
+    data modify storage physics:zprivate ContactGroups[-1].Objects[-1].Blocks append value {Pos:[I;0,0,0],Hitboxes:[{ID:1b}]}
+    execute store result storage physics:zprivate ContactGroups[-1].Objects[-1].Blocks[-1].Pos[0] int 1 run scoreboard players get #Physics.BlockPos.x Physics
+    execute store result storage physics:zprivate ContactGroups[-1].Objects[-1].Blocks[-1].Pos[1] int 1 run scoreboard players get #Physics.BlockPos.y Physics
+    execute store result storage physics:zprivate ContactGroups[-1].Objects[-1].Blocks[-1].Pos[2] int 1 run scoreboard players get #Physics.BlockPos.z Physics
 
     # Run contact generation
     function physics:zprivate/collision_detection/world/hitbox_type/1
 
     # Store the new contact
-    data modify storage physics:zprivate data.ContactGroups[-1].Objects[-1].Blocks[-1].Hitboxes[-1].Contacts append from storage physics:temp data.NewContact
+    data modify storage physics:zprivate ContactGroups[-1].Objects[-1].Blocks[-1].Hitboxes[-1].Contacts append from storage physics:temp data.NewContact
 
     # Get the block's contacts from the previous tick for all hitboxes (If this is the first successful SAT for this block)
     # (Important): This is setup for contact accumulation for touching blocks.
     # (Important): If there is no data for this block from the previous tick, it will fail to copy over the data (still uses 2 macros...), so it keeps the previous block's data. This is why the data is set to {} beforehand.
     scoreboard players set #Physics.Touching Physics 1
-    function physics:zprivate/contact_generation/new_contact/world/get_previous_contacts with storage physics:zprivate data.ContactGroups[-1].Objects[-1].Blocks[-1]
+    function physics:zprivate/contact_generation/new_contact/world/get_previous_contacts with storage physics:zprivate ContactGroups[-1].Objects[-1].Blocks[-1]

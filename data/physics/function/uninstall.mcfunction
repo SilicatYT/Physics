@@ -11,6 +11,7 @@ tellraw @s ["",{text:"Physics >> ",color:"#99EAD6"},"Uninstalled Physics (v0.1.0
 # Remove scoreboard objectives
 scoreboard objectives remove Physics
 
+scoreboard objectives remove Physics.Object.ID
 scoreboard objectives remove Physics.Object.Pos.x
 scoreboard objectives remove Physics.Object.Pos.y
 scoreboard objectives remove Physics.Object.Pos.z
@@ -149,3 +150,4 @@ scoreboard objectives remove Physics.Object.ProjectionOwnAxis.z.Max
 data remove storage physics:maths processing
 data remove storage physics:debug data
 data remove storage physics:temp data
+data remove storage physics:zprivate ContactGroups
