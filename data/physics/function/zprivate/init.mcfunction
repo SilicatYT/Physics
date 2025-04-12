@@ -145,6 +145,7 @@ scoreboard players set #Physics.Global.LinearDamping Physics 98
 scoreboard players set #Physics.Global.AngularDamping Physics 98
 scoreboard players set #Physics.Global.PlayerAttackForceMagnitude Physics 300
 scoreboard players set #Physics.Global.MinPenetrationDepth Physics -50
+scoreboard players set #Physics.Global.MinPenetrationDepth.Offset Physics 550
 
 # Set value constants
 scoreboard players set #Physics.Constants.-1000 Physics -1000

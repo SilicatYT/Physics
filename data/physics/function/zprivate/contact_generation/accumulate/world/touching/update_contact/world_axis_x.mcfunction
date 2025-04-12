@@ -1,3 +1,5 @@
+# (Important): All the "reject the contact entirely" checks have to be run before the "keep the contact but mark it as invalid" checks.
+
 # Check if the contact should be discarded
     # Check if the contact is still relevant
     # (Important): I project this contact's normal onto the current tick's contact's normal. If it's less than 70%, the contact is discarded completely for stability and performance reasons. If it's less than 90%, just carry over the contact without updating it (invalid contact).
@@ -5,8 +7,6 @@
     execute if score #Physics.Contact.FeatureB Physics matches 10 run scoreboard players operation #Physics.DotProduct Physics *= #Physics.Constants.-1 Physics
 
     execute if score #Physics.DotProduct Physics matches ..700 run return 0
-    $execute if score #Physics.DotProduct Physics matches ..900 run data modify storage physics:zprivate ContactGroups[-1].Objects[-1].Blocks[-1].Hitboxes[-1].Contacts append value {FeatureA:$(FeatureA)b}
-    execute if score #Physics.DotProduct Physics matches ..900 store result storage physics:zprivate ContactGroups[-1].Objects[-1].Blocks[-1].Hitboxes[-1].Contacts[-1].FeatureB byte 1 run return run scoreboard players get #Physics.Contact.FeatureB Physics
 
     # Calculate the Penetration Depth
     # (Important): Everything is cached, because there are only 8 possible corners.
@@ -20,6 +20,9 @@
     execute if score #Physics.PenetrationDepth Physics < #Physics.Global.MinPenetrationDepth Physics run return 0
     $execute if score #Physics.PenetrationDepth Physics matches ..-1 run data modify storage physics:zprivate ContactGroups[-1].Objects[-1].Blocks[-1].Hitboxes[-1].Contacts append value {FeatureA:$(FeatureA)b}
     execute if score #Physics.PenetrationDepth Physics matches ..-1 store result storage physics:zprivate ContactGroups[-1].Objects[-1].Blocks[-1].Hitboxes[-1].Contacts[-1].FeatureB byte 1 run return run scoreboard players get #Physics.Contact.FeatureB Physics
+
+    $execute if score #Physics.DotProduct Physics matches ..900 run data modify storage physics:zprivate ContactGroups[-1].Objects[-1].Blocks[-1].Hitboxes[-1].Contacts append value {FeatureA:$(FeatureA)b}
+    execute if score #Physics.DotProduct Physics matches ..900 store result storage physics:zprivate ContactGroups[-1].Objects[-1].Blocks[-1].Hitboxes[-1].Contacts[-1].FeatureB byte 1 run return run scoreboard players get #Physics.Contact.FeatureB Physics
 
 # Check if the Contact Corner is within the hitbox
 # (Important): This is necessary because the penetration depth could be positive even if the hitboxes aren't touching. So if they aren't touching, the contact should be ignored during resolution, but it should still be stored because we can't be sure whether the hitboxes are only slightly distanced or far away.

@@ -1,3 +1,5 @@
+# (Important): All the "reject the contact entirely" checks have to be run before the "keep the contact but mark it as invalid" checks.
+
 # Check if the contact is still relevant
 # (Important): I project this contact's normal onto the current tick's contact's normal. If it's less than 70%, the contact is discarded completely for stability and performance reasons. If it's less than 90%, just carry over the contact without updating it (invalid contact).
 scoreboard players operation #Physics.DotProduct Physics = #Physics.CrossProductAxis.yx.x Physics
@@ -10,8 +12,6 @@ scoreboard players operation #Physics.DotProduct Physics += #Physics.Maths.Value
 execute if score #Physics.ObjectA.EdgeProjection Physics > #Physics.ObjectB.EdgeProjection run scoreboard players operation #Physics.DotProduct Physics *= #Physics.Constants.-1 Physics
 
 execute if score #Physics.DotProduct Physics matches ..700000 run return 0
-$execute if score #Physics.DotProduct Physics matches ..900000 run data modify storage physics:zprivate ContactGroups[-1].Objects[-1].Blocks[-1].Hitboxes[-1].Contacts append value {FeatureA:$(FeatureA)b}
-execute if score #Physics.DotProduct Physics matches ..900000 store result storage physics:zprivate ContactGroups[-1].Objects[-1].Blocks[-1].Hitboxes[-1].Contacts[-1].FeatureB byte 1 run return run scoreboard players get #Physics.Contact.FeatureB Physics
 
 # Get the features
     # Edge A
