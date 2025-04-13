@@ -1,11 +1,18 @@
 # HitboxType 1 (Solid)
 
+# Add the hitbox to the data
+data modify storage physics:zprivate ContactGroups[-1].Objects[-1].Blocks[-1].Hitboxes append value {Bottom:[I;0,0,0],Top:[I;0,0,0]}
+execute store result storage physics:zprivate ContactGroups[-1].Objects[-1].Blocks[-1].Hitboxes[-1].ID byte 1 run scoreboard players get #Physics.HitboxID Physics
+execute store result storage physics:zprivate ContactGroups[-1].Objects[-1].Blocks[-1].Hitboxes[-1].Bottom[0] int 1 run scoreboard players get #Physics.Projection.Block.WorldAxis.x.Min Physics
+execute store result storage physics:zprivate ContactGroups[-1].Objects[-1].Blocks[-1].Hitboxes[-1].Bottom[1] int 1 run scoreboard players get #Physics.Projection.Block.WorldAxis.y.Min Physics
+execute store result storage physics:zprivate ContactGroups[-1].Objects[-1].Blocks[-1].Hitboxes[-1].Bottom[2] int 1 run scoreboard players get #Physics.Projection.Block.WorldAxis.z.Min Physics
+
 # Get how much each axis is overlapping & get the least overlap
 # (Important): If two axes are exactly parallel to each other (Like if the objects are resting ontop of each other), their cross product is [0,0,0]. I'm unsure if discarding cross products with an overlap of 0 or with a value of [0,0,0] is more stable, so I'll revisit it once the resolver is done. For now, I discard cross products with an overlap of 0.
     # x_block
     scoreboard players operation #Physics.Overlap.WorldAxis.x Physics = @s Physics.Object.BoundingBoxGlobalMax.x
     scoreboard players operation #Physics.Overlap.WorldAxis.x Physics -= #Physics.Projection.Block.WorldAxis.x.Min Physics
-    scoreboard players operation #Physics.Maths.Value1 Physics = #Physics.Projection.Block.WorldAxis.x.Max Physics
+    execute store result storage physics:zprivate ContactGroups[-1].Objects[-1].Blocks[-1].Hitboxes[-1].Top[0] int 1 run scoreboard players operation #Physics.Maths.Value1 Physics = #Physics.Projection.Block.WorldAxis.x.Max Physics
     scoreboard players operation #Physics.Maths.Value1 Physics -= @s Physics.Object.BoundingBoxGlobalMin.x
     execute if score #Physics.Overlap.WorldAxis.x Physics > #Physics.Maths.Value1 Physics run scoreboard players operation #Physics.Overlap.WorldAxis.x Physics = #Physics.Maths.Value1 Physics
 
@@ -14,7 +21,7 @@
     # y_block
     scoreboard players operation #Physics.Overlap.WorldAxis.y Physics = @s Physics.Object.BoundingBoxGlobalMax.y
     scoreboard players operation #Physics.Overlap.WorldAxis.y Physics -= #Physics.Projection.Block.WorldAxis.y.Min Physics
-    scoreboard players operation #Physics.Maths.Value1 Physics = #Physics.Projection.Block.WorldAxis.y.Max Physics
+    execute store result storage physics:zprivate ContactGroups[-1].Objects[-1].Blocks[-1].Hitboxes[-1].Top[1] int 1 run scoreboard players operation #Physics.Maths.Value1 Physics = #Physics.Projection.Block.WorldAxis.y.Max Physics
     scoreboard players operation #Physics.Maths.Value1 Physics -= @s Physics.Object.BoundingBoxGlobalMin.y
     execute if score #Physics.Overlap.WorldAxis.y Physics > #Physics.Maths.Value1 Physics run scoreboard players operation #Physics.Overlap.WorldAxis.y Physics = #Physics.Maths.Value1 Physics
 
@@ -23,7 +30,7 @@
     # z_block
     scoreboard players operation #Physics.Overlap.WorldAxis.z Physics = @s Physics.Object.BoundingBoxGlobalMax.z
     scoreboard players operation #Physics.Overlap.WorldAxis.z Physics -= #Physics.Projection.Block.WorldAxis.z.Min Physics
-    scoreboard players operation #Physics.Maths.Value1 Physics = #Physics.Projection.Block.WorldAxis.z.Max Physics
+    execute store result storage physics:zprivate ContactGroups[-1].Objects[-1].Blocks[-1].Hitboxes[-1].Top[2] int 1 run scoreboard players operation #Physics.Maths.Value1 Physics = #Physics.Projection.Block.WorldAxis.z.Max Physics
     scoreboard players operation #Physics.Maths.Value1 Physics -= @s Physics.Object.BoundingBoxGlobalMin.z
     execute if score #Physics.Overlap.WorldAxis.z Physics > #Physics.Maths.Value1 Physics run scoreboard players operation #Physics.Overlap.WorldAxis.z Physics = #Physics.Maths.Value1 Physics
 

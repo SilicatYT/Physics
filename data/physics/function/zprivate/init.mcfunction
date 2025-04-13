@@ -167,8 +167,10 @@ scoreboard players set #Physics.Constants.7775 Physics 7775
 scoreboard players set #Physics.Constants.10000 Physics 10000
 scoreboard players set #Physics.Constants.100000 Physics 100000
 
-# Set required initial scores
+# Set required initial scores (including settings)
+scoreboard players set #Physics.HitboxID Physics 1
 scoreboard players set #Physics.HitboxType Physics 1
+scoreboard players set #Physics.Settings.ReactToBlockUpdates Physics 1
 
 # Setup starting values for data storages
 data modify storage physics:temp data.Integration set value {Pos:[0d,0d,0d],start_interpolation:0,transformation:{left_rotation:[0f,0f,0f,0f]}}

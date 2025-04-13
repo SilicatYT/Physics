@@ -1,45 +1,104 @@
 # Carry over contacts from the previous tick for blocks that aren't touching
-    # Iterate over all the blocks to check if the check with an extended AABB succeeds (Assuming a full block hitbox)
+    # Update every block's hitbox (incl. hitbox data depending on the setting, and contacts)
+    # (Important): 10 blocks are hardcoded to improve performance (less function calls, scoreboard and data operations).
+    # (Important): BlockPos is stored as a float because otherwise it rounds down and gets the wrong block. I would need extra operations to fix this, or make the macro command longer by adding the offset of 1 manually.
         # Block 1
-        function physics:zprivate/contact_generation/accumulate/world/not_touching/check_aabb {Index:-1b}
-        execute if score #Physics.BlockCount Physics matches 1 run return 0
+        execute if score #Physics.Settings.ReactToBlockUpdates Physics matches 1 store result storage physics:temp data.BlockPos.x float 0.001 store result score #Physics.Projection.Block.WorldAxis.x.Min Physics store result score #Physics.Projection.Block.WorldAxis.x.Max Physics run data get storage physics:temp data.Blocks[-1].Pos[0]
+        execute if score #Physics.Settings.ReactToBlockUpdates Physics matches 1 store result storage physics:temp data.BlockPos.y float 0.001 store result score #Physics.Projection.Block.WorldAxis.y.Min Physics store result score #Physics.Projection.Block.WorldAxis.y.Max Physics run data get storage physics:temp data.Blocks[-1].Pos[1]
+        execute if score #Physics.Settings.ReactToBlockUpdates Physics matches 1 store result storage physics:temp data.BlockPos.z float 0.001 store result score #Physics.Projection.Block.WorldAxis.z.Min Physics store result score #Physics.Projection.Block.WorldAxis.z.Max Physics run data get storage physics:temp data.Blocks[-1].Pos[2]
+        execute if score #Physics.Settings.ReactToBlockUpdates Physics matches 1 run function physics:zprivate/contact_generation/accumulate/world/not_touching/get_hitbox/set_position with storage physics:temp data.BlockPos
+        execute if score #Physics.Settings.ReactToBlockUpdates Physics matches 0 run function physics:zprivate/contact_generation/accumulate/world/not_touching/main_no_block_updates
 
         # Block 2
-        function physics:zprivate/contact_generation/accumulate/world/not_touching/check_aabb {Index:-2b}
-        execute if score #Physics.BlockCount Physics matches 2 run return 0
+        execute if score #Physics.BlockCount Physics matches 1 run return 0
+        data remove storage physics:temp data.Blocks[-1]
+
+        execute if score #Physics.Settings.ReactToBlockUpdates Physics matches 1 store result storage physics:temp data.BlockPos.x float 0.001 store result score #Physics.Projection.Block.WorldAxis.x.Min Physics store result score #Physics.Projection.Block.WorldAxis.x.Max Physics run data get storage physics:temp data.Blocks[-1].Pos[0]
+        execute if score #Physics.Settings.ReactToBlockUpdates Physics matches 1 store result storage physics:temp data.BlockPos.y float 0.001 store result score #Physics.Projection.Block.WorldAxis.y.Min Physics store result score #Physics.Projection.Block.WorldAxis.y.Max Physics run data get storage physics:temp data.Blocks[-1].Pos[1]
+        execute if score #Physics.Settings.ReactToBlockUpdates Physics matches 1 store result storage physics:temp data.BlockPos.z float 0.001 store result score #Physics.Projection.Block.WorldAxis.z.Min Physics store result score #Physics.Projection.Block.WorldAxis.z.Max Physics run data get storage physics:temp data.Blocks[-1].Pos[2]
+        execute if score #Physics.Settings.ReactToBlockUpdates Physics matches 1 run function physics:zprivate/contact_generation/accumulate/world/not_touching/get_hitbox/set_position with storage physics:temp data.BlockPos
+        execute if score #Physics.Settings.ReactToBlockUpdates Physics matches 0 run function physics:zprivate/contact_generation/accumulate/world/not_touching/main_no_block_updates
 
         # Block 3
-        function physics:zprivate/contact_generation/accumulate/world/not_touching/check_aabb {Index:-3b}
-        execute if score #Physics.BlockCount Physics matches 3 run return 0
+        execute if score #Physics.BlockCount Physics matches 2 run return 0
+        data remove storage physics:temp data.Blocks[-1]
+
+        execute if score #Physics.Settings.ReactToBlockUpdates Physics matches 1 store result storage physics:temp data.BlockPos.x float 0.001 store result score #Physics.Projection.Block.WorldAxis.x.Min Physics store result score #Physics.Projection.Block.WorldAxis.x.Max Physics run data get storage physics:temp data.Blocks[-1].Pos[0]
+        execute if score #Physics.Settings.ReactToBlockUpdates Physics matches 1 store result storage physics:temp data.BlockPos.y float 0.001 store result score #Physics.Projection.Block.WorldAxis.y.Min Physics store result score #Physics.Projection.Block.WorldAxis.y.Max Physics run data get storage physics:temp data.Blocks[-1].Pos[1]
+        execute if score #Physics.Settings.ReactToBlockUpdates Physics matches 1 store result storage physics:temp data.BlockPos.z float 0.001 store result score #Physics.Projection.Block.WorldAxis.z.Min Physics store result score #Physics.Projection.Block.WorldAxis.z.Max Physics run data get storage physics:temp data.Blocks[-1].Pos[2]
+        execute if score #Physics.Settings.ReactToBlockUpdates Physics matches 1 run function physics:zprivate/contact_generation/accumulate/world/not_touching/get_hitbox/set_position with storage physics:temp data.BlockPos
+        execute if score #Physics.Settings.ReactToBlockUpdates Physics matches 0 run function physics:zprivate/contact_generation/accumulate/world/not_touching/main_no_block_updates
 
         # Block 4
-        function physics:zprivate/contact_generation/accumulate/world/not_touching/check_aabb {Index:-4b}
-        execute if score #Physics.BlockCount Physics matches 4 run return 0
+        execute if score #Physics.BlockCount Physics matches 3 run return 0
+        data remove storage physics:temp data.Blocks[-1]
+
+        execute if score #Physics.Settings.ReactToBlockUpdates Physics matches 1 store result storage physics:temp data.BlockPos.x float 0.001 store result score #Physics.Projection.Block.WorldAxis.x.Min Physics store result score #Physics.Projection.Block.WorldAxis.x.Max Physics run data get storage physics:temp data.Blocks[-1].Pos[0]
+        execute if score #Physics.Settings.ReactToBlockUpdates Physics matches 1 store result storage physics:temp data.BlockPos.y float 0.001 store result score #Physics.Projection.Block.WorldAxis.y.Min Physics store result score #Physics.Projection.Block.WorldAxis.y.Max Physics run data get storage physics:temp data.Blocks[-1].Pos[1]
+        execute if score #Physics.Settings.ReactToBlockUpdates Physics matches 1 store result storage physics:temp data.BlockPos.z float 0.001 store result score #Physics.Projection.Block.WorldAxis.z.Min Physics store result score #Physics.Projection.Block.WorldAxis.z.Max Physics run data get storage physics:temp data.Blocks[-1].Pos[2]
+        execute if score #Physics.Settings.ReactToBlockUpdates Physics matches 1 run function physics:zprivate/contact_generation/accumulate/world/not_touching/get_hitbox/set_position with storage physics:temp data.BlockPos
+        execute if score #Physics.Settings.ReactToBlockUpdates Physics matches 0 run function physics:zprivate/contact_generation/accumulate/world/not_touching/main_no_block_updates
 
         # Block 5
-        function physics:zprivate/contact_generation/accumulate/world/not_touching/check_aabb {Index:-5b}
-        execute if score #Physics.BlockCount Physics matches 5 run return 0
+        execute if score #Physics.BlockCount Physics matches 4 run return 0
+        data remove storage physics:temp data.Blocks[-1]
+
+        execute if score #Physics.Settings.ReactToBlockUpdates Physics matches 1 store result storage physics:temp data.BlockPos.x float 0.001 store result score #Physics.Projection.Block.WorldAxis.x.Min Physics store result score #Physics.Projection.Block.WorldAxis.x.Max Physics run data get storage physics:temp data.Blocks[-1].Pos[0]
+        execute if score #Physics.Settings.ReactToBlockUpdates Physics matches 1 store result storage physics:temp data.BlockPos.y float 0.001 store result score #Physics.Projection.Block.WorldAxis.y.Min Physics store result score #Physics.Projection.Block.WorldAxis.y.Max Physics run data get storage physics:temp data.Blocks[-1].Pos[1]
+        execute if score #Physics.Settings.ReactToBlockUpdates Physics matches 1 store result storage physics:temp data.BlockPos.z float 0.001 store result score #Physics.Projection.Block.WorldAxis.z.Min Physics store result score #Physics.Projection.Block.WorldAxis.z.Max Physics run data get storage physics:temp data.Blocks[-1].Pos[2]
+        execute if score #Physics.Settings.ReactToBlockUpdates Physics matches 1 run function physics:zprivate/contact_generation/accumulate/world/not_touching/get_hitbox/set_position with storage physics:temp data.BlockPos
+        execute if score #Physics.Settings.ReactToBlockUpdates Physics matches 0 run function physics:zprivate/contact_generation/accumulate/world/not_touching/main_no_block_updates
 
         # Block 6
-        function physics:zprivate/contact_generation/accumulate/world/not_touching/check_aabb {Index:-6b}
-        execute if score #Physics.BlockCount Physics matches 6 run return 0
+        execute if score #Physics.BlockCount Physics matches 5 run return 0
+        data remove storage physics:temp data.Blocks[-1]
+
+        execute if score #Physics.Settings.ReactToBlockUpdates Physics matches 1 store result storage physics:temp data.BlockPos.x float 0.001 store result score #Physics.Projection.Block.WorldAxis.x.Min Physics store result score #Physics.Projection.Block.WorldAxis.x.Max Physics run data get storage physics:temp data.Blocks[-1].Pos[0]
+        execute if score #Physics.Settings.ReactToBlockUpdates Physics matches 1 store result storage physics:temp data.BlockPos.y float 0.001 store result score #Physics.Projection.Block.WorldAxis.y.Min Physics store result score #Physics.Projection.Block.WorldAxis.y.Max Physics run data get storage physics:temp data.Blocks[-1].Pos[1]
+        execute if score #Physics.Settings.ReactToBlockUpdates Physics matches 1 store result storage physics:temp data.BlockPos.z float 0.001 store result score #Physics.Projection.Block.WorldAxis.z.Min Physics store result score #Physics.Projection.Block.WorldAxis.z.Max Physics run data get storage physics:temp data.Blocks[-1].Pos[2]
+        execute if score #Physics.Settings.ReactToBlockUpdates Physics matches 1 run function physics:zprivate/contact_generation/accumulate/world/not_touching/get_hitbox/set_position with storage physics:temp data.BlockPos
+        execute if score #Physics.Settings.ReactToBlockUpdates Physics matches 0 run function physics:zprivate/contact_generation/accumulate/world/not_touching/main_no_block_updates
 
         # Block 7
-        function physics:zprivate/contact_generation/accumulate/world/not_touching/check_aabb {Index:-7b}
-        execute if score #Physics.BlockCount Physics matches 7 run return 0
+        execute if score #Physics.BlockCount Physics matches 6 run return 0
+        data remove storage physics:temp data.Blocks[-1]
+
+        execute if score #Physics.Settings.ReactToBlockUpdates Physics matches 1 store result storage physics:temp data.BlockPos.x float 0.001 store result score #Physics.Projection.Block.WorldAxis.x.Min Physics store result score #Physics.Projection.Block.WorldAxis.x.Max Physics run data get storage physics:temp data.Blocks[-1].Pos[0]
+        execute if score #Physics.Settings.ReactToBlockUpdates Physics matches 1 store result storage physics:temp data.BlockPos.y float 0.001 store result score #Physics.Projection.Block.WorldAxis.y.Min Physics store result score #Physics.Projection.Block.WorldAxis.y.Max Physics run data get storage physics:temp data.Blocks[-1].Pos[1]
+        execute if score #Physics.Settings.ReactToBlockUpdates Physics matches 1 store result storage physics:temp data.BlockPos.z float 0.001 store result score #Physics.Projection.Block.WorldAxis.z.Min Physics store result score #Physics.Projection.Block.WorldAxis.z.Max Physics run data get storage physics:temp data.Blocks[-1].Pos[2]
+        execute if score #Physics.Settings.ReactToBlockUpdates Physics matches 1 run function physics:zprivate/contact_generation/accumulate/world/not_touching/get_hitbox/set_position with storage physics:temp data.BlockPos
+        execute if score #Physics.Settings.ReactToBlockUpdates Physics matches 0 run function physics:zprivate/contact_generation/accumulate/world/not_touching/main_no_block_updates
 
         # Block 8
-        function physics:zprivate/contact_generation/accumulate/world/not_touching/check_aabb {Index:-8b}
+        execute if score #Physics.BlockCount Physics matches 7 run return 0
+        data remove storage physics:temp data.Blocks[-1]
+
+        execute if score #Physics.Settings.ReactToBlockUpdates Physics matches 1 store result storage physics:temp data.BlockPos.x float 0.001 store result score #Physics.Projection.Block.WorldAxis.x.Min Physics store result score #Physics.Projection.Block.WorldAxis.x.Max Physics run data get storage physics:temp data.Blocks[-1].Pos[0]
+        execute if score #Physics.Settings.ReactToBlockUpdates Physics matches 1 store result storage physics:temp data.BlockPos.y float 0.001 store result score #Physics.Projection.Block.WorldAxis.y.Min Physics store result score #Physics.Projection.Block.WorldAxis.y.Max Physics run data get storage physics:temp data.Blocks[-1].Pos[1]
+        execute if score #Physics.Settings.ReactToBlockUpdates Physics matches 1 store result storage physics:temp data.BlockPos.z float 0.001 store result score #Physics.Projection.Block.WorldAxis.z.Min Physics store result score #Physics.Projection.Block.WorldAxis.z.Max Physics run data get storage physics:temp data.Blocks[-1].Pos[2]
+        execute if score #Physics.Settings.ReactToBlockUpdates Physics matches 1 run function physics:zprivate/contact_generation/accumulate/world/not_touching/get_hitbox/set_position with storage physics:temp data.BlockPos
+        execute if score #Physics.Settings.ReactToBlockUpdates Physics matches 0 run function physics:zprivate/contact_generation/accumulate/world/not_touching/main_no_block_updates
+
+        # Block 9
         execute if score #Physics.BlockCount Physics matches 8 run return 0
+        data remove storage physics:temp data.Blocks[-1]
+
+        execute if score #Physics.Settings.ReactToBlockUpdates Physics matches 1 store result storage physics:temp data.BlockPos.x float 0.001 store result score #Physics.Projection.Block.WorldAxis.x.Min Physics store result score #Physics.Projection.Block.WorldAxis.x.Max Physics run data get storage physics:temp data.Blocks[-1].Pos[0]
+        execute if score #Physics.Settings.ReactToBlockUpdates Physics matches 1 store result storage physics:temp data.BlockPos.y float 0.001 store result score #Physics.Projection.Block.WorldAxis.y.Min Physics store result score #Physics.Projection.Block.WorldAxis.y.Max Physics run data get storage physics:temp data.Blocks[-1].Pos[1]
+        execute if score #Physics.Settings.ReactToBlockUpdates Physics matches 1 store result storage physics:temp data.BlockPos.z float 0.001 store result score #Physics.Projection.Block.WorldAxis.z.Min Physics store result score #Physics.Projection.Block.WorldAxis.z.Max Physics run data get storage physics:temp data.Blocks[-1].Pos[2]
+        execute if score #Physics.Settings.ReactToBlockUpdates Physics matches 1 run function physics:zprivate/contact_generation/accumulate/world/not_touching/get_hitbox/set_position with storage physics:temp data.BlockPos
+        execute if score #Physics.Settings.ReactToBlockUpdates Physics matches 0 run function physics:zprivate/contact_generation/accumulate/world/not_touching/main_no_block_updates
+
+        # Block 10
+        execute if score #Physics.BlockCount Physics matches 9 run return 0
+        data remove storage physics:temp data.Blocks[-1]
+
+        execute if score #Physics.Settings.ReactToBlockUpdates Physics matches 1 store result storage physics:temp data.BlockPos.x float 0.001 store result score #Physics.Projection.Block.WorldAxis.x.Min Physics store result score #Physics.Projection.Block.WorldAxis.x.Max Physics run data get storage physics:temp data.Blocks[-1].Pos[0]
+        execute if score #Physics.Settings.ReactToBlockUpdates Physics matches 1 store result storage physics:temp data.BlockPos.y float 0.001 store result score #Physics.Projection.Block.WorldAxis.y.Min Physics store result score #Physics.Projection.Block.WorldAxis.y.Max Physics run data get storage physics:temp data.Blocks[-1].Pos[1]
+        execute if score #Physics.Settings.ReactToBlockUpdates Physics matches 1 store result storage physics:temp data.BlockPos.z float 0.001 store result score #Physics.Projection.Block.WorldAxis.z.Min Physics store result score #Physics.Projection.Block.WorldAxis.z.Max Physics run data get storage physics:temp data.Blocks[-1].Pos[2]
+        execute if score #Physics.Settings.ReactToBlockUpdates Physics matches 1 run function physics:zprivate/contact_generation/accumulate/world/not_touching/get_hitbox/set_position with storage physics:temp data.BlockPos
+        execute if score #Physics.Settings.ReactToBlockUpdates Physics matches 0 run function physics:zprivate/contact_generation/accumulate/world/not_touching/main_no_block_updates
 
         # Start next loop
-        scoreboard players remove #Physics.BlockCount Physics 8
-        data remove storage physics:temp data.Blocks[-1]
-        data remove storage physics:temp data.Blocks[-1]
-        data remove storage physics:temp data.Blocks[-1]
-        data remove storage physics:temp data.Blocks[-1]
-        data remove storage physics:temp data.Blocks[-1]
-        data remove storage physics:temp data.Blocks[-1]
-        data remove storage physics:temp data.Blocks[-1]
-        data remove storage physics:temp data.Blocks[-1]
+        scoreboard players remove #Physics.BlockCount Physics 10
         function physics:zprivate/contact_generation/accumulate/world/not_touching/main_loop

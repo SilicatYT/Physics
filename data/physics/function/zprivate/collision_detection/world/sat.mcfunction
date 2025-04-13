@@ -452,7 +452,7 @@ execute unless score #Physics.HitboxType Physics matches 1 run return run functi
     execute if score #Physics.Touching Physics matches 1 run return run data modify storage physics:zprivate ContactGroups[-1].Objects[-1].Blocks[-1].Hitboxes[-1].Contacts append from storage physics:temp data.NewContact
 
     # Add the block to the final storage
-    data modify storage physics:zprivate ContactGroups[-1].Objects[-1].Blocks append value {Pos:[I;0,0,0],Hitboxes:[{ID:1b}]}
+    data modify storage physics:zprivate ContactGroups[-1].Objects[-1].Blocks append value {Pos:[I;0,0,0],Hitboxes:[]}
     execute store result storage physics:zprivate ContactGroups[-1].Objects[-1].Blocks[-1].Pos[0] int 1 run scoreboard players get #Physics.BlockPos.x Physics
     execute store result storage physics:zprivate ContactGroups[-1].Objects[-1].Blocks[-1].Pos[1] int 1 run scoreboard players get #Physics.BlockPos.y Physics
     execute store result storage physics:zprivate ContactGroups[-1].Objects[-1].Blocks[-1].Pos[2] int 1 run scoreboard players get #Physics.BlockPos.z Physics
