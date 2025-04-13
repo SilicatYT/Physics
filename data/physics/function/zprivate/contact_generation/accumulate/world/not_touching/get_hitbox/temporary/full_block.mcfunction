@@ -14,11 +14,17 @@
         # But if the ID doesn't match, what should I do? Try to update the contacts regardless, or just scrap them completely?
         # Need to make sure I account for Hitboxes[{ID:1b}] being empty, causing data from the previous block to get re-used.
         # I could say: Get {ID:1b} (and use store success). If there is data, ...
+        data modify storage physics:zprivate ContactGroups[-1].Objects[-1].Blocks[-1].Hitboxes append from storage physics:temp data.Hitbox
+        data remove storage physics:zprivate ContactGroups[-1].Objects[-1].Blocks[-1].Hitboxes[-1].Contacts
+
         data modify storage physics:temp data.Hitbox set from storage physics:temp data.Blocks[-1].Hitboxes[0]
+        data modify storage physics:zprivate ContactGroups[-1].Objects[-1].Blocks[-1].Hitboxes append from storage physics:temp data.Hitbox
+        data remove storage physics:zprivate ContactGroups[-1].Objects[-1].Blocks[-1].Hitboxes[-1].Contacts
+
         execute store result score #Physics.ContactCount Physics if data storage physics:temp data.Hitbox.Contacts[]
         function physics:zprivate/contact_generation/accumulate/world/not_touching/update_hitbox
+        execute unless data storage physics:zprivate ContactGroups[-1].Objects[-1].Blocks[-1].Hitboxes[-1].Contacts[0] run data remove storage physics:zprivate ContactGroups[-1].Objects[-1].Blocks[-1].Hitboxes[-1]
 
-# (Perhaps inline this?)
 # Don't I need to get the hitbox's data first? Like... the actual contact data for {ID:1} or smth
 # If there were more hitboxes, I'd need to do the "HasPreviousContacts" check.
 # But I *THINK* I can just use Hitboxes[0] if it's a single-hitbox block (Because the odds that the block has updated in this specific tick are very low, so that extra performance cost is worth it).

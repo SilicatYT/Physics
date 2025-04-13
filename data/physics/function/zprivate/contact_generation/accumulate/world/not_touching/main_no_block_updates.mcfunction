@@ -5,6 +5,8 @@ execute store result score #Physics.HitboxCount Physics if data storage physics:
 
 # Hitbox 1
 data modify storage physics:temp data.Hitbox set from storage physics:temp data.Blocks[-1].Hitboxes[-1]
+data modify storage physics:zprivate ContactGroups[-1].Objects[-1].Blocks[-1].Hitboxes append from storage physics:temp data.Hitbox
+data remove storage physics:zprivate ContactGroups[-1].Objects[-1].Blocks[-1].Hitboxes[-1].Contacts
 
     # Get the projections
     execute store result score #Physics.Projection.Block.WorldAxis.x.Min Physics run data get storage physics:temp data.Hitbox.Bottom[0]
@@ -17,6 +19,7 @@ data modify storage physics:temp data.Hitbox set from storage physics:temp data.
     # Update the hitbox's contacts
     execute store result score #Physics.ContactCount Physics if data storage physics:temp data.Hitbox.Contacts[]
     function physics:zprivate/contact_generation/accumulate/world/not_touching/update_hitbox
+    execute unless data storage physics:zprivate ContactGroups[-1].Objects[-1].Blocks[-1].Hitboxes[-1].Contacts[0] run data remove storage physics:zprivate ContactGroups[-1].Objects[-1].Blocks[-1].Hitboxes[-1]
 
 # Hitbox 2
 execute if score #Physics.HitboxCount Physics matches 1 run return 0

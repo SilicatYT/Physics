@@ -1,11 +1,11 @@
 # Everything is cached because there are only 6 possible contacts
-$execute if score #Physics.Contact.FeatureB Physics matches 10..11 run return run function physics:zprivate/contact_generation/accumulate/world/not_touching/update_contact/world_axis_x with storage physics:temp data.Hitbox.Contacts[$(Index)]
 $execute if score #Physics.Contact.FeatureB Physics matches 12..13 run return run function physics:zprivate/contact_generation/accumulate/world/not_touching/update_contact/world_axis_y with storage physics:temp data.Hitbox.Contacts[$(Index)]
+$execute if score #Physics.Contact.FeatureB Physics matches 10..11 run return run function physics:zprivate/contact_generation/accumulate/world/not_touching/update_contact/world_axis_x with storage physics:temp data.Hitbox.Contacts[$(Index)]
 $execute if score #Physics.Contact.FeatureB Physics matches 14..15 run return run function physics:zprivate/contact_generation/accumulate/world/not_touching/update_contact/world_axis_z with storage physics:temp data.Hitbox.Contacts[$(Index)]
 
-$execute if score #Physics.Contact.FeatureA Physics matches 10..11 run return run function physics:zprivate/contact_generation/accumulate/world/not_touching/update_contact/object_axis_x/main with storage physics:temp data.Hitbox.Contacts[$(Index)]
-$execute if score #Physics.Contact.FeatureA Physics matches 12..13 run return run function physics:zprivate/contact_generation/accumulate/world/not_touching/update_contact/object_axis_y/main with storage physics:temp data.Hitbox.Contacts[$(Index)]
-$execute if score #Physics.Contact.FeatureA Physics matches 14..15 run return run function physics:zprivate/contact_generation/accumulate/world/not_touching/update_contact/object_axis_z/main with storage physics:temp data.Hitbox.Contacts[$(Index)]
+$execute if score #Physics.Contact.FeatureA Physics matches 10..11 run return run function physics:zprivate/contact_generation/accumulate/world/not_touching/update_contact/object_axis_x with storage physics:temp data.Hitbox.Contacts[$(Index)]
+$execute if score #Physics.Contact.FeatureA Physics matches 12..13 run return run function physics:zprivate/contact_generation/accumulate/world/not_touching/update_contact/object_axis_y with storage physics:temp data.Hitbox.Contacts[$(Index)]
+$execute if score #Physics.Contact.FeatureA Physics matches 14..15 run return run function physics:zprivate/contact_generation/accumulate/world/not_touching/update_contact/object_axis_z with storage physics:temp data.Hitbox.Contacts[$(Index)]
 
 $execute if score #Physics.Contact.FeatureB Physics matches 20..23 if score #Physics.Contact.FeatureA Physics matches 20..23 run return run function physics:zprivate/contact_generation/accumulate/world/not_touching/update_contact/cross_product_axis_xx/main with storage physics:temp data.Hitbox.Contacts[$(Index)]
 $execute if score #Physics.Contact.FeatureB Physics matches 20..23 if score #Physics.Contact.FeatureA Physics matches 24..27 run return run function physics:zprivate/contact_generation/accumulate/world/not_touching/update_contact/cross_product_axis_xy/main with storage physics:temp data.Hitbox.Contacts[$(Index)]
