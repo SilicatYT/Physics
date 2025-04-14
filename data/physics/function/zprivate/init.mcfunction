@@ -139,6 +139,13 @@ scoreboard objectives add Physics.Object.ProjectionOwnAxis.y.Max dummy
 scoreboard objectives add Physics.Object.ProjectionOwnAxis.z.Min dummy
 scoreboard objectives add Physics.Object.ProjectionOwnAxis.z.Max dummy
 
+# Add hitbox attributes
+scoreboard objectives add Physics.Hitbox.Gametime dummy
+
+# Add player attributes
+scoreboard objectives add Physics.Player.LookingAtID dummy
+scoreboard objectives add Physics.Player.ID dummy
+
 # Set global variables
 scoreboard players set #Physics.Global.DefaultGravity Physics 490
 scoreboard players set #Physics.Global.LinearDamping Physics 98
@@ -169,6 +176,7 @@ scoreboard players set #Physics.Constants.100000 Physics 100000
 # Set required initial scores (including settings)
 scoreboard players set #Physics.HitboxID Physics 1
 scoreboard players set #Physics.HitboxType Physics 1
+scoreboard players set #Physics.InteractionCount Physics 0
 scoreboard players set #Physics.Settings.ReactToBlockUpdates Physics 1
 
 # Setup starting values for data storages

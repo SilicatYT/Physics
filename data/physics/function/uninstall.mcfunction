@@ -146,8 +146,12 @@ scoreboard objectives remove Physics.Object.ProjectionOwnAxis.y.Max
 scoreboard objectives remove Physics.Object.ProjectionOwnAxis.z.Min
 scoreboard objectives remove Physics.Object.ProjectionOwnAxis.z.Max
 
+scoreboard objectives remove Physics.Hitbox.Gametime
+
+scoreboard objectives remove Physics.Player.LookingAtID
+scoreboard objectives remove Physics.Player.ID
+
 # Remove data storages
-data remove storage physics:maths processing
 data remove storage physics:debug data
 data remove storage physics:temp data
 data remove storage physics:zprivate ContactGroups

@@ -1,4 +1,4 @@
-advancement revoke @s only physics:hit_object_interaction
+advancement revoke @s only physics:hit_hitbox
 
 # Find interaction entity
 tag @s add Physics.This

@@ -1,4 +1,4 @@
-# (Important) (TODO): Minor issue is that several scores like the bounding box min and max (and the step counts) are not updated when changing dimensions or when summoning the object in the first place, so it can't properly detect collisions in the first tick afterwards.
+# (Important) (TODO): Minor issue is that several scores like the bounding box min and max (and the step counts) are not updated when changing dimensions or when summoning the object in the first place, so it can't properly detect collisions until the next tick.
 
 # Set the object's x, y and z dimensions (width, height and length)
 # (Important): Because of the AABB check between world geometry and the object, the max dimensions are currently restricted to 4 blocks along each axis (Because there's currently 1 function for every single bounding box, which would be 350MB of data even for just 8x8x8 cubes)
@@ -29,21 +29,6 @@ execute store result storage physics:temp data.Object.transformation.scale[0] fl
 execute store result storage physics:temp data.Object.transformation.scale[1] float 0.001 run scoreboard players get #Physics.SetAttribute.Dimension.y Physics
 execute store result storage physics:temp data.Object.transformation.scale[2] float 0.001 run scoreboard players get #Physics.SetAttribute.Dimension.z Physics
 data modify entity @s {} merge from storage physics:temp data.Object
-
-# Update the interaction hitbox's size
-    # Main hitbox
-    execute store result storage physics:maths processing.Distance[0] float 0.001 run scoreboard players get #Physics.SetAttribute.Dimension.x Physics
-    execute store result storage physics:maths processing.Distance[4] float 0.001 run scoreboard players get #Physics.SetAttribute.Dimension.y Physics
-    execute store result storage physics:maths processing.Distance[8] float 0.001 run scoreboard players get #Physics.SetAttribute.Dimension.z Physics
-    data modify entity 0-0-0-0-0 transformation set from storage physics:maths processing.Distance
-    data modify storage physics:temp data.Distance set from entity 0-0-0-0-0 transformation.scale[0]
-
-    data modify storage physics:temp data.InteractionSize.width set from storage physics:temp data.Distance
-    data modify storage physics:temp data.InteractionSize.height set from storage physics:temp data.Distance
-    execute on passengers on passengers run data modify entity @s {} merge from storage physics:temp data.InteractionSize
-
-    # Hitbox offset
-    execute on passengers store result entity @s height float -0.000001 run data get storage physics:temp data.InteractionSize.height 500000
 
 # Update the local bounding box
 scoreboard players operation @s Physics.Object.BoundingBoxLocalMax.x = #Physics.SetAttribute.Dimension.x Physics

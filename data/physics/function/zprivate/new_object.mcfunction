@@ -36,14 +36,5 @@ scoreboard players set @s Physics.Object.BoundingBoxStepCount.x 2
 scoreboard players set @s Physics.Object.BoundingBoxStepCount.y 2
 scoreboard players set @s Physics.Object.BoundingBoxStepCount.z 2
 
-# Summon interaction entity (Width and height is set so that the entire model is inside the hitbox, no matter the orientation. The interaction entity acts as a rough hitbox for punches and collision detection between objects, its width and height being the diagonal between the corners of the object.)
-summon minecraft:interaction ~ ~ ~ {Tags:["Physics.HitboxOffset","Physics.New"],height:-0.86602540378f,width:0f}
-summon minecraft:interaction ~ ~ ~ {Tags:["Physics.Hitbox","Physics.New"],height:1.73205080757f,width:1.73205080757f}
-
-ride @e[type=minecraft:interaction,tag=Physics.New,tag=Physics.HitboxOffset,distance=..0.1,limit=1] mount @s
-execute on passengers run ride @e[type=minecraft:interaction,tag=Physics.New,tag=Physics.Hitbox,distance=..0.1,limit=1] mount @s
-
 # Remove tag
 tag @s remove Physics.New
-execute on passengers run tag @s remove Physics.New
-execute on passengers on passengers run tag @s remove Physics.New
