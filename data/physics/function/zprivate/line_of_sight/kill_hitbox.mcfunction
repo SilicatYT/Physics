@@ -1,5 +1,5 @@
 # Looked away from object
-tag @s remove Physics.HasHitbox
+scoreboard players set @s Physics.Player.LookingAtID 0
 scoreboard players operation #Physics.Search Physics.Player.ID = @s Physics.Player.ID
 
     # Kill the hitbox

@@ -144,6 +144,12 @@ scoreboard objectives add Physics.Hitbox.Gametime dummy
 
 # Add player attributes
 scoreboard objectives add Physics.Player.LookingAtID dummy
+scoreboard objectives add Physics.Player.LookingAtPos.x dummy
+scoreboard objectives add Physics.Player.LookingAtPos.y dummy
+scoreboard objectives add Physics.Player.LookingAtPos.z dummy
+scoreboard objectives add Physics.Player.LookingAtDirection.x dummy
+scoreboard objectives add Physics.Player.LookingAtDirection.y dummy
+scoreboard objectives add Physics.Player.LookingAtDirection.z dummy
 scoreboard objectives add Physics.Player.ID dummy
 
 # Set global variables
@@ -177,13 +183,16 @@ scoreboard players set #Physics.Constants.100000 Physics 100000
 scoreboard players set #Physics.HitboxID Physics 1
 scoreboard players set #Physics.HitboxType Physics 1
 scoreboard players set #Physics.InteractionCount Physics 0
+scoreboard players set #Physics.MinDistance Physics 2147483647
+scoreboard players set #Physics.LookingAtID Physics 0
 scoreboard players set #Physics.Settings.ReactToBlockUpdates Physics 1
 
 # Setup starting values for data storages
+data modify storage physics:temp data.HitboxPos set value [0d,0d,0d]
+data modify storage physics:temp data.HitboxData set value {Pos:[0d,0d,0d],width:0.35f,height:0.35f,response:1b}
 data modify storage physics:temp data.Integration set value {Pos:[0d,0d,0d],start_interpolation:0,transformation:{left_rotation:[0f,0f,0f,0f]}}
 data modify storage physics:temp data.Integration.Pos set value [0d,0d,0d]
 data modify storage physics:temp data.IntersectionPosGlobal set value [0d,0d,0d]
-data modify storage physics:maths processing.Distance set value [0f,0f,0f,0f,0f,0f,0f,0f,0f,0f,0f,0f,0f,0f,0f,1f]
 data modify storage physics:temp data.NewContact set value {ContactNormal:[I;0,0,0],ContactPoint:[I;0,0,0]}
 data modify storage physics:temp data.BlockCorner set value [{x:"Min",y:"Min",z:"Min"},{x:"Min",y:"Min",z:"Max"},{x:"Max",y:"Min",z:"Min"},{x:"Max",y:"Min",z:"Max"},{x:"Min",y:"Max",z:"Min"},{x:"Min",y:"Max",z:"Max"},{x:"Max",y:"Max",z:"Min"},{x:"Max",y:"Max",z:"Max"}]
 data modify storage physics:temp data.BlockEdge set value {20:{StartCorner:0b},21:{StartCorner:1b},22:{StartCorner:4b},23:{StartCorner:5b},24:{StartCorner:0b},25:{StartCorner:1b},26:{StartCorner:2b},27:{StartCorner:3b},28:{StartCorner:0b},29:{StartCorner:2b},30:{StartCorner:4b},31:{StartCorner:6b}}

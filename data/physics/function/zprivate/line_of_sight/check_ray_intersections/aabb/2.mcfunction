@@ -1,19 +1,18 @@
-# Face 0: Positive y
+# Face 2: Negative y
 
 # Step 1: Calculate t = (aabb_y_max_relative - origin_y) / direction_y
-scoreboard players operation #Physics.Maths.Value1 Physics = @s Physics.Object.BoundingBoxGlobalMax.y
+scoreboard players operation #Physics.Maths.Value1 Physics = @s Physics.Object.BoundingBoxGlobalMin.y
 scoreboard players operation #Physics.Maths.Value1 Physics -= @s Physics.Object.Pos.y
 scoreboard players operation #Physics.Maths.Value1 Physics *= #Physics.Constants.1000 Physics
 scoreboard players operation #Physics.Maths.Value1 Physics -= #Physics.RayPosRelative.y Physics
-execute store result score #Physics.RayIntersection.t2 Physics run scoreboard players operation #Physics.Maths.Value1 Physics /= #Physics.RayDirection.y Physics
+execute store result score #Physics.RayIntersection.t2 Physics run scoreboard players operation #Physics.Maths.Value1 Physics /= #Physics.RayDirectionOriginal.y Physics
 
-# Step 2: If t is negative or too large, stop. This means no collision with this face is happening.
-execute if score #Physics.Maths.Value1 Physics matches ..-1 run return 0
+# Step 2: If t is too large, stop. This means no collision with this face is happening.
 execute if score #Physics.Maths.Value1 Physics > #Physics.EntityInteractionRange Physics run return 0
 
 # Step 3: Calculate the point of intersection for the other two axes: origin + t * direction
     # x
-    scoreboard players operation #Physics.Maths.Value1 Physics *= #Physics.RayDirection.x Physics
+    scoreboard players operation #Physics.Maths.Value1 Physics *= #Physics.RayDirectionOriginal.x Physics
     scoreboard players operation #Physics.Maths.Value1 Physics += #Physics.RayPosRelative.x Physics
 
     scoreboard players operation #Physics.RelativeAABB.x.Max Physics = @s Physics.Object.BoundingBoxGlobalMax.x
@@ -28,7 +27,7 @@ execute if score #Physics.Maths.Value1 Physics > #Physics.EntityInteractionRange
 
     # z
     scoreboard players operation #Physics.Maths.Value1 Physics = #Physics.RayIntersection.t2 Physics
-    scoreboard players operation #Physics.Maths.Value1 Physics *= #Physics.RayDirection.z Physics
+    scoreboard players operation #Physics.Maths.Value1 Physics *= #Physics.RayDirectionOriginal.z Physics
     scoreboard players operation #Physics.Maths.Value1 Physics += #Physics.RayPosRelative.z Physics
 
     scoreboard players operation #Physics.RelativeAABB.z.Max Physics = @s Physics.Object.BoundingBoxGlobalMax.z
