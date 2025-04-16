@@ -153,11 +153,7 @@ scoreboard objectives add Physics.Player.LookingAtDirection.z dummy
 scoreboard objectives add Physics.Player.ID dummy
 
 # Set global variables
-scoreboard players set #Physics.Global.DefaultGravity Physics 490
-scoreboard players set #Physics.Global.LinearDamping Physics 98
-scoreboard players set #Physics.Global.AngularDamping Physics 98
 scoreboard players set #Physics.Global.PlayerAttackForceMagnitude Physics 300
-scoreboard players set #Physics.Global.MinPenetrationDepth Physics -50
 
 # Set value constants
 scoreboard players set #Physics.Constants.-1000 Physics -1000
@@ -185,7 +181,12 @@ scoreboard players set #Physics.HitboxType Physics 1
 scoreboard players set #Physics.InteractionCount Physics 0
 scoreboard players set #Physics.MinDistance Physics 2147483647
 scoreboard players set #Physics.LookingAtID Physics 0
+
 scoreboard players set #Physics.Settings.ReactToBlockUpdates Physics 1
+scoreboard players set #Physics.Settings.DefaultGravity Physics 490
+scoreboard players set #Physics.Settings.LinearDamping Physics 98
+scoreboard players set #Physics.Settings.AngularDamping Physics 98
+scoreboard players set #Physics.Settings.MinPenetrationDepth Physics -50
 
 # Setup starting values for data storages
 data modify storage physics:temp data.HitboxPos set value [0d,0d,0d]

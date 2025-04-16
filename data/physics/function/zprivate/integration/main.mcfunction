@@ -13,16 +13,16 @@ scoreboard players operation @s Physics.Object.AccumulatedForce.y /= #Physics.Co
 scoreboard players operation @s Physics.Object.AccumulatedForce.z /= #Physics.Constants.100000 Physics
 
 scoreboard players operation @s Physics.Object.Velocity.x += @s Physics.Object.AccumulatedForce.x
-scoreboard players operation @s Physics.Object.Velocity.x *= #Physics.Global.LinearDamping Physics
+scoreboard players operation @s Physics.Object.Velocity.x *= #Physics.Settings.LinearDamping Physics
 scoreboard players operation @s Physics.Object.Velocity.x /= #Physics.Constants.100 Physics
 
 scoreboard players operation @s Physics.Object.Velocity.y += @s Physics.Object.AccumulatedForce.y
 scoreboard players operation @s Physics.Object.Velocity.y -= @s Physics.Object.Gravity
-scoreboard players operation @s Physics.Object.Velocity.y *= #Physics.Global.LinearDamping Physics
+scoreboard players operation @s Physics.Object.Velocity.y *= #Physics.Settings.LinearDamping Physics
 scoreboard players operation @s Physics.Object.Velocity.y /= #Physics.Constants.100 Physics
 
 scoreboard players operation @s Physics.Object.Velocity.z += @s Physics.Object.AccumulatedForce.z
-scoreboard players operation @s Physics.Object.Velocity.z *= #Physics.Global.LinearDamping Physics
+scoreboard players operation @s Physics.Object.Velocity.z *= #Physics.Settings.LinearDamping Physics
 scoreboard players operation @s Physics.Object.Velocity.z /= #Physics.Constants.100 Physics
 
 execute if score @s Physics.Object.Velocity.x matches ..-1 run scoreboard players add @s Physics.Object.Velocity.x 1
@@ -73,11 +73,11 @@ execute store result storage physics:temp data.Integration.Pos[2] double 0.001 r
     scoreboard players operation @s Physics.Object.AngularVelocity.z += #Physics.Maths.AngularAcceleration.z Physics
 
     # Apply angular damping
-    scoreboard players operation @s Physics.Object.AngularVelocity.x *= #Physics.Global.AngularDamping Physics
+    scoreboard players operation @s Physics.Object.AngularVelocity.x *= #Physics.Settings.AngularDamping Physics
     scoreboard players operation @s Physics.Object.AngularVelocity.x /= #Physics.Constants.100 Physics
-    scoreboard players operation @s Physics.Object.AngularVelocity.y *= #Physics.Global.AngularDamping Physics
+    scoreboard players operation @s Physics.Object.AngularVelocity.y *= #Physics.Settings.AngularDamping Physics
     scoreboard players operation @s Physics.Object.AngularVelocity.y /= #Physics.Constants.100 Physics
-    scoreboard players operation @s Physics.Object.AngularVelocity.z *= #Physics.Global.AngularDamping Physics
+    scoreboard players operation @s Physics.Object.AngularVelocity.z *= #Physics.Settings.AngularDamping Physics
     scoreboard players operation @s Physics.Object.AngularVelocity.z /= #Physics.Constants.100 Physics
 
     # Correct for rounding

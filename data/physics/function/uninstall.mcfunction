@@ -151,6 +151,10 @@ scoreboard objectives remove Physics.Hitbox.Gametime
 scoreboard objectives remove Physics.Player.LookingAtID
 scoreboard objectives remove Physics.Player.ID
 
+# Reset scores
+# (Important): It resets all Physics.Hitbox.Gametime scores to avoid having unloaded interaction entities be killed after uninstalling, which would permanently offset the InteractionCount score and break things.
+scoreboard players reset * Physics.Hitbox.Gametime
+
 # Remove data storages
 data remove storage physics:debug data
 data remove storage physics:temp data

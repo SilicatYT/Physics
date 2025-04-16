@@ -91,7 +91,7 @@
 
     # Check if the Penetration Depth is within the threshold (Can be slightly negative)
     # (Important): A negative PenetrationDepth accounts for the "Is not inside" case too, because it's only multiplied by -1 if it's not inside the block.
-    execute if score #Physics.Maths.SquareRoot.Output Physics < #Physics.Global.MinPenetrationDepth Physics run return 0
+    execute if score #Physics.Maths.SquareRoot.Output Physics < #Physics.Settings.MinPenetrationDepth Physics run return 0
 
     # Check if the contact is still relevant (Part 2)
     $execute if score #Physics.DotProduct Physics matches ..900000 run data modify storage physics:zprivate ContactGroups[-1].Objects[-1].Blocks[-1].Hitboxes[-1].Contacts append value {FeatureB:$(Edge)b}

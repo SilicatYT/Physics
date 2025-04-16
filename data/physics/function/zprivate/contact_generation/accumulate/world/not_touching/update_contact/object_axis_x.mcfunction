@@ -22,7 +22,7 @@ scoreboard players operation #Physics.Projection.BlockCenter.ObjectAxis.x Physic
     execute if score #Physics.Contact.FeatureA Physics matches 11 run scoreboard players operation #Physics.PenetrationDepth Physics *= #Physics.Constants.-1 Physics
 
     # Check if the Penetration Depth is within the threshold (Can be slightly negative)
-    execute if score #Physics.PenetrationDepth Physics < #Physics.Global.MinPenetrationDepth Physics run return 0
+    execute if score #Physics.PenetrationDepth Physics < #Physics.Settings.MinPenetrationDepth Physics run return 0
 
 # Append the contact
 $data modify storage physics:zprivate ContactGroups[-1].Objects[-1].Blocks[-1].Hitboxes[-1].Contacts append value {FeatureB:$(FeatureB)b}
