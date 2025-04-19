@@ -6,7 +6,6 @@ execute store result score @s Physics.Object.Pos.x run data get storage physics:
 execute store result score @s Physics.Object.Pos.y run data get storage physics:temp data.Object.Pos[1] 1000
 execute store result score @s Physics.Object.Pos.z run data get storage physics:temp data.Object.Pos[2] 1000
 scoreboard players set @s Physics.Object.InverseMass 100000
-scoreboard players operation @s Physics.Object.Gravity = #Physics.Settings.DefaultGravity Physics
 scoreboard players set @s Physics.Object.Dimension.x 1000
 scoreboard players set @s Physics.Object.Dimension.y 1000
 scoreboard players set @s Physics.Object.Dimension.z 1000

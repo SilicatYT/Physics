@@ -100,5 +100,6 @@
         execute if score #Physics.Settings.ReactToBlockUpdates Physics matches 0 run function physics:zprivate/contact_generation/accumulate/world/not_touching/main_no_block_updates
 
         # Start next loop
+        execute if score #Physics.BlockCount Physics matches 10 run return 0
         scoreboard players remove #Physics.BlockCount Physics 10
         function physics:zprivate/contact_generation/accumulate/world/not_touching/main_loop

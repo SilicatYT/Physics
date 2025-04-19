@@ -16,7 +16,6 @@ execute if score #Physics.Touching Physics matches 0 run return 0
 # IT SHOULD ONLY RUN THE OPERATIONS ON "data.Block" IF A HITBOX PRIOR TO THOSE CHECKS HAS PASSED THE SAT, BECAUSE ONLY THEN IS THE STORAGE SET.
 
 
-
 # Carry over the previous tick's contacts with that (entire) block if it's not in contact
 # (Important): Mark those contacts as invalid by removing all data except the feature pair.
 #execute if score #Physics.Touching Physics matches 0 run return run tellraw @p {nbt:"data.Block",storage:"physics:temp"}

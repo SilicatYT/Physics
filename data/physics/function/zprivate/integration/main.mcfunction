@@ -17,7 +17,8 @@ scoreboard players operation @s Physics.Object.Velocity.x *= #Physics.Settings.L
 scoreboard players operation @s Physics.Object.Velocity.x /= #Physics.Constants.100 Physics
 
 scoreboard players operation @s Physics.Object.Velocity.y += @s Physics.Object.AccumulatedForce.y
-scoreboard players operation @s Physics.Object.Velocity.y -= @s Physics.Object.Gravity
+execute if score @s Physics.Object.Gravity matches -2147483648..2147483647 run scoreboard players operation @s Physics.Object.Velocity.y -= @s Physics.Object.Gravity
+execute unless score @s Physics.Object.Gravity matches -2147483648..2147483647 run scoreboard players operation @s Physics.Object.Velocity.y -= #Physics.Settings.DefaultGravity Physics
 scoreboard players operation @s Physics.Object.Velocity.y *= #Physics.Settings.LinearDamping Physics
 scoreboard players operation @s Physics.Object.Velocity.y /= #Physics.Constants.100 Physics
 

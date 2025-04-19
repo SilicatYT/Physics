@@ -138,5 +138,6 @@
         execute unless data storage physics:zprivate ContactGroups[-1].Objects[-1].Blocks[-1].Hitboxes[0] run data remove storage physics:zprivate ContactGroups[-1].Objects[-1].Blocks[-1]
 
         # Start next loop
+        execute if score #Physics.BlockCount Physics matches 10 run return 0
         scoreboard players remove #Physics.BlockCount Physics 10
         function physics:zprivate/contact_generation/accumulate/world/not_touching/main_loop
