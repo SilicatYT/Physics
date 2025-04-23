@@ -43,7 +43,7 @@ execute if score #Physics.IsInside Physics matches 0 store result storage physic
     $execute store result storage physics:temp data.NewContact.ContactPoint[0] int 1 run scoreboard players operation #Physics.ContactPoint.x Physics = @s Physics.Object.CornerPosGlobal.$(FeatureA).x
     $execute store result storage physics:temp data.NewContact.ContactPoint[1] int 1 run scoreboard players operation #Physics.ContactPoint.y Physics = @s Physics.Object.CornerPosGlobal.$(FeatureA).y
     execute if score #Physics.Contact.FeatureB Physics matches 14 store result storage physics:temp data.NewContact.ContactPoint[2] int 1 run scoreboard players get #Physics.Projection.Block.WorldAxis.z.Min Physics
-    execute if score #Physics.Contact.FeatureB Physics matches 15 store success storage physics:temp data.NewContact.ContactNormal[2] int 1000 store result storage physics:temp data.NewContact.ContactPoint[1] int 1 run scoreboard players get #Physics.Projection.Block.WorldAxis.z.Max Physics
+    execute if score #Physics.Contact.FeatureB Physics matches 15 store success storage physics:temp data.NewContact.ContactNormal[2] int 1000 store result storage physics:temp data.NewContact.ContactPoint[2] int 1 run scoreboard players get #Physics.Projection.Block.WorldAxis.z.Max Physics
 
     # Update the Separating Velocity
         # Calculate relative contact point
