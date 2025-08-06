@@ -3,7 +3,7 @@
 # Step 1: Calculate t = (boundary_min_z - origin_z) / direction_z
 scoreboard players set #Physics.Maths.Value1 Physics 500000
 scoreboard players operation #Physics.Maths.Value1 Physics -= #Physics.RayPosLocalScaled.z Physics
-execute store result score #Physics.RayIntersection.t5 Physics run scoreboard players operation #Physics.Maths.Value1 Physics /= #Physics.RayDirectionLocal.z Physics
+execute store result score #Physics.RayIntersection.t Physics run scoreboard players operation #Physics.Maths.Value1 Physics /= #Physics.RayDirectionLocal.z Physics
 
 # Step 2: If t is too large, stop. This means no collision with this face is happening.
 execute if score #Physics.Maths.Value1 Physics > #Physics.EntityInteractionRange Physics run return 0
@@ -15,9 +15,13 @@ execute if score #Physics.Maths.Value1 Physics > #Physics.EntityInteractionRange
     execute unless score #Physics.Maths.Value1 Physics matches -500000..500000 run return 0
 
     # y
-    scoreboard players operation #Physics.Maths.Value1 Physics = #Physics.RayIntersection.t5 Physics
+    scoreboard players operation #Physics.Maths.Value1 Physics = #Physics.RayIntersection.t Physics
     scoreboard players operation #Physics.Maths.Value1 Physics *= #Physics.RayDirectionLocal.y Physics
     scoreboard players operation #Physics.Maths.Value1 Physics += #Physics.RayPosLocalScaled.y Physics
 
-# Update the earliest intersection for the current object
-execute if score #Physics.Maths.Value1 Physics matches -500000..500000 if score #Physics.RayIntersection.t5 Physics < #Physics.MinDistance Physics run scoreboard players operation #Physics.MinDistance Physics = #Physics.RayIntersection.t5 Physics
+# Update the earliest intersection for any object
+execute unless score #Physics.Maths.Value1 Physics matches -500000..500000 run return 0
+execute unless score #Physics.RayIntersection.t Physics < #Physics.MinDistance Physics run return 0
+scoreboard players operation #Physics.MinDistance Physics = #Physics.RayIntersection.t Physics
+scoreboard players operation #Physics.LookingAtID Physics = @s Physics.Object.ID
+return 1

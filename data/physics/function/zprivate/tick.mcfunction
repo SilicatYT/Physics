@@ -6,7 +6,7 @@ execute if score #Physics.Debug.ShowAxes Physics matches 1 as @e[type=minecraft:
 execute as @a unless score @s Physics.Player.ID matches 1.. run function physics:zprivate/new_player
 
 # Line of sight: Spawn or teleport punchable interaction hitboxes
-    # Spawn hitboxes
+    # Spawn or teleport hitboxes
     execute store result score #Physics.Gametime Physics run time query gametime
     scoreboard players set #Physics.SuccessfulTeleports Physics 0
     execute as @a run function physics:zprivate/line_of_sight/main

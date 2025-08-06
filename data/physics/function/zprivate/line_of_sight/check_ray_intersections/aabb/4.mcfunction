@@ -5,7 +5,7 @@ scoreboard players operation #Physics.Maths.Value1 Physics = @s Physics.Object.B
 scoreboard players operation #Physics.Maths.Value1 Physics -= @s Physics.Object.Pos.z
 scoreboard players operation #Physics.Maths.Value1 Physics *= #Physics.Constants.1000 Physics
 scoreboard players operation #Physics.Maths.Value1 Physics -= #Physics.RayPosRelative.z Physics
-execute store result score #Physics.RayIntersection.t4 Physics run scoreboard players operation #Physics.Maths.Value1 Physics /= #Physics.RayDirectionOriginal.z Physics
+execute store result score #Physics.RayIntersection.t Physics run scoreboard players operation #Physics.Maths.Value1 Physics /= #Physics.RayDirectionOriginal.z Physics
 
 # Step 2: If t is too large, stop. This means no collision with this face is happening.
 execute if score #Physics.Maths.Value1 Physics > #Physics.EntityInteractionRange Physics run return 0
@@ -26,7 +26,7 @@ execute if score #Physics.Maths.Value1 Physics > #Physics.EntityInteractionRange
     execute if score #Physics.Maths.Value1 Physics < #Physics.RelativeAABB.x.Min Physics run return 0
 
     # y
-    scoreboard players operation #Physics.Maths.Value1 Physics = #Physics.RayIntersection.t4 Physics
+    scoreboard players operation #Physics.Maths.Value1 Physics = #Physics.RayIntersection.t Physics
     scoreboard players operation #Physics.Maths.Value1 Physics *= #Physics.RayDirectionOriginal.y Physics
     scoreboard players operation #Physics.Maths.Value1 Physics += #Physics.RayPosRelative.y Physics
 
@@ -38,6 +38,4 @@ execute if score #Physics.Maths.Value1 Physics > #Physics.EntityInteractionRange
     scoreboard players operation #Physics.RelativeAABB.y.Min Physics = @s Physics.Object.BoundingBoxGlobalMin.y
     scoreboard players operation #Physics.RelativeAABB.y.Min Physics -= @s Physics.Object.Pos.y
     scoreboard players operation #Physics.RelativeAABB.y.Min Physics *= #Physics.Constants.1000 Physics
-    execute if score #Physics.Maths.Value1 Physics < #Physics.RelativeAABB.y.Min Physics run return 0
-
-return 1
+    execute unless score #Physics.Maths.Value1 Physics < #Physics.RelativeAABB.y.Min Physics if score #Physics.RayIntersection.t Physics < #Physics.MinDistance Physics run return 1

@@ -69,32 +69,34 @@ scoreboard players operation #Physics.RayDirectionLocal.z Physics /= @s Physics.
 
 # Check if / where the ray hits the object
 # (Important): The local position is scaled up by 1,000x (So 1,000,000x in total) to provide accuracy when calculating t.
-# (Important): The 2nd check for each face explicitly allows for punching the object while facing the backside of a surface.
+# (Important): The "exiting faces" checks explicitly allow for punching the object while facing the backside of a surface.
+# (Important): If the 1st check for any face (entering the object) succeeds, all other checks can be ignored (there will at most be a single more intersection that goes out of the object which would be farther away). If the 2nd check for any face (exiting the object) succeeds, all remaining "exiting" checks can be ignored too.
 scoreboard players operation #Physics.RayPosLocalScaled.x Physics *= #Physics.Constants.1000 Physics
 scoreboard players operation #Physics.RayPosLocalScaled.y Physics *= #Physics.Constants.1000 Physics
 scoreboard players operation #Physics.RayPosLocalScaled.z Physics *= #Physics.Constants.1000 Physics
 
-scoreboard players operation #Physics.MinDistancePrev Physics = #Physics.MinDistance Physics
+    # Entering faces
+        # x axis
+        execute if score #Physics.RayPosLocal.x Physics matches ..-500 if score #Physics.RayDirectionLocal.x Physics matches 0.. if function physics:zprivate/line_of_sight/check_ray_intersections/precise/0 run return 0
+        execute if score #Physics.RayPosLocal.x Physics matches 500.. if score #Physics.RayDirectionLocal.x Physics matches ..-1 if function physics:zprivate/line_of_sight/check_ray_intersections/precise/1 run return 0
 
-    # x axis
-    execute if score #Physics.RayPosLocal.x Physics matches ..-500 if score #Physics.RayDirectionLocal.x Physics matches 0.. run function physics:zprivate/line_of_sight/check_ray_intersections/precise/0
-    execute if score #Physics.RayPosLocal.x Physics matches -499.. if score #Physics.RayDirectionLocal.x Physics matches ..-1 run function physics:zprivate/line_of_sight/check_ray_intersections/precise/0
+        # y axis
+        execute if score #Physics.RayPosLocal.y Physics matches ..-500 if score #Physics.RayDirectionLocal.y Physics matches 0.. if function physics:zprivate/line_of_sight/check_ray_intersections/precise/2 run return 0
+        execute if score #Physics.RayPosLocal.y Physics matches 500.. if score #Physics.RayDirectionLocal.y Physics matches ..-1 if function physics:zprivate/line_of_sight/check_ray_intersections/precise/3 run return 0
 
-    execute if score #Physics.RayPosLocal.x Physics matches 500.. if score #Physics.RayDirectionLocal.x Physics matches ..-1 run function physics:zprivate/line_of_sight/check_ray_intersections/precise/1
-    execute if score #Physics.RayPosLocal.x Physics matches ..499 if score #Physics.RayDirectionLocal.x Physics matches 0.. run function physics:zprivate/line_of_sight/check_ray_intersections/precise/1
+        # z axis
+        execute if score #Physics.RayPosLocal.z Physics matches ..-500 if score #Physics.RayDirectionLocal.z Physics matches 0.. if function physics:zprivate/line_of_sight/check_ray_intersections/precise/4 run return 0
+        execute if score #Physics.RayPosLocal.z Physics matches 500.. if score #Physics.RayDirectionLocal.z Physics matches ..-1 if function physics:zprivate/line_of_sight/check_ray_intersections/precise/5 run return 0
 
-    # y axis
-    execute if score #Physics.RayPosLocal.y Physics matches ..-500 if score #Physics.RayDirectionLocal.y Physics matches 0.. run function physics:zprivate/line_of_sight/check_ray_intersections/precise/2
-    execute if score #Physics.RayPosLocal.y Physics matches -499.. if score #Physics.RayDirectionLocal.y Physics matches ..-1 run function physics:zprivate/line_of_sight/check_ray_intersections/precise/2
+    # Exiting faces
+        # x axis
+        execute if score #Physics.RayPosLocal.x Physics matches -499.. if score #Physics.RayDirectionLocal.x Physics matches ..-1 if function physics:zprivate/line_of_sight/check_ray_intersections/precise/0 run return 0
+        execute if score #Physics.RayPosLocal.x Physics matches ..499 if score #Physics.RayDirectionLocal.x Physics matches 0.. if function physics:zprivate/line_of_sight/check_ray_intersections/precise/1 run return 0
 
-    execute if score #Physics.RayPosLocal.y Physics matches 500.. if score #Physics.RayDirectionLocal.y Physics matches ..-1 run function physics:zprivate/line_of_sight/check_ray_intersections/precise/3
-    execute if score #Physics.RayPosLocal.y Physics matches ..499 if score #Physics.RayDirectionLocal.y Physics matches 0.. run function physics:zprivate/line_of_sight/check_ray_intersections/precise/3
+        # y axis
+        execute if score #Physics.RayPosLocal.y Physics matches -499.. if score #Physics.RayDirectionLocal.y Physics matches ..-1 if function physics:zprivate/line_of_sight/check_ray_intersections/precise/2 run return 0
+        execute if score #Physics.RayPosLocal.y Physics matches ..499 if score #Physics.RayDirectionLocal.y Physics matches 0.. if function physics:zprivate/line_of_sight/check_ray_intersections/precise/3 run return 0
 
-    # z axis
-    execute if score #Physics.RayPosLocal.z Physics matches ..-500 if score #Physics.RayDirectionLocal.z Physics matches 0.. run function physics:zprivate/line_of_sight/check_ray_intersections/precise/4
-    execute if score #Physics.RayPosLocal.z Physics matches -499.. if score #Physics.RayDirectionLocal.z Physics matches ..-1 run function physics:zprivate/line_of_sight/check_ray_intersections/precise/4
-
-    execute if score #Physics.RayPosLocal.z Physics matches 500.. if score #Physics.RayDirectionLocal.z Physics matches ..-1 run function physics:zprivate/line_of_sight/check_ray_intersections/precise/5
-    execute if score #Physics.RayPosLocal.z Physics matches ..499 if score #Physics.RayDirectionLocal.z Physics matches 0.. run function physics:zprivate/line_of_sight/check_ray_intersections/precise/5
-
-execute unless score #Physics.MinDistance Physics = #Physics.MinDistancePrev Physics run scoreboard players operation #Physics.LookingAtID Physics = @s Physics.Object.ID
+        # z axis
+        execute if score #Physics.RayPosLocal.z Physics matches -499.. if score #Physics.RayDirectionLocal.z Physics matches ..-1 if function physics:zprivate/line_of_sight/check_ray_intersections/precise/4 run return 0
+        execute if score #Physics.RayPosLocal.z Physics matches ..499 if score #Physics.RayDirectionLocal.z Physics matches 0.. run function physics:zprivate/line_of_sight/check_ray_intersections/precise/5

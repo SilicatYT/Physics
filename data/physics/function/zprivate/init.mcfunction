@@ -175,7 +175,7 @@ scoreboard players set #Physics.Constants.7775 Physics 7775
 scoreboard players set #Physics.Constants.10000 Physics 10000
 scoreboard players set #Physics.Constants.100000 Physics 100000
 
-# Set required initial scores (including settings)
+# Set required initial scores
 scoreboard players set #Physics.MinSeparatingVelocityTotal Physics 0
 scoreboard players set #Physics.MaxPenetrationDepthTotal Physics 0
 scoreboard players set #Physics.HitboxID Physics 1
