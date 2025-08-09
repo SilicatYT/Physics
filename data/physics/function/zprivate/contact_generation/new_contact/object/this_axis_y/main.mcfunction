@@ -52,22 +52,23 @@ scoreboard players operation #Physics.DeepestProjection Physics = #Physics.Proje
             execute store result score #Physics.PointVelocity.x Physics run scoreboard players operation #Physics.ContactPoint.y Physics -= #Physics.ThisObject Physics.Object.Pos.y
             execute store result score #Physics.PointVelocity.y Physics run scoreboard players operation #Physics.ContactPoint.z Physics -= #Physics.ThisObject Physics.Object.Pos.z
 
-            # Calculate cross product between relative contact point and angular velocity
+            # Calculate cross product between angular velocity and relative contact point
             # (Important): I overwrite the contact point scores here, as I don't need those values (relative to this object) anymore.
+            # (Important): I messed up the order (relativeContactPoint x angularVelocity instead of angularVelocity x relativeContactPoint). To accomodate for that without spending hours rewriting it, I divide by -1000 instead of 1000.
             scoreboard players operation #Physics.PointVelocity.x Physics *= #Physics.ThisObject Physics.Object.AngularVelocity.z
             scoreboard players operation #Physics.ContactPoint.z Physics *= #Physics.ThisObject Physics.Object.AngularVelocity.y
             scoreboard players operation #Physics.PointVelocity.x Physics -= #Physics.ContactPoint.z Physics
-            scoreboard players operation #Physics.PointVelocity.x Physics /= #Physics.Constants.1000 Physics
+            scoreboard players operation #Physics.PointVelocity.x Physics /= #Physics.Constants.-1000 Physics
 
             scoreboard players operation #Physics.PointVelocity.y Physics *= #Physics.ThisObject Physics.Object.AngularVelocity.x
             scoreboard players operation #Physics.ContactPoint.x Physics *= #Physics.ThisObject Physics.Object.AngularVelocity.z
             scoreboard players operation #Physics.PointVelocity.y Physics -= #Physics.ContactPoint.x Physics
-            scoreboard players operation #Physics.PointVelocity.y Physics /= #Physics.Constants.1000 Physics
+            scoreboard players operation #Physics.PointVelocity.y Physics /= #Physics.Constants.-1000 Physics
 
             scoreboard players operation #Physics.PointVelocity.z Physics *= #Physics.ThisObject Physics.Object.AngularVelocity.y
             scoreboard players operation #Physics.ContactPoint.y Physics *= #Physics.ThisObject Physics.Object.AngularVelocity.x
             scoreboard players operation #Physics.PointVelocity.z Physics -= #Physics.ContactPoint.y Physics
-            scoreboard players operation #Physics.PointVelocity.z Physics /= #Physics.Constants.1000 Physics
+            scoreboard players operation #Physics.PointVelocity.z Physics /= #Physics.Constants.-1000 Physics
 
             # Add the linear velocity to obtain the relative velocity of the contact point
             scoreboard players operation #Physics.PointVelocity.x Physics += #Physics.ThisObject Physics.Object.Velocity.x
@@ -89,22 +90,23 @@ scoreboard players operation #Physics.DeepestProjection Physics = #Physics.Proje
             execute store result score #Physics.SeparatingVelocity.x Physics run scoreboard players operation #Physics.ContactPointCopy.y Physics -= @s Physics.Object.Pos.y
             execute store result score #Physics.SeparatingVelocity.y Physics run scoreboard players operation #Physics.ContactPointCopy.z Physics -= @s Physics.Object.Pos.z
 
-            # Calculate cross product between relative contact point and angular velocity
+            # Calculate cross product between angular velocity and relative contact point
             # (Important): I overwrite the contact point scores here, as I don't need those values (relative to this object) anymore.
+            # (Important): I messed up the order (relativeContactPoint x angularVelocity instead of angularVelocity x relativeContactPoint). To accomodate for that without spending hours rewriting it, I divide by -1000 instead of 1000.
             scoreboard players operation #Physics.SeparatingVelocity.x Physics *= @s Physics.Object.AngularVelocity.z
             scoreboard players operation #Physics.ContactPointCopy.z Physics *= @s Physics.Object.AngularVelocity.y
             scoreboard players operation #Physics.SeparatingVelocity.x Physics -= #Physics.ContactPointCopy.z Physics
-            scoreboard players operation #Physics.SeparatingVelocity.x Physics /= #Physics.Constants.1000 Physics
+            scoreboard players operation #Physics.SeparatingVelocity.x Physics /= #Physics.Constants.-1000 Physics
 
             scoreboard players operation #Physics.SeparatingVelocity.y Physics *= @s Physics.Object.AngularVelocity.x
             scoreboard players operation #Physics.ContactPointCopy.x Physics *= @s Physics.Object.AngularVelocity.z
             scoreboard players operation #Physics.SeparatingVelocity.y Physics -= #Physics.ContactPointCopy.x Physics
-            scoreboard players operation #Physics.SeparatingVelocity.y Physics /= #Physics.Constants.1000 Physics
+            scoreboard players operation #Physics.SeparatingVelocity.y Physics /= #Physics.Constants.-1000 Physics
 
             scoreboard players operation #Physics.SeparatingVelocity.z Physics *= @s Physics.Object.AngularVelocity.y
             scoreboard players operation #Physics.ContactPointCopy.y Physics *= @s Physics.Object.AngularVelocity.x
             scoreboard players operation #Physics.SeparatingVelocity.z Physics -= #Physics.ContactPointCopy.y Physics
-            scoreboard players operation #Physics.SeparatingVelocity.z Physics /= #Physics.Constants.1000 Physics
+            scoreboard players operation #Physics.SeparatingVelocity.z Physics /= #Physics.Constants.-1000 Physics
 
             # Add the linear velocity to obtain the relative velocity of the contact point
             scoreboard players operation #Physics.SeparatingVelocity.x Physics += @s Physics.Object.Velocity.x

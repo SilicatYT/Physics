@@ -50,11 +50,12 @@ execute if score #Physics.IsInside Physics matches 0 store result storage physic
         scoreboard players operation #Physics.ContactPoint.x Physics -= @s Physics.Object.Pos.x
         scoreboard players operation #Physics.ContactPoint.y Physics -= @s Physics.Object.Pos.y
 
-        # Calculate cross product between relative contact point and angular velocity
+        # Calculate cross product between angular velocity and relative contact point
+        # (Important): I messed up the order (relativeContactPoint x angularVelocity instead of angularVelocity x relativeContactPoint). To accomodate for that without spending hours rewriting it, I divide by -1000 instead of 1000.
         scoreboard players operation #Physics.ContactPoint.x Physics *= @s Physics.Object.AngularVelocity.y
         scoreboard players operation #Physics.ContactPoint.y Physics *= @s Physics.Object.AngularVelocity.x
         scoreboard players operation #Physics.ContactPoint.x Physics -= #Physics.ContactPoint.y Physics
-        scoreboard players operation #Physics.ContactPoint.x Physics /= #Physics.Constants.1000 Physics
+        scoreboard players operation #Physics.ContactPoint.x Physics /= #Physics.Constants.-1000 Physics
 
         # Add the linear velocity to obtain the relative velocity of the contact point
         scoreboard players operation #Physics.ContactPoint.x Physics += @s Physics.Object.Velocity.z
