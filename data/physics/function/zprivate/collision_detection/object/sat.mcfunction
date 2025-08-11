@@ -1,7 +1,8 @@
 # (VERY IMPORTANT): Apparently, blindly using the axis of minimum overlap is not correct, and could lead to point-face contacts being detected where not a single corner intersects. After implementing resolution, check how much of a problem this is. To fix, either verify the proposed contact somehow, or use Ian Millington's method that doesn't use the axis of min overlap but instead checks every combination. Whatever is faster.
 
-
-
+# (VERY IMPORTANT): When I implement object-object contact accumulation, I need to remember that not all projections are properly scaled (some are still 1000x). But in check_corner_min (for point-face), it scales two projections instead of 1 (like in check_corner_max). To avoid complexity, it's probably best to just scale everything regardless. How is it done in edge-edge? Is everything scaled there, or just 1-2? Maybe I could scale both in check_corner_max too (point-face) and then use a score distinction to... argh, but that would be a function call, which is more expensive than just scaling it.
+# => Scale all corner projections directly in *this* function, instead of only scaling the min/max.
+# (Note to the above): Currently, check_corner_min is broken because I *don't* scale two corners, only one. "If corner2 is the min, corner5 is the one I'm looking for. Run function with corner 5 as a macro", but corner5 isn't scaled down. But because I'll need to change the stuff anyway, I chose not to fix it for now.
 
 
 
