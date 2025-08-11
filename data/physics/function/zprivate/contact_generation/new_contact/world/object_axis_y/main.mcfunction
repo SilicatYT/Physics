@@ -80,6 +80,7 @@ execute if score #Physics.FeatureA Physics matches 13 run scoreboard players ope
 
         # Calculate the relative velocity's dot product with the contact normal to get the separation velocity (single number, not a vector) and store it
         # (Important): Because the contact normal scores (Physics.Object.Axis.?.?) are not adjusted to face away from the face, I may multiply the final result with -1.
+        # (Important): I mixed up ObjectA and ObjectB. With two objects, you take one object's pointVelocity and subtract it from the other to get the relativeVelocity (contactVelocity). The one that's subtracted is the object whose feature is the face, so I flip the sign if FeatureA is 13 instead of 12.
         scoreboard players operation #Physics.PointVelocity.x Physics *= @s Physics.Object.Axis.y.x
         scoreboard players operation #Physics.PointVelocity.y Physics *= @s Physics.Object.Axis.y.y
         scoreboard players operation #Physics.PointVelocity.z Physics *= @s Physics.Object.Axis.y.z
@@ -87,7 +88,7 @@ execute if score #Physics.FeatureA Physics matches 13 run scoreboard players ope
         scoreboard players operation #Physics.PointVelocity.x Physics += #Physics.PointVelocity.y Physics
         scoreboard players operation #Physics.PointVelocity.x Physics += #Physics.PointVelocity.z Physics
 
-        execute if score #Physics.FeatureA Physics matches 12 run scoreboard players operation #Physics.PointVelocity.x Physics *= #Physics.Constants.-1 Physics
+        execute if score #Physics.FeatureA Physics matches 13 run scoreboard players operation #Physics.PointVelocity.x Physics *= #Physics.Constants.-1 Physics
         execute store result storage physics:temp data.NewContact.SeparatingVelocity short 1 run scoreboard players operation #Physics.PointVelocity.x Physics /= #Physics.Constants.1000 Physics
 
 # Process the separating velocity (Keep track of the most negative separating velocity for the current ObjectA, as well as global for all ObjectA's)

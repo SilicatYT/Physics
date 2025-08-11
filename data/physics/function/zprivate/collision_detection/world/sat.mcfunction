@@ -1,3 +1,20 @@
+# (VERY IMPORTANT): Apparently, blindly using the axis of minimum overlap is not correct, and could lead to point-face contacts being detected where not a single corner intersects. After implementing resolution, check how much of a problem this is. To fix, either verify the proposed contact somehow, or use Ian Millington's method that doesn't use the axis of min overlap but instead checks every combination. Whatever is faster.
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
 # Note: All axis-vectors need to be normalized, including the cross product axes
 # Note: Precalculation - The projection of the object onto the world-geometry block's 3 axes is the same as the object's min and max values for those axes, so the min and max of the bounding box.
 # Note: Precalculation - The projection of the object onto its own 3 axes is -(dimension/2) for the min, and (dimension/2) for the max. Then just add the object center's projection onto the same axis to those min and max values.

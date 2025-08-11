@@ -1,3 +1,23 @@
+# (VERY IMPORTANT): Apparently, blindly using the axis of minimum overlap is not correct, and could lead to point-face contacts being detected where not a single corner intersects. After implementing resolution, check how much of a problem this is. To fix, either verify the proposed contact somehow, or use Ian Millington's method that doesn't use the axis of min overlap but instead checks every combination. Whatever is faster.
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
 # Perform the Separating Axes Theorem to get whether there's a collision, the depth of the collision and what kind it is (Edge-Edge, Point-Face)
     # Check the different axes
     # (Important): This function is executed as ObjectB aka "Other"
@@ -2067,12 +2087,12 @@ execute store result storage physics:zprivate ContactGroups[-1].Objects[-1].B in
     execute if score #Physics.MinOverlap Physics > #Physics.Overlap.CrossProductAxis.zz Physics unless score #Physics.Overlap.CrossProductAxis.zz Physics matches 0 run return run function physics:zprivate/contact_generation/new_contact/object/cross_product_axis_zz/main
 
 # Get the involved features of both objects
+execute if score #Physics.MinOverlap Physics = #Physics.Overlap.ObjectAxis.y Physics run return run function physics:zprivate/contact_generation/new_contact/object/this_axis_y/main
 execute if score #Physics.MinOverlap Physics = #Physics.Overlap.ObjectAxis.x Physics run return run function physics:zprivate/contact_generation/new_contact/object/this_axis_x/main
-execute if score #Physics.MinOverlap Physics = #Physics.Overlap.ObjectAxis.y Physics run return run function physics:zprivate/contact_generation/new_contact/object/this_axis_x/main
-execute if score #Physics.MinOverlap Physics = #Physics.Overlap.ObjectAxis.z Physics run return run function physics:zprivate/contact_generation/new_contact/object/this_axis_x/main
+execute if score #Physics.MinOverlap Physics = #Physics.Overlap.ObjectAxis.z Physics run return run function physics:zprivate/contact_generation/new_contact/object/this_axis_z/main
+execute if score #Physics.MinOverlap Physics = #Physics.Overlap.OtherObjectAxis.y Physics run return run function physics:zprivate/contact_generation/new_contact/object/other_axis_y/main
 execute if score #Physics.MinOverlap Physics = #Physics.Overlap.OtherObjectAxis.x Physics run return run function physics:zprivate/contact_generation/new_contact/object/other_axis_x/main
-execute if score #Physics.MinOverlap Physics = #Physics.Overlap.OtherObjectAxis.y Physics run return run function physics:zprivate/contact_generation/new_contact/object/other_axis_x/main
-execute if score #Physics.MinOverlap Physics = #Physics.Overlap.OtherObjectAxis.z Physics run return run function physics:zprivate/contact_generation/new_contact/object/other_axis_x/main
+execute if score #Physics.MinOverlap Physics = #Physics.Overlap.OtherObjectAxis.z Physics run return run function physics:zprivate/contact_generation/new_contact/object/other_axis_z/main
 execute if score #Physics.MinOverlap Physics = #Physics.Overlap.CrossProductAxis.xx Physics run return run function physics:zprivate/contact_generation/new_contact/object/cross_product_axis_xx/main
 execute if score #Physics.MinOverlap Physics = #Physics.Overlap.CrossProductAxis.xy Physics run return run function physics:zprivate/contact_generation/new_contact/object/cross_product_axis_xy/main
 execute if score #Physics.MinOverlap Physics = #Physics.Overlap.CrossProductAxis.xz Physics run return run function physics:zprivate/contact_generation/new_contact/object/cross_product_axis_xz/main
