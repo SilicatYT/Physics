@@ -4,16 +4,16 @@
         data modify storage physics:temp data.Hitbox set from storage physics:temp data.Blocks[-1].Hitboxes[0]
 
         # Change Min and Max
-        execute store result storage physics:temp data.Hitbox.Bottom[0] int 1 run scoreboard players remove #Physics.Projection.Block.WorldAxis.x.Min Physics 500
-        execute store result storage physics:temp data.Hitbox.Top[0] int 1 run scoreboard players add #Physics.Projection.Block.WorldAxis.x.Max Physics 500
-        execute store result storage physics:temp data.Hitbox.Bottom[1] int 1 run scoreboard players remove #Physics.Projection.Block.WorldAxis.y.Min Physics 500
-        execute store result storage physics:temp data.Hitbox.Top[1] int 1 run scoreboard players add #Physics.Projection.Block.WorldAxis.y.Max Physics 500
-        execute store result storage physics:temp data.Hitbox.Bottom[2] int 1 run scoreboard players remove #Physics.Projection.Block.WorldAxis.z.Min Physics 500
-        execute store result storage physics:temp data.Hitbox.Top[2] int 1 run scoreboard players add #Physics.Projection.Block.WorldAxis.z.Max Physics 500
+        execute store result storage physics:temp data.Hitbox.BoundingBox[0] int 1 run scoreboard players remove #Physics.Projection.Block.WorldAxis.x.Min Physics 500
+        execute store result storage physics:temp data.Hitbox.BoundingBox[3] int 1 run scoreboard players add #Physics.Projection.Block.WorldAxis.x.Max Physics 500
+        execute store result storage physics:temp data.Hitbox.BoundingBox[1] int 1 run scoreboard players remove #Physics.Projection.Block.WorldAxis.y.Min Physics 500
+        execute store result storage physics:temp data.Hitbox.BoundingBox[4] int 1 run scoreboard players add #Physics.Projection.Block.WorldAxis.y.Max Physics 500
+        execute store result storage physics:temp data.Hitbox.BoundingBox[2] int 1 run scoreboard players remove #Physics.Projection.Block.WorldAxis.z.Min Physics 500
+        execute store result storage physics:temp data.Hitbox.BoundingBox[5] int 1 run scoreboard players add #Physics.Projection.Block.WorldAxis.z.Max Physics 500
 
         # Add hitbox
-        data modify storage physics:zprivate ContactGroups[-1].Objects[-1].Blocks[-1].Hitboxes append from storage physics:temp data.Hitbox
-        data remove storage physics:zprivate ContactGroups[-1].Objects[-1].Blocks[-1].Hitboxes[-1].Contacts
+        data modify storage physics:zprivate ContactGroups[-1].Objects[0].Blocks[-1].Hitboxes append from storage physics:temp data.Hitbox
+        data remove storage physics:zprivate ContactGroups[-1].Objects[0].Blocks[-1].Hitboxes[-1].Contacts
 
         # Update its contacts
         # NO! I don't know if I have data for ID:1b, I only know that I have data for **A** hitbox. So I still need to run the "HasContacts" checks from the regular "get_hitbox" function
@@ -23,7 +23,7 @@
         # I could say: Get {ID:1b} (and use store success). If there is data, ...
         execute store result score #Physics.ContactCount Physics if data storage physics:temp data.Hitbox.Contacts[]
         function physics:zprivate/contact_generation/accumulate/world/not_touching/update_hitbox
-        execute unless data storage physics:zprivate ContactGroups[-1].Objects[-1].Blocks[-1].Hitboxes[-1].Contacts[0] run data remove storage physics:zprivate ContactGroups[-1].Objects[-1].Blocks[-1].Hitboxes[-1]
+        execute unless data storage physics:zprivate ContactGroups[-1].Objects[0].Blocks[-1].Hitboxes[-1].Contacts[0] run data remove storage physics:zprivate ContactGroups[-1].Objects[0].Blocks[-1].Hitboxes[-1]
 
 # Don't I need to get the hitbox's data first? Like... the actual contact data for {ID:1} or smth
 # If there were more hitboxes, I'd need to do the "HasPreviousContacts" check.
@@ -35,4 +35,4 @@
 
 
 
-# IMPORTANT: The hitbox storage is made from scratch every tick (incl. its Top and Bottom data). Is there a good way to check if it's the same, and therefore keep it?
+# IMPORTANT: The hitbox storage is made from scratch every tick (incl. its BoundingBox data). Is there a good way to check if it's the same, and therefore keep it?

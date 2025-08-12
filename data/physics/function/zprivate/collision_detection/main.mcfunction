@@ -1,13 +1,14 @@
 # Prepare the contacts storage & copy over this object's stored contacts from the previous tick (If there are any)
 # (Important): The ID in the data storage is also used when generating the new contact
 # (Important): I use a placeholder "MinSeparatingVelocity" so it doesn't get selected during resolution and is immediately replaced when a contact is found / updated.
+# (Important): With at least 2 contacts that refresh the MinSeparatingVelocity for the current object, only refreshing the score and then at the very end copying it into the storage once is faster than always refreshing the storage. Thanks to accumulation, this will basically be guaranteed.
 data modify storage physics:temp data.Blocks set value []
 data modify storage physics:zprivate ContactGroups append value {Objects:[{Blocks:[]}]}
 execute store result storage physics:temp data.A int 1 store result storage physics:zprivate ContactGroups[-1].A int 1 run scoreboard players get @s Physics.Object.ID
 execute if entity @s[tag=Physics.HasContacts] run function physics:zprivate/contact_generation/accumulate/get_previous_contacts with storage physics:temp data
 
-scoreboard players set #Physics.MinSeparatingVelocity Physics 32767
-scoreboard players set #Physics.MaxPenetrationDepth Physics -1
+scoreboard players set @s Physics.Object.MinSeparatingVelocity 2147483647
+scoreboard players set @s Physics.Object.MaxPenetrationDepth -2147483648
 
 # Pre-calculate as much as possible for the world SAT (Collisions with regular blocks)
     # 9 cross products of the 3 axes of the object and the world-geometry block
@@ -1104,9 +1105,14 @@ execute if score #Physics.BlockCount Physics matches 1.. run function physics:zp
 # Delete the "Blocks" entry in the object's contacts if no world collision was found or carried over from the last tick
 execute unless data storage physics:zprivate ContactGroups[-1].Objects[0].Blocks[0] run data remove storage physics:zprivate ContactGroups[-1].Objects[0]
 
+# Set the MinSeparatingVelocity & MaxPenetrationDepth for all world contacts combined
+scoreboard players operation @s Physics.Object.MinSeparatingVelocity.World = @s Physics.Object.MinSeparatingVelocity
+scoreboard players operation @s Physics.Object.MaxPenetrationDepth.World = @s Physics.Object.MaxPenetrationDepth
+
 # Check for coarse collisions with other dynamic objects, so I can then perform the SAT to check for fine collisions
 # (Important): Only checks objects in a range of 6.929 blocks, which is the sum of both objects' maximum supported bounding box divided by 2 (so from the center of both entities), assuming I cap the dimensions at 4 blocks. The reasoning is explained in the set_attributes/dimension function.
-tag @s add Physics.Checked
+# (Important): A Physics.Checked tag could remain for the object if the contact resolution moved it into an unloaded chunk, which could cause resolution issues for 1 tick upon getting loaded again (very minor and rare issues). This alone wouldn't warrant a change, but using a timestamp score I can also get rid of the "tag @e[...] remove ...". The performance difference is negligible, but with a lot of item displays, a timestamp is faster ontop of being more stable, especially given that inactive physics objects would've still counted toward the entity cap and made the @e call slower.
+scoreboard players operation @s Physics.Object.Gametime = #Physics.Gametime Physics
 
     # Prepare scores
     # (Important): #Physics.ThisObject Physics.Object.Axis.?.? are set at the start of this function, inside the "execute store result", to squeeze out an extra bit of performance
@@ -1173,7 +1179,7 @@ tag @s add Physics.Checked
     scoreboard players operation #Physics.ThisObject Physics.Object.ProjectionOwnAxis.z.Min = @s Physics.Object.ProjectionOwnAxis.z.Min
     scoreboard players operation #Physics.ThisObject Physics.Object.ProjectionOwnAxis.z.Max = @s Physics.Object.ProjectionOwnAxis.z.Max
 
-execute at @s as @e[type=minecraft:item_display,tag=Physics.Object,tag=!Physics.Checked,distance=..6.929] if score @s Physics.Object.BoundingBoxGlobalMin.x <= #Physics.ThisObject Physics.Object.BoundingBoxGlobalMax.x if score #Physics.ThisObject Physics.Object.BoundingBoxGlobalMin.x <= @s Physics.Object.BoundingBoxGlobalMax.x if score @s Physics.Object.BoundingBoxGlobalMin.z <= #Physics.ThisObject Physics.Object.BoundingBoxGlobalMax.z if score #Physics.ThisObject Physics.Object.BoundingBoxGlobalMin.z <= @s Physics.Object.BoundingBoxGlobalMax.z if score @s Physics.Object.BoundingBoxGlobalMin.y <= #Physics.ThisObject Physics.Object.BoundingBoxGlobalMax.y if score #Physics.ThisObject Physics.Object.BoundingBoxGlobalMin.y <= @s Physics.Object.BoundingBoxGlobalMax.y run function physics:zprivate/collision_detection/object/sat
+execute at @s as @e[type=minecraft:item_display,tag=Physics.Object,distance=..6.929] unless score @s Physics.Object.Gametime = #Physics.Gametime Physics if score @s Physics.Object.BoundingBoxGlobalMin.x <= #Physics.ThisObject Physics.Object.BoundingBoxGlobalMax.x if score #Physics.ThisObject Physics.Object.BoundingBoxGlobalMin.x <= @s Physics.Object.BoundingBoxGlobalMax.x if score @s Physics.Object.BoundingBoxGlobalMin.z <= #Physics.ThisObject Physics.Object.BoundingBoxGlobalMax.z if score #Physics.ThisObject Physics.Object.BoundingBoxGlobalMin.z <= @s Physics.Object.BoundingBoxGlobalMax.z if score @s Physics.Object.BoundingBoxGlobalMin.y <= #Physics.ThisObject Physics.Object.BoundingBoxGlobalMax.y if score #Physics.ThisObject Physics.Object.BoundingBoxGlobalMin.y <= @s Physics.Object.BoundingBoxGlobalMax.y run function physics:zprivate/collision_detection/object/sat
 
 # Update or discard contacts (Object)
 # (Important): Contacts for objects that are in contact are already updated directly after their respective SAT, so this only updates contacts for objects that were in contact last tick but aren't anymore.
@@ -1183,3 +1189,23 @@ execute if data storage physics:temp data.ContactsPrevious[0] run function physi
 tag @s remove Physics.HasContacts
 execute unless data storage physics:zprivate ContactGroups[-1].Objects[0] run return run data remove storage physics:zprivate ContactGroups[-1]
 tag @s add Physics.HasContacts
+
+
+
+
+
+
+# TODO:
+# - DONE: Keep track of MinSeparatingVelocity for *all* world contacts combined (stored in @s). Start with the max int limit, and continuously update that score during world contact generation/accumulation.
+# NOTE: No, just set the score to be equal to the MinSeparatingVelocity at the end of world contacts. So no additional overhead, and no "set to the max int limit" required at the start.
+# - W.I.P.: Remove minSeparatingVelocityTotal
+# - W.I.P.: Don't store MinSeparatingVelocity in the data anymore, only in @s
+# - W.I.P.: Keep track of the "HasMinSeparatingVelocity:1b" tag for the contact (not the objects / blocks)
+# - During object-object contact generation / accumulation, compare the separatingVelocity with the global score that holds the total min separating velocity for *all* world contacts. If any are lower, add a tag to the data structure that says: MinSepVelocity is from an object-object contact
+# - During object-object contact generation / accumulation, keep track of minSeparatingVelocity for each object
+# (Do these things for PenetrationDepth as well)
+
+# - DONE: Replace the "Physics.Checked" tag in collision detection with a timestamp score (Because the object could unload because of a penetration resolution and keep the tag. Wouldn't be *that* bad, but it would still cause wrong collision for 1 tick)
+
+
+# I've done all these things for *WORLD* contacts now. Time to do it for object-object contacts too!

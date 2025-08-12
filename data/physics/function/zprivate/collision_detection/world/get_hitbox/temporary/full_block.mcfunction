@@ -56,9 +56,14 @@ data remove storage physics:temp data.Block
 
 
 
-# INSTEAD OF Hitboxes[ID:1b], JUST USE Hitboxes[0] FOR SINGLE-HITBOX BLOCKS
-
+# INSTEAD OF Hitboxes[{ID:1b}], JUST USE Hitboxes[0] FOR SINGLE-HITBOX BLOCKS (Like here)
 
 
 
 # NOTE: IT SHOULD NOT REMOVE THE BLOCK FROM THE HITBOXES IF IT'S THERE'S ONLY ONE HITBOX (remaining?) ANYWAY.
+
+
+
+
+
+# In collision_detection/main, I only accumulate non-touching blocks. And here, I only seem to accumulate hitboxes that are currently touching. But what if a *different* hitbox was touching? I need to make sure I *don't* early-out (or if I do, make absolutely sure I have no data for that block from the previous tick), so I can update the contacts for that block regardless what hitboxes I'm currently touching. Maybe "return 0 IF there is no remaining un-updated hitbox data from the previous tick for this block"

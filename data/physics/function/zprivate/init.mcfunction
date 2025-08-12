@@ -31,6 +31,10 @@ scoreboard objectives add Physics.Object.AngularVelocity.z dummy
 scoreboard objectives add Physics.Object.InverseInertiaTensorLocal.0 dummy
 scoreboard objectives add Physics.Object.InverseInertiaTensorLocal.4 dummy
 scoreboard objectives add Physics.Object.InverseInertiaTensorLocal.8 dummy
+scoreboard objectives add Physics.Object.MinSeparatingVelocity dummy
+scoreboard objectives add Physics.Object.MaxPenetrationDepth dummy
+scoreboard objectives add Physics.Object.MinSeparatingVelocity.World dummy
+scoreboard objectives add Physics.Object.MaxPenetrationDepth.World dummy
 
 # Add derived object attributes (Calculated from object attributes, but stored separately to prevent repeated calculations)
 scoreboard objectives add Physics.Object.RotationMatrix.0 dummy
@@ -138,6 +142,7 @@ scoreboard objectives add Physics.Object.ProjectionOwnAxis.y.Min dummy
 scoreboard objectives add Physics.Object.ProjectionOwnAxis.y.Max dummy
 scoreboard objectives add Physics.Object.ProjectionOwnAxis.z.Min dummy
 scoreboard objectives add Physics.Object.ProjectionOwnAxis.z.Max dummy
+scoreboard objectives add Physics.Object.Gametime dummy
 
 # Add hitbox attributes
 scoreboard objectives add Physics.Hitbox.Gametime dummy
