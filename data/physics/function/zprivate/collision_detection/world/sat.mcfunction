@@ -461,12 +461,9 @@
 # (Important): Because this is only run when HitboxType is not 1, the 1 doesn't have to be stored in the storage and be run with this macro (& the 1 can be inlined after this to avoid a function call).
 execute unless score #Physics.HitboxType Physics matches 1 run return run function physics:zprivate/collision_detection/world/hitbox_type/check with storage physics:temp data
 
-# Additional "Solid" commands
-    # Add the block to the final data if it's the first contact / hitbox for that block
-    execute if score #Physics.Touching Physics matches 0 run function physics:zprivate/collision_detection/world/new_block
-
-# Additional "Solid" commands: Run contact generation
-# HitboxType 1 (Solid)
+# HitboxType 1 (Solid): Run contact generation
+# Add the block to the final data if it's the first contact / hitbox for that block
+execute if score #Physics.Touching Physics matches 0 run function physics:zprivate/collision_detection/world/new_block
 
 # Add the hitbox to the data (Indexes 0-2 are the bottom corner, 3-5 are the top corner)
 data modify storage physics:zprivate ContactGroups[-1].Objects[0].Blocks[-1].Hitboxes append value {BoundingBox:[I;0,0,0,0,0,0]}

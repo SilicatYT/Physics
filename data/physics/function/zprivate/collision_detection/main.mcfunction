@@ -1189,23 +1189,3 @@ execute if data storage physics:temp data.ContactsPrevious[0] run function physi
 tag @s remove Physics.HasContacts
 execute unless data storage physics:zprivate ContactGroups[-1].Objects[0] run return run data remove storage physics:zprivate ContactGroups[-1]
 tag @s add Physics.HasContacts
-
-
-
-
-
-
-# TODO:
-# - DONE: Keep track of MinSeparatingVelocity for *all* world contacts combined (stored in @s). Start with the max int limit, and continuously update that score during world contact generation/accumulation.
-# NOTE: No, just set the score to be equal to the MinSeparatingVelocity at the end of world contacts. So no additional overhead, and no "set to the max int limit" required at the start.
-# - W.I.P.: Remove minSeparatingVelocityTotal
-# - W.I.P.: Don't store MinSeparatingVelocity in the data anymore, only in @s
-# - W.I.P.: Keep track of the "HasMinSeparatingVelocity:1b" tag for the contact (not the objects / blocks)
-# - During object-object contact generation / accumulation, compare the separatingVelocity with the global score that holds the total min separating velocity for *all* world contacts. If any are lower, add a tag to the data structure that says: MinSepVelocity is from an object-object contact
-# - During object-object contact generation / accumulation, keep track of minSeparatingVelocity for each object
-# (Do these things for PenetrationDepth as well)
-
-# - DONE: Replace the "Physics.Checked" tag in collision detection with a timestamp score (Because the object could unload because of a penetration resolution and keep the tag. Wouldn't be *that* bad, but it would still cause wrong collision for 1 tick)
-
-
-# I've done all these things for *WORLD* contacts now. Time to do it for object-object contacts too!

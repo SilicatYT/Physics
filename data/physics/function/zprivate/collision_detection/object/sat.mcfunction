@@ -7,6 +7,10 @@
 
 
 
+# (ACCUMULATION NOTE FOR OBJECT-OBJECT): During object-object accumulation, I'll need to compare the MaxPenetrationDepth of the current objectB with the PenetrationDepth to see if it needs to be updated. In new_contact, it can just assume it's the Max, because there's only one contact.
+
+
+
 
 
 
