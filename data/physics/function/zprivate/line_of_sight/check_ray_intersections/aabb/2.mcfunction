@@ -8,7 +8,7 @@ scoreboard players operation #Physics.Maths.Value1 Physics -= #Physics.RayPosRel
 execute store result score #Physics.RayIntersection.t Physics run scoreboard players operation #Physics.Maths.Value1 Physics /= #Physics.RayDirectionOriginal.y Physics
 
 # Step 2: If t is too large, stop. This means no collision with this face is happening.
-execute if score #Physics.Maths.Value1 Physics > #Physics.EntityInteractionRange Physics run return 0
+execute if score #Physics.IsExitingFaceAABB Physics matches 0 if score #Physics.Maths.Value1 Physics > #Physics.EntityInteractionRange Physics run return 0
 
 # Step 3: Calculate the point of intersection for the other two axes: origin + t * direction
     # x
@@ -38,4 +38,7 @@ execute if score #Physics.Maths.Value1 Physics > #Physics.EntityInteractionRange
     scoreboard players operation #Physics.RelativeAABB.z.Min Physics = @s Physics.Object.BoundingBoxGlobalMin.z
     scoreboard players operation #Physics.RelativeAABB.z.Min Physics -= @s Physics.Object.Pos.z
     scoreboard players operation #Physics.RelativeAABB.z.Min Physics *= #Physics.Constants.1000 Physics
-    execute unless score #Physics.Maths.Value1 Physics < #Physics.RelativeAABB.z.Min Physics if score #Physics.RayIntersection.t Physics < #Physics.MinDistance Physics run return 1
+    execute if score #Physics.Maths.Value1 Physics < #Physics.RelativeAABB.z.Min Physics run return 0
+
+execute if score #Physics.IsExitingFaceAABB Physics matches 1 run return 1
+execute if score #Physics.RayIntersection.t Physics < #Physics.MinDistance Physics run return 1

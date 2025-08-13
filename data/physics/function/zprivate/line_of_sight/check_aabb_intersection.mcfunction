@@ -19,6 +19,7 @@ scoreboard players operation #Physics.RayPosRelative.y Physics *= #Physics.Const
 scoreboard players operation #Physics.RayPosRelative.z Physics *= #Physics.Constants.1000 Physics
 
     # Entering faces
+    scoreboard players set #Physics.IsExitingFaceAABB Physics 0
         # x axis
     execute if score #Physics.RayPosOriginal.x Physics <= @s Physics.Object.BoundingBoxGlobalMin.x if score #Physics.RayDirectionOriginal.x Physics matches 0.. if function physics:zprivate/line_of_sight/check_ray_intersections/aabb/0 run return run function physics:zprivate/line_of_sight/check_precise_intersection
     execute if score #Physics.RayPosOriginal.x Physics >= @s Physics.Object.BoundingBoxGlobalMax.x if score #Physics.RayDirectionOriginal.x Physics matches ..-1 if function physics:zprivate/line_of_sight/check_ray_intersections/aabb/1 run return run function physics:zprivate/line_of_sight/check_precise_intersection
@@ -32,6 +33,9 @@ scoreboard players operation #Physics.RayPosRelative.z Physics *= #Physics.Const
     execute if score #Physics.RayPosOriginal.z Physics >= @s Physics.Object.BoundingBoxGlobalMax.z if score #Physics.RayDirectionOriginal.z Physics matches ..-1 if function physics:zprivate/line_of_sight/check_ray_intersections/aabb/5 run return run function physics:zprivate/line_of_sight/check_precise_intersection
 
     # Exiting faces
+    # (Important): For AABB, when exiting faces, I'll ignore the EntityInteractionRange. That's because the distance to exit the AABB can be vastly greater than the distance to intersect with the model itself.
+    scoreboard players set #Physics.IsExitingFaceAABB Physics 1
+
         # x axis
     execute if score #Physics.RayPosOriginal.x Physics > @s Physics.Object.BoundingBoxGlobalMin.x if score #Physics.RayDirectionOriginal.x Physics matches ..-1 if function physics:zprivate/line_of_sight/check_ray_intersections/aabb/0 run return run function physics:zprivate/line_of_sight/check_precise_intersection
     execute if score #Physics.RayPosOriginal.x Physics < @s Physics.Object.BoundingBoxGlobalMax.x if score #Physics.RayDirectionOriginal.x Physics matches 0.. if function physics:zprivate/line_of_sight/check_ray_intersections/aabb/1 run return run function physics:zprivate/line_of_sight/check_precise_intersection
