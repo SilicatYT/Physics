@@ -60,14 +60,16 @@ execute if score #Physics.FeatureB Physics matches 11 run scoreboard players ope
         execute if score #Physics.FeatureB Physics matches 10 run scoreboard players operation #Physics.ContactPoint.y Physics *= #Physics.Constants.-1 Physics
         execute store result storage physics:temp data.NewContact.SeparatingVelocity short 1 run scoreboard players get #Physics.ContactPoint.y Physics
 
+# Store the contact
+data modify storage physics:zprivate ContactGroups[-1].Objects[0].Blocks[-1].Hitboxes[-1].Contacts append from storage physics:temp data.NewContact
+
 # Update the MaxPenetrationDepth (& keep track of the contact with the MaxPenetrationDepth)
 # (Important): The contact with the MaxPenetrationDepth has "HasMaxPenetrationDepth:0b" instead of 1b so the "store result storage ..." command works even if the command afterwards (to remove the previously tagged contact's tag) fails.
-execute if data storage physics:temp data.NewContact.HasMaxPenetrationDepth run data remove storage physics:temp data.NewContact.HasMaxPenetrationDepth
-execute if score #Physics.PenetrationDepth Physics > @s Physics.Object.MaxPenetrationDepth store result storage physics:temp data.NewContact.HasMaxPenetrationDepth byte 0 run data remove storage physics:zprivate ContactGroups[-1].Objects[0].Blocks[].Hitboxes[].Contacts[{HasMaxPenetrationDepth:0b}].HasMaxPenetrationDepth
+execute if score #Physics.PenetrationDepth Physics > @s Physics.Object.MaxPenetrationDepth store result storage physics:zprivate ContactGroups[-1].Objects[0].Blocks[-1].Hitboxes[-1].Contacts[-1].HasMaxPenetrationDepth byte 0 run data remove storage physics:zprivate ContactGroups[-1].Objects[0].Blocks[].Hitboxes[].Contacts[{HasMaxPenetrationDepth:0b}].HasMaxPenetrationDepth
 execute if score #Physics.PenetrationDepth Physics > @s Physics.Object.MaxPenetrationDepth run scoreboard players operation @s Physics.Object.MaxPenetrationDepth = #Physics.PenetrationDepth Physics
 
 # Process the separating velocity (Keep track of the most negative separating velocity for the current ObjectA & tag the contact with the lowest value)
 # (Important): The contact with the MinSeparatingVelocity has "HasMinSeparatingVelocity:0b" for the same reason as "HasMaxPenetrationDepth".
-execute if score #Physics.ContactPoint.y Physics >= @s Physics.Object.MinSeparatingVelocity run return run execute if data storage physics:temp data.NewContact.HasMinSeparatingVelocity run data remove storage physics:temp data.NewContact.HasMinSeparatingVelocity
-execute store result storage physics:temp data.NewContact.HasMinSeparatingVelocity byte 0 run data remove storage physics:zprivate ContactGroups[-1].Objects[0].Blocks[].Hitboxes[].Contacts[{HasMinSeparatingVelocity:0b}].HasMinSeparatingVelocity
+execute if score #Physics.ContactPoint.y Physics >= @s Physics.Object.MinSeparatingVelocity run return 0
+execute store result storage physics:zprivate ContactGroups[-1].Objects[0].Blocks[-1].Hitboxes[-1].Contacts[-1].HasMinSeparatingVelocity byte 0 run data remove storage physics:zprivate ContactGroups[-1].Objects[0].Blocks[].Hitboxes[].Contacts[{HasMinSeparatingVelocity:0b}].HasMinSeparatingVelocity
 scoreboard players operation @s Physics.Object.MinSeparatingVelocity = #Physics.ContactPoint.y Physics
