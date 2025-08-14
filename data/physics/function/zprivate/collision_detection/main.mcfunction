@@ -1193,46 +1193,14 @@ tag @s add Physics.HasContacts
 
 
 # TODO:
-# - Store the contactVelocity in every contact
-# - (outdated) Don't store contactNormal in world_axis_? contacts
-# - Make sure even invalid contacts have the required data (contactVelocity if initially calculated [don't calculate it if the contact is already invalid because of penetration depth, but don't delete it if a contact becomes invalid either], contactPoint???, contactNormal???, penDepth) to update sepVelocity and penDepth
-#   - Should I even remove ContactPoint data and stuff? Or should I keep that and continuously update?
-#   - (outdated) Maybe only store the contactPoint data from the last time the penetration depth was valid (and store the penetration depth from back then). So when it becomes valid again, I can subtract the penetration depths and then project the difference onto the contact normal? => Nope. updating the contact point is literally just "add move to it". Not worth storing "previous" or anything like that.
-#   - (outdated) MAYBE not worth storing the contactPoint for point-face, because it's just as easily calculated from scratch? => FALSE. I can simply add "move" to it when updating.
-#   - (outdated) How about not storing the penetrationdepth for point-face invalid contacts because it's calculated from scratch faster than it's updated? I DONT KNOW IF THAT'S TRUE, BUT IF YES...
-# - Mark invalid contacts with Invalid:1b
-# - Calculate velocity from acceleration during integration, and store it in the object (as 3 scores)
-# - Add 2 settings: tolerance limit for resolution (penDepth and sepVelocity)
-
-
-# (outdated) If I don't store the contactNormal in world_axis_? contacts, what do I do when they turn invalid and then valid again? -> The updating of penetrationDepth and separatingVelocities should be handled in hardcoded functions, so it shouldn't actually matter
-# (outdated) => Accumulated world_axis_? contacts *ALSO* shouldn't have a contact normal
-
-# PENETRATION DEPTH *AND* CONTACT NORMAL WILL NEED TO BE STORED FOR ALL CONTACTS (EVEN WORLD_AXIS_?). That's because I'll use hardcoded iteration to run the "update" function, so I can't use macro distribution to hardcode cases.
-
-# WHAT ABOUT INACTIVE CONTACTS THAT ARE NEWLY GENERATED? THOSE DO NOT HAVE CONTACTVELOCITY OR SEPARATINGVELOCITY. -> handle differently with an "if-else" statement during the hardcoded iteration of "for each contact, update the values". That's worth it, because if a contact is not touching (and therefore does not have a separatingVelocity calculated because it's not necessary), I don't want to calculate the separatingVelocity anyway. Because I'll do separating velocity resolution first, so it'll just remain not touching. So why bother
-
-# => Alright. If I can just use an if-else statement (most world contacts will likely be point-face, unless the object is really big), I can probably get away with not storing the contactNormal for world_axis_? contacts.
-# Hmm eh, maybe too much overhead. Not all contacts are world_axis_? contacts, and it doesn't save that much when one is hit. So it's actually a risk, especially with big objects.
-
-
-
-
-
-
-
-# NEW TODO:
 # - Store penetrationDepth for all invalid contacts
-# - Don't store separatingVelocity for invalid contacts that are irrelevant or have a wrong penetration depth (ALREADY THE CASE)
-# - Still store contactNormal for world_axis_? contacts (ALREADY THE CASE, EXCEPT FOR INVALID CONTACTS)
 # - Store contactVelocity, contactPoint & penetrationDepth and contactNormal in all invalid contacts (Required for updating penetrationDepth & separatingVelocity)
-# - Store the contactVelocity in every contact (incl. invalid ones)
+# - W.I.P. (Only done for point-face world contacts so far, not in accumulation) Store the contactVelocity in every contact (incl. invalid ones)
 # - DO NOT store contactVelocity or separatingVelocity in invalid contacts that are invalid because of penetrationDepth or irrelevance (bad projection onto the current tick's contact normal), because they will never become valid during velocity resolution
 # - Mark invalid contacts with Invalid:1b
-# - Calculate velocity from acceleration during integration, and store it in the object as 3 scores (vector)
+# - W.I.P. Calculate velocity from acceleration during integration, and store it in the object as 3 scores (vector)
+#   - Also subtract it (or add it?) from the contactVelocity during generation AND accumulation (so it's only done once and not explicitly projected onto the normal with additional calculations)
 # - Add 2 settings: tolerance limit for resolution (penDepth and sepVelocity)
 
-# (outdated) Waiiit. Irrelevant contacts *cannot* become relevant again, at least in the current tick, right? I can mark them as irrelevant and then remove them from the final storage before resolution starts, so I don't have to iterate over them and update them unnecessarily. The hitbox/objectB they're in will always have at least 1 other relevant contact, so I don't have to bother removing those if they're empty.
-# (outdated)But how can I make this work? How can I append them to a storage where I can easily add them back into the final storage after resolution is complete, without having to iterate?
-# (outdated) => I think I'll just try removing the contacts if they're irrelevant? Or basically removing the 80-90% check essentially? But I'll need to mark it down in the SAT with the other notes.
-# => Noted that as a potential solution. But for now, I'll just mark those contacts as "Invalid:1b" like the rest and ignore them during resolution because of that.
+# For now, I'll just mark invalid "irrelevant" contacts as "Invalid:1b" like the rest and ignore them during resolution because of that. I'll still iterate over them during resolution. And DO NOT update separatingVelocity/contactVelocity for invalid contacts that don't already have separatingVelocity (because it accumulated and found it's outside the threshold).
+# During resolution, after velocityResolution, remove the penetrationDepth of all invalid contacts that have an invalid separatingVelocity (-> will NEVER become valid, so why update penDepth)
