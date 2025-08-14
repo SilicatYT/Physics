@@ -118,9 +118,9 @@ execute store result storage physics:temp data.NewContact.PenetrationDepth short
 
     # Separating Velocity
         # Calculate relative contact point
-        scoreboard players operation #Physics.ContactPoint.x Physics -= @s Physics.Object.Pos.x
+        execute store result score #Physics.PointVelocity.z Physics run scoreboard players operation #Physics.ContactPoint.x Physics -= @s Physics.Object.Pos.x
         execute store result score #Physics.PointVelocity.x Physics run scoreboard players operation #Physics.ContactPoint.y Physics -= @s Physics.Object.Pos.y
-        scoreboard players operation #Physics.ContactPoint.z Physics -= @s Physics.Object.Pos.z
+        execute store result score #Physics.PointVelocity.y Physics run scoreboard players operation #Physics.ContactPoint.z Physics -= @s Physics.Object.Pos.z
 
         # Calculate cross product between angular velocity and relative contact point
         # (Important): I messed up the order (relativeContactPoint x angularVelocity instead of angularVelocity x relativeContactPoint). To accomodate for that without spending hours rewriting it, I divide by -1000 instead of 1000.
@@ -129,20 +129,27 @@ execute store result storage physics:temp data.NewContact.PenetrationDepth short
         scoreboard players operation #Physics.PointVelocity.x Physics -= #Physics.ContactPoint.z Physics
         scoreboard players operation #Physics.PointVelocity.x Physics /= #Physics.Constants.-1000 Physics
 
-        scoreboard players operation #Physics.ContactPoint.x Physics *= @s Physics.Object.AngularVelocity.y
+        scoreboard players operation #Physics.PointVelocity.y Physics *= @s Physics.Object.AngularVelocity.x
+        scoreboard players operation #Physics.ContactPoint.x Physics *= @s Physics.Object.AngularVelocity.z
+        scoreboard players operation #Physics.PointVelocity.y Physics -= #Physics.ContactPoint.x Physics
+        scoreboard players operation #Physics.PointVelocity.y Physics /= #Physics.Constants.-1000 Physics
+
+        scoreboard players operation #Physics.PointVelocity.z Physics *= @s Physics.Object.AngularVelocity.y
         scoreboard players operation #Physics.ContactPoint.y Physics *= @s Physics.Object.AngularVelocity.x
-        scoreboard players operation #Physics.ContactPoint.x Physics -= #Physics.ContactPoint.y Physics
-        scoreboard players operation #Physics.ContactPoint.x Physics /= #Physics.Constants.-1000 Physics
+        scoreboard players operation #Physics.PointVelocity.z Physics -= #Physics.ContactPoint.y Physics
+        scoreboard players operation #Physics.PointVelocity.z Physics /= #Physics.Constants.-1000 Physics
 
         # Add the linear velocity to obtain the relative velocity of the contact point
         scoreboard players operation #Physics.PointVelocity.x Physics += @s Physics.Object.Velocity.x
-        scoreboard players operation #Physics.ContactPoint.x Physics += @s Physics.Object.Velocity.z
+        scoreboard players operation #Physics.PointVelocity.y Physics += @s Physics.Object.Velocity.y
+        scoreboard players operation #Physics.PointVelocity.z Physics += @s Physics.Object.Velocity.z
 
         # Calculate the relative velocity's dot product with the contact normal to get the separation velocity (single number, not a vector) and store it
+        # (Important): Because the block's y axis component is 1, the contact normal's y component is 0. So this is simplified.
         scoreboard players operation #Physics.PointVelocity.x Physics *= #Physics.CrossProductAxis.yz.x Physics
-        scoreboard players operation #Physics.ContactPoint.x Physics *= #Physics.CrossProductAxis.yz.z Physics
+        scoreboard players operation #Physics.PointVelocity.z Physics *= #Physics.CrossProductAxis.yz.z Physics
 
-        scoreboard players operation #Physics.PointVelocity.x Physics += #Physics.ContactPoint.x Physics
+        scoreboard players operation #Physics.PointVelocity.x Physics += #Physics.PointVelocity.z Physics
         execute if score #Physics.ObjectA.EdgeProjection Physics >= #Physics.ObjectB.EdgeProjection Physics run scoreboard players operation #Physics.PointVelocity.x Physics *= #Physics.Constants.-1 Physics
         execute store result storage physics:temp data.NewContact.SeparatingVelocity short 1 run scoreboard players operation #Physics.PointVelocity.x Physics /= #Physics.Constants.1000 Physics
 
