@@ -1,3 +1,7 @@
+# (Tick order explanation): The ideal order of operations would be: 1. Integration (Calculate values & apply constant forces like gravity), 2. Collision Detection, 3. Contact Generation, 4. Apply contact-dependent forces like buoyancy, 5. Contact Resolution, 6. Update visuals
+#                           However, step 4 would require updating the separating velocities again (or reworking a lot of code), so I'd rather do that in step 1. It shouldn't make much of a difference.
+#                           And I can do step 1 inside step 6 to avoid an @e call, with the downside that newly spawned objects won't collide properly in their first tick. This can be resolved in other ways though, so that's the order I went with.
+
 # Debug: Show axes
 execute if score #Physics.Debug.ShowAxes Physics matches 1 as @e[type=minecraft:item_display,tag=Physics.Object] run function physics:debug/show_axes
 

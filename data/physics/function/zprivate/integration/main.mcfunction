@@ -1,8 +1,25 @@
-# TODO: If no forces, impulses or torque have been added, don't run this function
+# TODO: If no forces, impulses or torque have been added, don't update the rotation matrix, orientation and stuff
 # NOTE: As an impulse, collisions with other objects count as well. Those can displace the object.
+# TODO: MAYBE make a function for the "AddVelocity" and "AddAngularVelocity", so it doesn't have to be added (& reset) every single tick for every object. Too cumbersome?
+
+# Update visuals / NBT
+# (Important): This used to be at the very end, but I need to update visuals while the contacts are still resolved. If I do it after applying gravity and such, it would appear clipped into blocks again.
+execute store result storage physics:temp data.Integration.Pos[0] double 0.001 run scoreboard players get @s Physics.Object.Pos.x
+execute store result storage physics:temp data.Integration.Pos[1] double 0.001 run scoreboard players get @s Physics.Object.Pos.y
+execute store result storage physics:temp data.Integration.Pos[2] double 0.001 run scoreboard players get @s Physics.Object.Pos.z
+execute store result storage physics:temp data.Integration.transformation.left_rotation[0] float 0.001 run scoreboard players get @s Physics.Object.Orientation.x
+execute store result storage physics:temp data.Integration.transformation.left_rotation[1] float 0.001 run scoreboard players get @s Physics.Object.Orientation.y
+execute store result storage physics:temp data.Integration.transformation.left_rotation[2] float 0.001 run scoreboard players get @s Physics.Object.Orientation.z
+execute store result storage physics:temp data.Integration.transformation.left_rotation[3] float 0.001 run scoreboard players get @s Physics.Object.Orientation.a
+data modify entity @s {} merge from storage physics:temp data.Integration
 
 # Update velocity & apply linear damping
-    # (Important) Scale: InverseMass /= 1,000 -> Need to scale down the acceleration by 1/100,000x so the end result is scaled by 1,000x
+# (Important) Scale: InverseMass /= 1,000 -> Need to scale down the acceleration by 1/100,000x so the end result is scaled by 1,000x.
+# (Important): I need to keep track of the VelocityDifference (also for angular velocity) so it doesn't count towards SeparatingVelocity and ContactVelocity. I add those differences to the velocities here at the start of the next tick's integration. Because I calculate the difference with "old - new", the sign is flipped, so I subtract instead.
+execute store result score @s Physics.Object.VelocityDifference.x run scoreboard players operation @s Physics.Object.Velocity.x -= @s Physics.Object.VelocityDifference.x
+execute store result score @s Physics.Object.VelocityDifference.y run scoreboard players operation @s Physics.Object.Velocity.y -= @s Physics.Object.VelocityDifference.y
+execute store result score @s Physics.Object.VelocityDifference.z run scoreboard players operation @s Physics.Object.Velocity.z -= @s Physics.Object.VelocityDifference.z
+
 scoreboard players operation #Physics.Maths.Value1 Physics = @s Physics.Object.InverseMass
 scoreboard players operation #Physics.Maths.Value1 Physics /= #Physics.Constants.1000 Physics
 scoreboard players operation @s Physics.Object.AccumulatedForce.x *= #Physics.Maths.Value1 Physics
@@ -13,16 +30,19 @@ scoreboard players operation @s Physics.Object.AccumulatedForce.y /= #Physics.Co
 scoreboard players operation @s Physics.Object.AccumulatedForce.z /= #Physics.Constants.100000 Physics
 
 scoreboard players operation @s Physics.Object.Velocity.x += @s Physics.Object.AccumulatedForce.x
+scoreboard players operation @s Physics.Object.Velocity.x += @s Physics.Object.AddVelocity.x
 scoreboard players operation @s Physics.Object.Velocity.x *= #Physics.Settings.LinearDamping Physics
 scoreboard players operation @s Physics.Object.Velocity.x /= #Physics.Constants.100 Physics
 
 scoreboard players operation @s Physics.Object.Velocity.y += @s Physics.Object.AccumulatedForce.y
+scoreboard players operation @s Physics.Object.Velocity.y += @s Physics.Object.AddVelocity.y
 execute if score @s Physics.Object.Gravity matches -2147483648..2147483647 run scoreboard players operation @s Physics.Object.Velocity.y -= @s Physics.Object.Gravity
 execute unless score @s Physics.Object.Gravity matches -2147483648..2147483647 run scoreboard players operation @s Physics.Object.Velocity.y -= #Physics.Settings.DefaultGravity Physics
 scoreboard players operation @s Physics.Object.Velocity.y *= #Physics.Settings.LinearDamping Physics
 scoreboard players operation @s Physics.Object.Velocity.y /= #Physics.Constants.100 Physics
 
 scoreboard players operation @s Physics.Object.Velocity.z += @s Physics.Object.AccumulatedForce.z
+scoreboard players operation @s Physics.Object.Velocity.z += @s Physics.Object.AddVelocity.z
 scoreboard players operation @s Physics.Object.Velocity.z *= #Physics.Settings.LinearDamping Physics
 scoreboard players operation @s Physics.Object.Velocity.z /= #Physics.Constants.100 Physics
 
@@ -30,10 +50,18 @@ execute if score @s Physics.Object.Velocity.x matches ..-1 run scoreboard player
 execute if score @s Physics.Object.Velocity.y matches ..-1 run scoreboard players add @s Physics.Object.Velocity.y 1
 execute if score @s Physics.Object.Velocity.z matches ..-1 run scoreboard players add @s Physics.Object.Velocity.z 1
 
-# Update position
-execute store result storage physics:temp data.Integration.Pos[0] double 0.001 run scoreboard players operation @s Physics.Object.Pos.x += @s Physics.Object.Velocity.x
-execute store result storage physics:temp data.Integration.Pos[1] double 0.001 run scoreboard players operation @s Physics.Object.Pos.y += @s Physics.Object.Velocity.y
-execute store result storage physics:temp data.Integration.Pos[2] double 0.001 run scoreboard players operation @s Physics.Object.Pos.z += @s Physics.Object.Velocity.z
+# Update position & remove VelocityDifference from Velocity
+scoreboard players operation @s Physics.Object.Pos.x += @s Physics.Object.Velocity.x
+scoreboard players operation @s Physics.Object.Pos.y += @s Physics.Object.Velocity.y
+scoreboard players operation @s Physics.Object.Pos.z += @s Physics.Object.Velocity.z
+
+scoreboard players operation @s Physics.Object.VelocityDifference.x -= @s Physics.Object.Velocity.x
+scoreboard players operation @s Physics.Object.VelocityDifference.y -= @s Physics.Object.Velocity.y
+scoreboard players operation @s Physics.Object.VelocityDifference.z -= @s Physics.Object.Velocity.z
+
+scoreboard players operation @s Physics.Object.Velocity.x += @s Physics.Object.VelocityDifference.x
+scoreboard players operation @s Physics.Object.Velocity.y += @s Physics.Object.VelocityDifference.y
+scoreboard players operation @s Physics.Object.Velocity.z += @s Physics.Object.VelocityDifference.z
 
 # Update angular velocity
     # AngularAcceleration = InverseGlobalInertiaTensor * AccumulatedTorque
@@ -69,9 +97,17 @@ execute store result storage physics:temp data.Integration.Pos[2] double 0.001 r
     scoreboard players operation #Physics.Maths.AngularAcceleration.z Physics /= #Physics.Constants.100000 Physics
 
     # Add angular acceleration to angular velocity
+    execute store result score @s Physics.Object.AngularVelocityDifference.x run scoreboard players operation @s Physics.Object.AngularVelocity.x -= @s Physics.Object.AngularVelocityDifference.x
+    execute store result score @s Physics.Object.AngularVelocityDifference.y run scoreboard players operation @s Physics.Object.AngularVelocity.y -= @s Physics.Object.AngularVelocityDifference.y
+    execute store result score @s Physics.Object.AngularVelocityDifference.z run scoreboard players operation @s Physics.Object.AngularVelocity.z -= @s Physics.Object.AngularVelocityDifference.z
+
     scoreboard players operation @s Physics.Object.AngularVelocity.x += #Physics.Maths.AngularAcceleration.x Physics
     scoreboard players operation @s Physics.Object.AngularVelocity.y += #Physics.Maths.AngularAcceleration.y Physics
     scoreboard players operation @s Physics.Object.AngularVelocity.z += #Physics.Maths.AngularAcceleration.z Physics
+
+    scoreboard players operation @s Physics.Object.AngularVelocity.x += @s Physics.Object.AddAngularVelocity.x
+    scoreboard players operation @s Physics.Object.AngularVelocity.y += @s Physics.Object.AddAngularVelocity.y
+    scoreboard players operation @s Physics.Object.AngularVelocity.z += @s Physics.Object.AddAngularVelocity.z
 
     # Apply angular damping
     scoreboard players operation @s Physics.Object.AngularVelocity.x *= #Physics.Settings.AngularDamping Physics
@@ -133,6 +169,15 @@ execute store result storage physics:temp data.Integration.Pos[2] double 0.001 r
     scoreboard players operation #Physics.Maths.Value1 Physics /= #Physics.Constants.2000 Physics
     execute store result score #Physics.Maths.Value5 Physics run scoreboard players operation @s Physics.Object.Orientation.a -= #Physics.Maths.Value1 Physics
 
+    # Remove the angular velocity gained during this integration step again (AngularVelocityDifference)
+    scoreboard players operation @s Physics.Object.AngularVelocityDifference.x -= @s Physics.Object.AngularVelocity.x
+    scoreboard players operation @s Physics.Object.AngularVelocityDifference.y -= @s Physics.Object.AngularVelocity.y
+    scoreboard players operation @s Physics.Object.AngularVelocityDifference.z -= @s Physics.Object.AngularVelocity.z
+
+    scoreboard players operation @s Physics.Object.AngularVelocity.x += @s Physics.Object.AngularVelocityDifference.x
+    scoreboard players operation @s Physics.Object.AngularVelocity.y += @s Physics.Object.AngularVelocityDifference.y
+    scoreboard players operation @s Physics.Object.AngularVelocity.z += @s Physics.Object.AngularVelocityDifference.z
+
     # Re-normalize the quaternions
     # (Important): Because of the squaring, the result is scaled too much, or rather dividing by the square root would get rid of the scaling. So I need to multiply the quaternions by 1,000x first.
     scoreboard players operation #Physics.Maths.SquareRoot.Input Physics *= #Physics.Maths.SquareRoot.Input Physics
@@ -148,10 +193,10 @@ execute store result storage physics:temp data.Integration.Pos[2] double 0.001 r
     scoreboard players operation @s Physics.Object.Orientation.y *= #Physics.Constants.1000 Physics
     scoreboard players operation @s Physics.Object.Orientation.z *= #Physics.Constants.1000 Physics
     scoreboard players operation @s Physics.Object.Orientation.a *= #Physics.Constants.1000 Physics
-    execute store result storage physics:temp data.Integration.transformation.left_rotation[0] float 0.001 run scoreboard players operation @s Physics.Object.Orientation.x /= #Physics.Maths.SquareRoot.Output Physics
-    execute store result storage physics:temp data.Integration.transformation.left_rotation[1] float 0.001 run scoreboard players operation @s Physics.Object.Orientation.y /= #Physics.Maths.SquareRoot.Output Physics
-    execute store result storage physics:temp data.Integration.transformation.left_rotation[2] float 0.001 run scoreboard players operation @s Physics.Object.Orientation.z /= #Physics.Maths.SquareRoot.Output Physics
-    execute store result storage physics:temp data.Integration.transformation.left_rotation[3] float 0.001 run scoreboard players operation @s Physics.Object.Orientation.a /= #Physics.Maths.SquareRoot.Output Physics
+    scoreboard players operation @s Physics.Object.Orientation.x /= #Physics.Maths.SquareRoot.Output Physics
+    scoreboard players operation @s Physics.Object.Orientation.y /= #Physics.Maths.SquareRoot.Output Physics
+    scoreboard players operation @s Physics.Object.Orientation.z /= #Physics.Maths.SquareRoot.Output Physics
+    scoreboard players operation @s Physics.Object.Orientation.a /= #Physics.Maths.SquareRoot.Output Physics
 
 # Update derived data
     # Rotation Matrix (from quaternions) & Transpose
@@ -585,14 +630,5 @@ execute store result storage physics:temp data.Integration.Pos[2] double 0.001 r
                 scoreboard players operation @s Physics.Object.ProjectionOwnAxis.z.Min += #Physics.Projection.ObjectCenter.ObjectAxis.z Physics
                 scoreboard players operation @s Physics.Object.ProjectionOwnAxis.z.Max += #Physics.Projection.ObjectCenter.ObjectAxis.z Physics
 
-# Clear accumulators
-scoreboard players set @s Physics.Object.AccumulatedForce.x 0
-scoreboard players set @s Physics.Object.AccumulatedForce.y 0
-scoreboard players set @s Physics.Object.AccumulatedForce.z 0
-
-scoreboard players set @s Physics.Object.AccumulatedTorque.x 0
-scoreboard players set @s Physics.Object.AccumulatedTorque.y 0
-scoreboard players set @s Physics.Object.AccumulatedTorque.z 0
-
-# Update NBT if it changed
-data modify entity @s {} merge from storage physics:temp data.Integration
+# Clear accumulators (incl. the "Add" scores that are useable by other datapacks)
+execute store result score @s Physics.Object.AddAngularVelocity.z store result score @s Physics.Object.AddAngularVelocity.y store result score @s Physics.Object.AddAngularVelocity.x store result score @s Physics.Object.AddVelocity.z store result score @s Physics.Object.AddVelocity.y store result score @s Physics.Object.AddVelocity.x store result score @s Physics.Object.AccumulatedTorque.z store result score @s Physics.Object.AccumulatedTorque.y store result score @s Physics.Object.AccumulatedTorque.x store result score @s Physics.Object.AccumulatedForce.z store result score @s Physics.Object.AccumulatedForce.y run scoreboard players set @s Physics.Object.AccumulatedForce.x 0

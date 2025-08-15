@@ -70,9 +70,9 @@ execute if score #Physics.IsInside Physics matches 0 store result storage physic
         scoreboard players operation #Physics.PointVelocity.z Physics /= #Physics.Constants.-1000 Physics
 
         # Add the linear velocity to obtain the relative velocity of the contact point
-        scoreboard players operation #Physics.PointVelocity.x Physics += @s Physics.Object.Velocity.x
-        scoreboard players operation #Physics.PointVelocity.y Physics += @s Physics.Object.Velocity.y
-        scoreboard players operation #Physics.PointVelocity.z Physics += @s Physics.Object.Velocity.z
+        execute store result storage physics:temp data.NewContact.ContactVelocity[0] int 1 run scoreboard players operation #Physics.PointVelocity.x Physics += @s Physics.Object.Velocity.x
+        execute store result storage physics:temp data.NewContact.ContactVelocity[1] int 1 run scoreboard players operation #Physics.PointVelocity.y Physics += @s Physics.Object.Velocity.y
+        execute store result storage physics:temp data.NewContact.ContactVelocity[2] int 1 run scoreboard players operation #Physics.PointVelocity.z Physics += @s Physics.Object.Velocity.z
 
         # Take the dot product with the contact normal
         # (Important): For the SeparatingVelocity, I only care about a single component because the contact normal is a world axis.

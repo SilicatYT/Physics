@@ -1198,8 +1198,7 @@ tag @s add Physics.HasContacts
 # - W.I.P. (Only done for point-face world contacts so far, not in accumulation) Store the contactVelocity in every contact (incl. invalid ones)
 # - DO NOT store contactVelocity or separatingVelocity in invalid contacts that are invalid because of penetrationDepth or irrelevance (bad projection onto the current tick's contact normal), because they will never become valid during velocity resolution
 # - Mark invalid contacts with Invalid:1b
-# - W.I.P. Calculate velocity from acceleration during integration, and store it in the object as 3 scores (vector)
-#   - Also subtract it (or add it?) from the contactVelocity during generation AND accumulation (so it's only done once and not explicitly projected onto the normal with additional calculations)
+# - DONE: Calculate velocity from acceleration during integration, and store it in the object as 3 scores (vector)
 # - Add 2 settings: tolerance limit for resolution (penDepth and sepVelocity)
 
 # For now, I'll just mark invalid "irrelevant" contacts as "Invalid:1b" like the rest and ignore them during resolution because of that. I'll still iterate over them during resolution. And DO NOT update separatingVelocity/contactVelocity for invalid contacts that don't already have separatingVelocity (because it accumulated and found it's outside the threshold).

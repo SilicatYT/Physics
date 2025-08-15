@@ -154,9 +154,9 @@ execute if score #Physics.Projection.Block.CrossProductAxis.zy.Min Physics < #Ph
         scoreboard players operation #Physics.PointVelocity.z Physics /= #Physics.Constants.-1000 Physics
 
         # Add the linear velocity to obtain the relative velocity of the contact point
-        scoreboard players operation #Physics.PointVelocity.x Physics += @s Physics.Object.Velocity.x
-        scoreboard players operation #Physics.PointVelocity.y Physics += @s Physics.Object.Velocity.y
-        scoreboard players operation #Physics.PointVelocity.z Physics += @s Physics.Object.Velocity.z
+        execute store result storage physics:temp data.NewContact.ContactVelocity[0] int 1 run scoreboard players operation #Physics.PointVelocity.x Physics += @s Physics.Object.Velocity.x
+        execute store result storage physics:temp data.NewContact.ContactVelocity[1] int 1 run scoreboard players operation #Physics.PointVelocity.y Physics += @s Physics.Object.Velocity.y
+        execute store result storage physics:temp data.NewContact.ContactVelocity[2] int 1 run scoreboard players operation #Physics.PointVelocity.z Physics += @s Physics.Object.Velocity.z
 
         # Calculate the relative velocity's dot product with the contact normal to get the separation velocity (single number, not a vector) and store it
         # (Important): Because the block's z axis component is 1, the contact normal's z component is 0. So this is simplified.
