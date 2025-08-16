@@ -1,4 +1,4 @@
-# TODO: Rework the formulas to use an impulse. Right now, it's not physically accurate that the linear force is just added ontop.
+# TODO: Rework the formulas to use an impulse. Right now, it's not physically accurate that the linear force is just added ontop. (maybe it's correct?)
 # THIS IS RUDIMENTARY. THE SCALING ALSO ISN'T PROPERLY IMPLEMENTED, IT'S JUST HARDCODED.
 
 # Display a crit particle at the intersection coordinates

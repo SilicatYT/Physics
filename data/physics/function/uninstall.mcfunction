@@ -23,9 +23,15 @@ scoreboard objectives remove Physics.Object.Gravity
 scoreboard objectives remove Physics.Object.AccumulatedForce.x
 scoreboard objectives remove Physics.Object.AccumulatedForce.y
 scoreboard objectives remove Physics.Object.AccumulatedForce.z
+scoreboard objectives remove Physics.Object.AccumulatedForceConstant.x
+scoreboard objectives remove Physics.Object.AccumulatedForceConstant.y
+scoreboard objectives remove Physics.Object.AccumulatedForceConstant.z
 scoreboard objectives remove Physics.Object.AccumulatedTorque.x
 scoreboard objectives remove Physics.Object.AccumulatedTorque.y
 scoreboard objectives remove Physics.Object.AccumulatedTorque.z
+scoreboard objectives remove Physics.Object.AccumulatedTorqueConstant.x
+scoreboard objectives remove Physics.Object.AccumulatedTorqueConstant.y
+scoreboard objectives remove Physics.Object.AccumulatedTorqueConstant.z
 scoreboard objectives remove Physics.Object.AddVelocity.x
 scoreboard objectives remove Physics.Object.AddVelocity.y
 scoreboard objectives remove Physics.Object.AddVelocity.z
