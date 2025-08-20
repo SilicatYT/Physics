@@ -17,8 +17,8 @@ scoreboard players operation #Physics.Projection.BlockCenter.ObjectAxis.x Physic
     # Calculate the Penetration Depth
     $scoreboard players operation #Physics.PenetrationDepth Physics = #Physics.Projection.BlockCornerBase$(FeatureB).ObjectAxis.x Physics
     scoreboard players operation #Physics.PenetrationDepth Physics += #Physics.Projection.BlockCenter.ObjectAxis.x Physics
-    execute if score #Physics.Contact.FeatureA Physics matches 10 run scoreboard players operation #Physics.PenetrationDepth Physics -= @s Physics.Object.ProjectionOwnAxis.x.Min
-    execute if score #Physics.Contact.FeatureA Physics matches 11 run scoreboard players operation #Physics.PenetrationDepth Physics -= @s Physics.Object.ProjectionOwnAxis.x.Max
+    execute if score #Physics.Contact.FeatureA Physics matches 10 run scoreboard players operation #Physics.PenetrationDepth Physics -= #Physics.ThisObject Physics.Object.ProjectionOwnAxis.x.Min
+    execute if score #Physics.Contact.FeatureA Physics matches 11 run scoreboard players operation #Physics.PenetrationDepth Physics -= #Physics.ThisObject Physics.Object.ProjectionOwnAxis.x.Max
     execute if score #Physics.Contact.FeatureA Physics matches 11 run scoreboard players operation #Physics.PenetrationDepth Physics *= #Physics.Constants.-1 Physics
 
     # Check if the Penetration Depth is within the threshold (Can be slightly negative)
@@ -27,3 +27,5 @@ scoreboard players operation #Physics.Projection.BlockCenter.ObjectAxis.x Physic
 # Append the contact
 $data modify storage physics:zprivate ContactGroups[-1].Objects[0].Blocks[-1].Hitboxes[-1].Contacts append value {FeatureB:$(FeatureB)b}
 execute store result storage physics:zprivate ContactGroups[-1].Objects[0].Blocks[-1].Hitboxes[-1].Contacts[-1].FeatureA byte 1 run scoreboard players get #Physics.Contact.FeatureA Physics
+
+# Calculate Contact Point

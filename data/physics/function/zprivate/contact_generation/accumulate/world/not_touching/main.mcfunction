@@ -2,6 +2,7 @@
 # (Important): All the contacts will either be discarded or carried over as "invalid" contacts.
 # (Important): The hitbox data also has to be updated if the setting 'ReactToBlockUpdates' is enabled.
     # Mark all remaining contacts as invalid
+    data remove storage physics:temp data.Blocks[].Hitboxes[].Contacts[].ContactVelocity
     data remove storage physics:temp data.Blocks[].Hitboxes[].Contacts[].SeparatingVelocity
     data remove storage physics:temp data.Blocks[].Hitboxes[].Contacts[].PenetrationDepth
     data remove storage physics:temp data.Blocks[].Hitboxes[].Contacts[].ContactNormal

@@ -74,32 +74,32 @@ scoreboard players operation #Physics.DeepestProjection Physics = #Physics.Proje
 
         # Separating Velocity for ObjectB
             # Calculate relative contact point
-            execute store result score #Physics.SeparatingVelocity.z Physics run scoreboard players operation #Physics.ContactPointCopy.x Physics -= @s Physics.Object.Pos.x
-            execute store result score #Physics.SeparatingVelocity.x Physics run scoreboard players operation #Physics.ContactPointCopy.y Physics -= @s Physics.Object.Pos.y
-            execute store result score #Physics.SeparatingVelocity.y Physics run scoreboard players operation #Physics.ContactPointCopy.z Physics -= @s Physics.Object.Pos.z
+            execute store result score #Physics.SeparatingVelocity.z Physics run scoreboard players operation #Physics.ContactPointCopy.x Physics -= #Physics.ThisObject Physics.Object.Pos.x
+            execute store result score #Physics.SeparatingVelocity.x Physics run scoreboard players operation #Physics.ContactPointCopy.y Physics -= #Physics.ThisObject Physics.Object.Pos.y
+            execute store result score #Physics.SeparatingVelocity.y Physics run scoreboard players operation #Physics.ContactPointCopy.z Physics -= #Physics.ThisObject Physics.Object.Pos.z
 
             # Calculate cross product between angular velocity and relative contact point
             # (Important): I overwrite the contact point scores here, as I don't need those values (relative to this object) anymore.
             # (Important): I messed up the order (relativeContactPoint x angularVelocity instead of angularVelocity x relativeContactPoint). To accomodate for that without spending hours rewriting it, I divide by -1000 instead of 1000.
-            scoreboard players operation #Physics.SeparatingVelocity.x Physics *= @s Physics.Object.AngularVelocity.z
-            scoreboard players operation #Physics.ContactPointCopy.z Physics *= @s Physics.Object.AngularVelocity.y
+            scoreboard players operation #Physics.SeparatingVelocity.x Physics *= #Physics.ThisObject Physics.Object.AngularVelocity.z
+            scoreboard players operation #Physics.ContactPointCopy.z Physics *= #Physics.ThisObject Physics.Object.AngularVelocity.y
             scoreboard players operation #Physics.SeparatingVelocity.x Physics -= #Physics.ContactPointCopy.z Physics
             scoreboard players operation #Physics.SeparatingVelocity.x Physics /= #Physics.Constants.-1000 Physics
 
-            scoreboard players operation #Physics.SeparatingVelocity.y Physics *= @s Physics.Object.AngularVelocity.x
-            scoreboard players operation #Physics.ContactPointCopy.x Physics *= @s Physics.Object.AngularVelocity.z
+            scoreboard players operation #Physics.SeparatingVelocity.y Physics *= #Physics.ThisObject Physics.Object.AngularVelocity.x
+            scoreboard players operation #Physics.ContactPointCopy.x Physics *= #Physics.ThisObject Physics.Object.AngularVelocity.z
             scoreboard players operation #Physics.SeparatingVelocity.y Physics -= #Physics.ContactPointCopy.x Physics
             scoreboard players operation #Physics.SeparatingVelocity.y Physics /= #Physics.Constants.-1000 Physics
 
-            scoreboard players operation #Physics.SeparatingVelocity.z Physics *= @s Physics.Object.AngularVelocity.y
-            scoreboard players operation #Physics.ContactPointCopy.y Physics *= @s Physics.Object.AngularVelocity.x
+            scoreboard players operation #Physics.SeparatingVelocity.z Physics *= #Physics.ThisObject Physics.Object.AngularVelocity.y
+            scoreboard players operation #Physics.ContactPointCopy.y Physics *= #Physics.ThisObject Physics.Object.AngularVelocity.x
             scoreboard players operation #Physics.SeparatingVelocity.z Physics -= #Physics.ContactPointCopy.y Physics
             scoreboard players operation #Physics.SeparatingVelocity.z Physics /= #Physics.Constants.-1000 Physics
 
             # Add the linear velocity to obtain the relative velocity of the contact point
-            scoreboard players operation #Physics.SeparatingVelocity.x Physics += @s Physics.Object.Velocity.x
-            scoreboard players operation #Physics.SeparatingVelocity.y Physics += @s Physics.Object.Velocity.y
-            scoreboard players operation #Physics.SeparatingVelocity.z Physics += @s Physics.Object.Velocity.z
+            scoreboard players operation #Physics.SeparatingVelocity.x Physics += #Physics.ThisObject Physics.Object.Velocity.x
+            scoreboard players operation #Physics.SeparatingVelocity.y Physics += #Physics.ThisObject Physics.Object.Velocity.y
+            scoreboard players operation #Physics.SeparatingVelocity.z Physics += #Physics.ThisObject Physics.Object.Velocity.z
 
         # Add the point velocities together
         execute store result storage physics:temp data.NewContact.ContactVelocity[0] int 1 run scoreboard players operation #Physics.SeparatingVelocity.x Physics -= #Physics.PointVelocity.x Physics
@@ -130,13 +130,13 @@ function physics:zprivate/contact_generation/new_contact/object/get_previous_con
 # Update the MaxPenetrationDepth (& keep track of the contact with the MaxPenetrationDepth)
 # (Important): The contact with the MaxPenetrationDepth has "HasMaxPenetrationDepth:0b" instead of 1b so the "store result storage ..." command works even if the command afterwards (to remove the previously tagged contact's tag) fails. Same for "MaxPenetrationDepthIsObjectContact".
 # (Important): MaxPenetrationDepth.World will be set even if no world contacts exist, but it doesn't cause any bugs or noteworthy performance cost, so I ignore that.
-execute if score #Physics.PenetrationDepth Physics > @s Physics.Object.MaxPenetrationDepth if score @s Physics.Object.MaxPenetrationDepth = @s Physics.Object.MaxPenetrationDepth.World store result storage physics:zprivate ContactGroups[-1].Objects[-1].Contacts[-1].HasMaxPenetrationDepth byte 0 store result storage physics:zprivate ContactGroups[-1].MaxPenetrationDepthIsObjectContact byte 0 run data remove storage physics:zprivate ContactGroups[-1].Objects[0].Blocks[].Hitboxes[].Contacts[{HasMaxPenetrationDepth:0b}].HasMaxPenetrationDepth
-execute if score #Physics.PenetrationDepth Physics > @s Physics.Object.MaxPenetrationDepth unless score @s Physics.Object.MaxPenetrationDepth = @s Physics.Object.MaxPenetrationDepth.World store result storage physics:zprivate ContactGroups[-1].Objects[-1].Contacts[-1].HasMaxPenetrationDepth byte 0 run data remove storage physics:zprivate ContactGroups[-1].Objects[].Contacts[{HasMaxPenetrationDepth:0b}].HasMaxPenetrationDepth
-execute if score #Physics.PenetrationDepth Physics > @s Physics.Object.MaxPenetrationDepth run scoreboard players operation @s Physics.Object.MaxPenetrationDepth = #Physics.PenetrationDepth Physics
+execute if score #Physics.PenetrationDepth Physics > #Physics.ThisObject Physics.Object.MaxPenetrationDepth if score #Physics.ThisObject Physics.Object.MaxPenetrationDepth = #Physics.ThisObject Physics.Object.MaxPenetrationDepth.World store result storage physics:zprivate ContactGroups[-1].Objects[-1].Contacts[-1].HasMaxPenetrationDepth byte 0 store result storage physics:zprivate ContactGroups[-1].MaxPenetrationDepthIsObjectContact byte 0 run data remove storage physics:zprivate ContactGroups[-1].Objects[0].Blocks[].Hitboxes[].Contacts[{HasMaxPenetrationDepth:0b}].HasMaxPenetrationDepth
+execute if score #Physics.PenetrationDepth Physics > #Physics.ThisObject Physics.Object.MaxPenetrationDepth unless score #Physics.ThisObject Physics.Object.MaxPenetrationDepth = #Physics.ThisObject Physics.Object.MaxPenetrationDepth.World store result storage physics:zprivate ContactGroups[-1].Objects[-1].Contacts[-1].HasMaxPenetrationDepth byte 0 run data remove storage physics:zprivate ContactGroups[-1].Objects[].Contacts[{HasMaxPenetrationDepth:0b}].HasMaxPenetrationDepth
+execute if score #Physics.PenetrationDepth Physics > #Physics.ThisObject Physics.Object.MaxPenetrationDepth run scoreboard players operation #Physics.ThisObject Physics.Object.MaxPenetrationDepth = #Physics.PenetrationDepth Physics
 
 # Process the separating velocity (Keep track of the most negative separating velocity for the current ObjectA & tag the contact with the lowest value)
 # (Important): The contact with the MinSeparatingVelocity has "HasMinSeparatingVelocity:0b" for the same reason as "HasMaxPenetrationDepth". Same for "MinSeparatingVelocityIsObjectContact".
-execute if score #Physics.SeparatingVelocity.x Physics >= @s Physics.Object.MinSeparatingVelocity run return 0
-execute if score @s Physics.Object.MinSeparatingVelocity = @s Physics.Object.MinSeparatingVelocity.World store result storage physics:zprivate ContactGroups[-1].Objects[-1].Contacts[-1].HasMinSeparatingVelocity byte 0 store result storage physics:zprivate ContactGroups[-1].MinSeparatingVelocityIsObjectContact byte 0 run data remove storage physics:zprivate ContactGroups[-1].Objects[0].Blocks[].Hitboxes[].Contacts[{HasMinSeparatingVelocity:0b}].HasMinSeparatingVelocity
-execute unless score @s Physics.Object.MinSeparatingVelocity = @s Physics.Object.MinSeparatingVelocity.World store result storage physics:zprivate ContactGroups[-1].Objects[-1].Contacts[-1].HasMinSeparatingVelocity byte 0 run data remove storage physics:zprivate ContactGroups[-1].Objects[].Contacts[{HasMinSeparatingVelocity:0b}].HasMinSeparatingVelocity
-scoreboard players operation @s Physics.Object.MinSeparatingVelocity = #Physics.SeparatingVelocity.x Physics
+execute if score #Physics.SeparatingVelocity.x Physics >= #Physics.ThisObject Physics.Object.MinSeparatingVelocity run return 0
+execute if score #Physics.ThisObject Physics.Object.MinSeparatingVelocity = #Physics.ThisObject Physics.Object.MinSeparatingVelocity.World store result storage physics:zprivate ContactGroups[-1].Objects[-1].Contacts[-1].HasMinSeparatingVelocity byte 0 store result storage physics:zprivate ContactGroups[-1].MinSeparatingVelocityIsObjectContact byte 0 run data remove storage physics:zprivate ContactGroups[-1].Objects[0].Blocks[].Hitboxes[].Contacts[{HasMinSeparatingVelocity:0b}].HasMinSeparatingVelocity
+execute unless score #Physics.ThisObject Physics.Object.MinSeparatingVelocity = #Physics.ThisObject Physics.Object.MinSeparatingVelocity.World store result storage physics:zprivate ContactGroups[-1].Objects[-1].Contacts[-1].HasMinSeparatingVelocity byte 0 run data remove storage physics:zprivate ContactGroups[-1].Objects[].Contacts[{HasMinSeparatingVelocity:0b}].HasMinSeparatingVelocity
+scoreboard players operation #Physics.ThisObject Physics.Object.MinSeparatingVelocity = #Physics.SeparatingVelocity.x Physics

@@ -1,10 +1,10 @@
 # Check if the contact should be discarded
 # (Important): I can't check if the contact is still relevant, because there is no "current tick's contact normal" I could compare it to.
     # Calculate the Penetration Depth
-    $execute if score #Physics.Contact.FeatureB Physics matches 14 run scoreboard players operation #Physics.PenetrationDepth Physics = @s Physics.Object.CornerPosGlobal.$(FeatureA).z
+    $execute if score #Physics.Contact.FeatureB Physics matches 14 run scoreboard players operation #Physics.PenetrationDepth Physics = #Physics.ThisObject Physics.Object.CornerPosGlobal.$(FeatureA).z
     execute if score #Physics.Contact.FeatureB Physics matches 14 run scoreboard players operation #Physics.PenetrationDepth Physics -= #Physics.Projection.Block.WorldAxis.z.Min Physics
     execute if score #Physics.Contact.FeatureB Physics matches 15 run scoreboard players operation #Physics.PenetrationDepth Physics = #Physics.Projection.Block.WorldAxis.z.Max Physics
-    $execute if score #Physics.Contact.FeatureB Physics matches 15 run scoreboard players operation #Physics.PenetrationDepth Physics -= @s Physics.Object.CornerPosGlobal.$(FeatureA).z
+    $execute if score #Physics.Contact.FeatureB Physics matches 15 run scoreboard players operation #Physics.PenetrationDepth Physics -= #Physics.ThisObject Physics.Object.CornerPosGlobal.$(FeatureA).z
 
     # Check if the Penetration Depth is within the threshold (Can be slightly negative)
     execute if score #Physics.PenetrationDepth Physics < #Physics.Settings.MinPenetrationDepth Physics run return 0

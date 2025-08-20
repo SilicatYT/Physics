@@ -14,7 +14,6 @@
 
 
 
-
 # Note: All axis-vectors need to be normalized, including the cross product axes
 # Note: Precalculation - The projection of the object onto the world-geometry block's 3 axes is the same as the object's min and max values for those axes, so the min and max of the bounding box.
 # Note: Precalculation - The projection of the object onto its own 3 axes is -(dimension/2) for the min, and (dimension/2) for the max. Then just add the object center's projection onto the same axis to those min and max values.
@@ -23,16 +22,20 @@
 # Note: Precalculation - The projection of the object onto the 9 cross product axes can be done once in total, as it stays constant throughout the tick.
 # Note: Precalculation - The projection of the world-geometry block onto the 9 cross product axes and the axes of the object has to be done for each cube, but there's a trick: Precompute the projection of all 8 corner points of the block onto the axes, using only coordinates relative to the block hitbox center of the cube, then precompute the min and max for each axis. Then, for each block, scale the projections based on the block hitbox's scale and add its position to the precomputed min and max values. If the block position were the coordinate origin, one of the block's corners would always be at [0, 0, 0], relatively speaking. So I wouldn't have to project that one onto the axes, as it would always result in [0, 0, 0]. But overall it's faster to use the center position, because then I only have to project half the corner points onto each axis, calculate the max, and then just change the sign to get the min for each axis.
 
+# Setup (Precalculations)
+execute if score #Physics.SetupDone Physics matches 0 run function physics:zprivate/collision_detection/world/setup
+
 # Perform the Separating Axes Theorem (Simplified with pre-calculated values) to get whether there's a collision, the depth of the collision and what kind it is (Edge-Edge, Point-Face)
     # Check the different axes
+    # (Important): The block axes are only necessary because there could be non-full blocks. For full blocks, the overlap check for the block axes always passes.
         # x_block
             # Projection: Block (= Hitbox)
 
             # Projection: Object (= Global Bounding Box)
 
             # Overlap check
-            execute unless score #Physics.Projection.Block.WorldAxis.x.Min Physics <= @s Physics.Object.BoundingBoxGlobalMax.x run return 0
-            execute unless score @s Physics.Object.BoundingBoxGlobalMin.x <= #Physics.Projection.Block.WorldAxis.x.Max Physics run return 0
+            execute unless score #Physics.Projection.Block.WorldAxis.x.Min Physics <= #Physics.ThisObject Physics.Object.BoundingBoxGlobalMax.x run return 0
+            execute unless score #Physics.ThisObject Physics.Object.BoundingBoxGlobalMin.x <= #Physics.Projection.Block.WorldAxis.x.Max Physics run return 0
 
         # y_block
             # Projection: Block (= Hitbox)
@@ -40,8 +43,8 @@
             # Projection: Object (= Global Bounding Box)
 
             # Overlap check
-            execute unless score #Physics.Projection.Block.WorldAxis.y.Min Physics <= @s Physics.Object.BoundingBoxGlobalMax.y run return 0
-            execute unless score @s Physics.Object.BoundingBoxGlobalMin.y <= #Physics.Projection.Block.WorldAxis.y.Max Physics run return 0
+            execute unless score #Physics.Projection.Block.WorldAxis.y.Min Physics <= #Physics.ThisObject Physics.Object.BoundingBoxGlobalMax.y run return 0
+            execute unless score #Physics.ThisObject Physics.Object.BoundingBoxGlobalMin.y <= #Physics.Projection.Block.WorldAxis.y.Max Physics run return 0
 
         # z_block
             # Projection: Block (= Hitbox)
@@ -49,8 +52,8 @@
             # Projection: Object (= Global Bounding Box)
 
             # Overlap check
-            execute unless score #Physics.Projection.Block.WorldAxis.z.Min Physics <= @s Physics.Object.BoundingBoxGlobalMax.z run return 0
-            execute unless score @s Physics.Object.BoundingBoxGlobalMin.z <= #Physics.Projection.Block.WorldAxis.z.Max Physics run return 0
+            execute unless score #Physics.Projection.Block.WorldAxis.z.Min Physics <= #Physics.ThisObject Physics.Object.BoundingBoxGlobalMax.z run return 0
+            execute unless score #Physics.ThisObject Physics.Object.BoundingBoxGlobalMin.z <= #Physics.Projection.Block.WorldAxis.z.Max Physics run return 0
 
         # x_object
             # Projection: Block
@@ -85,8 +88,8 @@
             # Projection: Object (Precalculated)
 
             # Overlap check
-            execute unless score #Physics.Projection.Block.ObjectAxis.x.Min Physics <= @s Physics.Object.ProjectionOwnAxis.x.Max run return 0
-            execute unless score @s Physics.Object.ProjectionOwnAxis.x.Min <= #Physics.Projection.Block.ObjectAxis.x.Max Physics run return 0
+            execute unless score #Physics.Projection.Block.ObjectAxis.x.Min Physics <= #Physics.ThisObject Physics.Object.ProjectionOwnAxis.x.Max run return 0
+            execute unless score #Physics.ThisObject Physics.Object.ProjectionOwnAxis.x.Min <= #Physics.Projection.Block.ObjectAxis.x.Max Physics run return 0
 
         # y_object
             # Projection: Block
@@ -121,8 +124,8 @@
             # Projection: Object (Precalculated)
 
             # Overlap check
-            execute unless score #Physics.Projection.Block.ObjectAxis.y.Min Physics <= @s Physics.Object.ProjectionOwnAxis.y.Max run return 0
-            execute unless score @s Physics.Object.ProjectionOwnAxis.y.Min <= #Physics.Projection.Block.ObjectAxis.y.Max Physics run return 0
+            execute unless score #Physics.Projection.Block.ObjectAxis.y.Min Physics <= #Physics.ThisObject Physics.Object.ProjectionOwnAxis.y.Max run return 0
+            execute unless score #Physics.ThisObject Physics.Object.ProjectionOwnAxis.y.Min <= #Physics.Projection.Block.ObjectAxis.y.Max Physics run return 0
 
         # z_object
             # Projection: Block
@@ -157,8 +160,8 @@
             # Projection: Object (Precalculated)
 
             # Overlap check
-            execute unless score #Physics.Projection.Block.ObjectAxis.z.Min Physics <= @s Physics.Object.ProjectionOwnAxis.z.Max run return 0
-            execute unless score @s Physics.Object.ProjectionOwnAxis.z.Min <= #Physics.Projection.Block.ObjectAxis.z.Max Physics run return 0
+            execute unless score #Physics.Projection.Block.ObjectAxis.z.Min Physics <= #Physics.ThisObject Physics.Object.ProjectionOwnAxis.z.Max run return 0
+            execute unless score #Physics.ThisObject Physics.Object.ProjectionOwnAxis.z.Min <= #Physics.Projection.Block.ObjectAxis.z.Max Physics run return 0
 
         # Cross Product: x_block x x_object
             # Projection: Block
@@ -475,55 +478,55 @@ execute store result storage physics:zprivate ContactGroups[-1].Objects[0].Block
 # Get how much each axis is overlapping & get the least overlap
 # (Important): If two axes are exactly parallel to each other (Like if the objects are resting ontop of each other), their cross product is [0,0,0]. I'm unsure if discarding cross products with an overlap of 0 or with a value of [0,0,0] is more stable, so I'll revisit it once the resolver is done. For now, I discard cross products with an overlap of 0.
     # x_block
-    scoreboard players operation #Physics.Overlap.WorldAxis.x Physics = @s Physics.Object.BoundingBoxGlobalMax.x
+    scoreboard players operation #Physics.Overlap.WorldAxis.x Physics = #Physics.ThisObject Physics.Object.BoundingBoxGlobalMax.x
     scoreboard players operation #Physics.Overlap.WorldAxis.x Physics -= #Physics.Projection.Block.WorldAxis.x.Min Physics
     execute store result storage physics:zprivate ContactGroups[-1].Objects[0].Blocks[-1].Hitboxes[-1].BoundingBox[3] int 1 run scoreboard players operation #Physics.Maths.Value1 Physics = #Physics.Projection.Block.WorldAxis.x.Max Physics
-    scoreboard players operation #Physics.Maths.Value1 Physics -= @s Physics.Object.BoundingBoxGlobalMin.x
+    scoreboard players operation #Physics.Maths.Value1 Physics -= #Physics.ThisObject Physics.Object.BoundingBoxGlobalMin.x
     execute if score #Physics.Overlap.WorldAxis.x Physics > #Physics.Maths.Value1 Physics run scoreboard players operation #Physics.Overlap.WorldAxis.x Physics = #Physics.Maths.Value1 Physics
 
     scoreboard players operation #Physics.MinOverlap Physics = #Physics.Overlap.WorldAxis.x Physics
 
     # y_block
-    scoreboard players operation #Physics.Overlap.WorldAxis.y Physics = @s Physics.Object.BoundingBoxGlobalMax.y
+    scoreboard players operation #Physics.Overlap.WorldAxis.y Physics = #Physics.ThisObject Physics.Object.BoundingBoxGlobalMax.y
     scoreboard players operation #Physics.Overlap.WorldAxis.y Physics -= #Physics.Projection.Block.WorldAxis.y.Min Physics
     execute store result storage physics:zprivate ContactGroups[-1].Objects[0].Blocks[-1].Hitboxes[-1].BoundingBox[4] int 1 run scoreboard players operation #Physics.Maths.Value1 Physics = #Physics.Projection.Block.WorldAxis.y.Max Physics
-    scoreboard players operation #Physics.Maths.Value1 Physics -= @s Physics.Object.BoundingBoxGlobalMin.y
+    scoreboard players operation #Physics.Maths.Value1 Physics -= #Physics.ThisObject Physics.Object.BoundingBoxGlobalMin.y
     execute if score #Physics.Overlap.WorldAxis.y Physics > #Physics.Maths.Value1 Physics run scoreboard players operation #Physics.Overlap.WorldAxis.y Physics = #Physics.Maths.Value1 Physics
 
     execute if score #Physics.MinOverlap Physics > #Physics.Overlap.WorldAxis.y Physics run scoreboard players operation #Physics.MinOverlap Physics = #Physics.Overlap.WorldAxis.y Physics
 
     # z_block
-    scoreboard players operation #Physics.Overlap.WorldAxis.z Physics = @s Physics.Object.BoundingBoxGlobalMax.z
+    scoreboard players operation #Physics.Overlap.WorldAxis.z Physics = #Physics.ThisObject Physics.Object.BoundingBoxGlobalMax.z
     scoreboard players operation #Physics.Overlap.WorldAxis.z Physics -= #Physics.Projection.Block.WorldAxis.z.Min Physics
     execute store result storage physics:zprivate ContactGroups[-1].Objects[0].Blocks[-1].Hitboxes[-1].BoundingBox[5] int 1 run scoreboard players operation #Physics.Maths.Value1 Physics = #Physics.Projection.Block.WorldAxis.z.Max Physics
-    scoreboard players operation #Physics.Maths.Value1 Physics -= @s Physics.Object.BoundingBoxGlobalMin.z
+    scoreboard players operation #Physics.Maths.Value1 Physics -= #Physics.ThisObject Physics.Object.BoundingBoxGlobalMin.z
     execute if score #Physics.Overlap.WorldAxis.z Physics > #Physics.Maths.Value1 Physics run scoreboard players operation #Physics.Overlap.WorldAxis.z Physics = #Physics.Maths.Value1 Physics
 
     execute if score #Physics.MinOverlap Physics > #Physics.Overlap.WorldAxis.z Physics run scoreboard players operation #Physics.MinOverlap Physics = #Physics.Overlap.WorldAxis.z Physics
 
     # x_object
-    scoreboard players operation #Physics.Overlap.ObjectAxis.x Physics = @s Physics.Object.ProjectionOwnAxis.x.Max
+    scoreboard players operation #Physics.Overlap.ObjectAxis.x Physics = #Physics.ThisObject Physics.Object.ProjectionOwnAxis.x.Max
     scoreboard players operation #Physics.Overlap.ObjectAxis.x Physics -= #Physics.Projection.Block.ObjectAxis.x.Min Physics
     scoreboard players operation #Physics.Maths.Value1 Physics = #Physics.Projection.Block.ObjectAxis.x.Max Physics
-    scoreboard players operation #Physics.Maths.Value1 Physics -= @s Physics.Object.ProjectionOwnAxis.x.Min
+    scoreboard players operation #Physics.Maths.Value1 Physics -= #Physics.ThisObject Physics.Object.ProjectionOwnAxis.x.Min
     execute if score #Physics.Overlap.ObjectAxis.x Physics > #Physics.Maths.Value1 Physics run scoreboard players operation #Physics.Overlap.ObjectAxis.x Physics = #Physics.Maths.Value1 Physics
 
     execute if score #Physics.MinOverlap Physics > #Physics.Overlap.ObjectAxis.x Physics run scoreboard players operation #Physics.MinOverlap Physics = #Physics.Overlap.ObjectAxis.x Physics
 
     # y_object
-    scoreboard players operation #Physics.Overlap.ObjectAxis.y Physics = @s Physics.Object.ProjectionOwnAxis.y.Max
+    scoreboard players operation #Physics.Overlap.ObjectAxis.y Physics = #Physics.ThisObject Physics.Object.ProjectionOwnAxis.y.Max
     scoreboard players operation #Physics.Overlap.ObjectAxis.y Physics -= #Physics.Projection.Block.ObjectAxis.y.Min Physics
     scoreboard players operation #Physics.Maths.Value1 Physics = #Physics.Projection.Block.ObjectAxis.y.Max Physics
-    scoreboard players operation #Physics.Maths.Value1 Physics -= @s Physics.Object.ProjectionOwnAxis.y.Min
+    scoreboard players operation #Physics.Maths.Value1 Physics -= #Physics.ThisObject Physics.Object.ProjectionOwnAxis.y.Min
     execute if score #Physics.Overlap.ObjectAxis.y Physics > #Physics.Maths.Value1 Physics run scoreboard players operation #Physics.Overlap.ObjectAxis.y Physics = #Physics.Maths.Value1 Physics
 
     execute if score #Physics.MinOverlap Physics > #Physics.Overlap.ObjectAxis.y Physics run scoreboard players operation #Physics.MinOverlap Physics = #Physics.Overlap.ObjectAxis.y Physics
 
     # z_object
-    scoreboard players operation #Physics.Overlap.ObjectAxis.z Physics = @s Physics.Object.ProjectionOwnAxis.z.Max
+    scoreboard players operation #Physics.Overlap.ObjectAxis.z Physics = #Physics.ThisObject Physics.Object.ProjectionOwnAxis.z.Max
     scoreboard players operation #Physics.Overlap.ObjectAxis.z Physics -= #Physics.Projection.Block.ObjectAxis.z.Min Physics
     scoreboard players operation #Physics.Maths.Value1 Physics = #Physics.Projection.Block.ObjectAxis.z.Max Physics
-    scoreboard players operation #Physics.Maths.Value1 Physics -= @s Physics.Object.ProjectionOwnAxis.z.Min
+    scoreboard players operation #Physics.Maths.Value1 Physics -= #Physics.ThisObject Physics.Object.ProjectionOwnAxis.z.Min
     execute if score #Physics.Overlap.ObjectAxis.z Physics > #Physics.Maths.Value1 Physics run scoreboard players operation #Physics.Overlap.ObjectAxis.z Physics = #Physics.Maths.Value1 Physics
 
     execute if score #Physics.MinOverlap Physics > #Physics.Overlap.ObjectAxis.z Physics run scoreboard players operation #Physics.MinOverlap Physics = #Physics.Overlap.ObjectAxis.z Physics

@@ -17,8 +17,8 @@ scoreboard players operation #Physics.Projection.BlockCenter.ObjectAxis.z Physic
     # Calculate the Penetration Depth
     $scoreboard players operation #Physics.PenetrationDepth Physics = #Physics.Projection.BlockCornerBase$(FeatureB).ObjectAxis.z Physics
     scoreboard players operation #Physics.PenetrationDepth Physics += #Physics.Projection.BlockCenter.ObjectAxis.z Physics
-    execute if score #Physics.Contact.FeatureA Physics matches 14 run scoreboard players operation #Physics.PenetrationDepth Physics -= @s Physics.Object.ProjectionOwnAxis.z.Min
-    execute if score #Physics.Contact.FeatureA Physics matches 15 run scoreboard players operation #Physics.PenetrationDepth Physics -= @s Physics.Object.ProjectionOwnAxis.z.Max
+    execute if score #Physics.Contact.FeatureA Physics matches 14 run scoreboard players operation #Physics.PenetrationDepth Physics -= #Physics.ThisObject Physics.Object.ProjectionOwnAxis.z.Min
+    execute if score #Physics.Contact.FeatureA Physics matches 15 run scoreboard players operation #Physics.PenetrationDepth Physics -= #Physics.ThisObject Physics.Object.ProjectionOwnAxis.z.Max
     execute if score #Physics.Contact.FeatureA Physics matches 15 run scoreboard players operation #Physics.PenetrationDepth Physics *= #Physics.Constants.-1 Physics
 
     # Check if the Penetration Depth is within the threshold (Can be slightly negative)
