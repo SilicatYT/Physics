@@ -69,6 +69,14 @@ execute if score #Physics.IsInside Physics matches 0 store result storage physic
         scoreboard players operation #Physics.PointVelocity.z Physics -= #Physics.ContactPoint.y Physics
         scoreboard players operation #Physics.PointVelocity.z Physics /= #Physics.Constants.-1000 Physics
 
+        # Subtract velocity from acceleration along contact normal
+        # (Important): Normally you just subtract it from SeparatingVelocity so that ContactVelocity remains intact (the tangents need to be untouched!), but if I subtract the projection from both, then I don't have to repeatedly do that during each iteration of resolution.
+        # (Important): I project the VelocityFromAcceleration (currently only gravity) onto the contactNormal. Then I multiply this scalar with the ContactNormal, and subtract this new vector from the ContactVelocity. This means the SeparatingVelocity will already be adjusted once it's calculated, and I don't have to apply the projection every time it resolves a contact.
+        # (Important): Because the contact normal is axis-aligned, the calculations are simplified.
+        scoreboard players operation #Physics.VelocityFromAcceleration.y Physics = #Physics.ThisObject Physics.Object.DefactoGravity
+        execute if score #Physics.FeatureB Physics matches 12 run scoreboard players operation #Physics.VelocityFromAcceleration.y Physics *= #Physics.Constants.-1 Physics
+        scoreboard players operation #Physics.PointVelocity.y Physics -= #Physics.VelocityFromAcceleration.y Physics
+
         # Add the linear velocity to obtain the relative velocity of the contact point
         execute store result storage physics:temp data.NewContact.ContactVelocity[0] int 1 run scoreboard players operation #Physics.PointVelocity.x Physics += #Physics.ThisObject Physics.Object.Velocity.x
         execute store result storage physics:temp data.NewContact.ContactVelocity[1] int 1 run scoreboard players operation #Physics.PointVelocity.y Physics += #Physics.ThisObject Physics.Object.Velocity.y

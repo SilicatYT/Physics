@@ -36,6 +36,9 @@ scoreboard objectives add Physics.Object.MaxPenetrationDepth dummy
 scoreboard objectives add Physics.Object.MinSeparatingVelocity.World dummy
 scoreboard objectives add Physics.Object.MaxPenetrationDepth.World dummy
 
+    # Temporary. Remove once a proper system is added for all x, y and z components for velocityFromAcc
+    scoreboard objectives add Physics.Object.DefactoGravity dummy
+
 # Add derived object attributes (Calculated from object attributes, but stored separately to prevent repeated calculations)
 scoreboard objectives add Physics.Object.RotationMatrix.0 dummy
 scoreboard objectives add Physics.Object.RotationMatrix.1 dummy
@@ -190,7 +193,7 @@ scoreboard players set #Physics.MinDistance Physics 2147483647
 scoreboard players set #Physics.LookingAtID Physics 0
 
 scoreboard players set #Physics.Settings.ReactToBlockUpdates Physics 1
-scoreboard players set #Physics.Settings.DefaultGravity Physics 490
+scoreboard players set #Physics.Settings.DefaultGravity Physics -490
 scoreboard players set #Physics.Settings.LinearDamping Physics 98
 scoreboard players set #Physics.Settings.AngularDamping Physics 98
 scoreboard players set #Physics.Settings.MinPenetrationDepth Physics -50

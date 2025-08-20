@@ -5,6 +5,8 @@ scoreboard players set #Physics.SetupDone Physics 1
 # (Important): #Physics.ThisObject Physics.Object.Axis.?.? are set at the start of this function, inside the "execute store result", to squeeze out an extra bit of performance
 # (Important): This runs before object-object collision detection happens in this function, because this lets me use a #-fakeplayer instead of using @s, making these accesses (even during world contact generation!) roughly 10% faster. Technically I only *need* those scores after everything related to world contacts is already 100% complete, so any #Physics.ThisObject reference that happens during this function or during world contact stuff is purely because of that.
 # (Important): Object.ID is set above to avoid an extra "scoreboard players get".
+scoreboard players operation #Physics.ThisObject Physics.Object.DefactoGravity = @s Physics.Object.DefactoGravity
+
 scoreboard players operation #Physics.ThisObject Physics.Object.Pos.x = @s Physics.Object.Pos.x
 scoreboard players operation #Physics.ThisObject Physics.Object.Pos.y = @s Physics.Object.Pos.y
 scoreboard players operation #Physics.ThisObject Physics.Object.Pos.z = @s Physics.Object.Pos.z

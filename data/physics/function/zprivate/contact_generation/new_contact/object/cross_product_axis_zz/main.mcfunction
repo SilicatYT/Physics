@@ -129,9 +129,9 @@ scoreboard players operation #Physics.DeepestProjection Physics = #Physics.Proje
     # Contact Normal
     # (Important): For edge-edge collisions, the contact normal is the cross product.
     # (Important): In case ObjectA's projection is larger, it inverts the contact normal in "get_edge_b".
-    execute if score #Physics.PenetrationDepth Physics matches 0.. store result storage physics:temp data.NewContact.ContactNormal[0] int 1 run scoreboard players operation #Physics.ContactNormal.x Physics = #Physics.CrossProductAxis.zz.x Physics
-    execute if score #Physics.PenetrationDepth Physics matches 0.. store result storage physics:temp data.NewContact.ContactNormal[1] int 1 run scoreboard players operation #Physics.ContactNormal.y Physics = #Physics.CrossProductAxis.zz.y Physics
-    execute if score #Physics.PenetrationDepth Physics matches 0.. store result storage physics:temp data.NewContact.ContactNormal[2] int 1 run scoreboard players operation #Physics.ContactNormal.z Physics = #Physics.CrossProductAxis.zz.z Physics
+    execute unless score #Physics.ObjectA.EdgeProjection Physics > #Physics.ObjectB.EdgeProjection Physics store result storage physics:temp data.NewContact.ContactNormal[0] int 1 run scoreboard players operation #Physics.ContactNormal.x Physics = #Physics.CrossProductAxis.zz.x Physics
+    execute unless score #Physics.ObjectA.EdgeProjection Physics > #Physics.ObjectB.EdgeProjection Physics store result storage physics:temp data.NewContact.ContactNormal[1] int 1 run scoreboard players operation #Physics.ContactNormal.y Physics = #Physics.CrossProductAxis.zz.y Physics
+    execute unless score #Physics.ObjectA.EdgeProjection Physics > #Physics.ObjectB.EdgeProjection Physics store result storage physics:temp data.NewContact.ContactNormal[2] int 1 run scoreboard players operation #Physics.ContactNormal.z Physics = #Physics.CrossProductAxis.zz.z Physics
 
     # Separating Velocity
     # (Important): The separating velocity for one object is the dot product between the contact point (relative to that object)'s relative velocity and the contact normal. The relative velocity is the cross product between the object's angular velocity and the contact point (relative to the object's center) that's added together with the object's linear velocity.
@@ -193,6 +193,25 @@ scoreboard players operation #Physics.DeepestProjection Physics = #Physics.Proje
             scoreboard players operation #Physics.SeparatingVelocity.x Physics += #Physics.ThisObject Physics.Object.Velocity.x
             scoreboard players operation #Physics.SeparatingVelocity.y Physics += #Physics.ThisObject Physics.Object.Velocity.y
             scoreboard players operation #Physics.SeparatingVelocity.z Physics += #Physics.ThisObject Physics.Object.Velocity.z
+
+        # Subtract velocity from acceleration along contact normal
+        # (Important): Normally you just subtract it from SeparatingVelocity so that ContactVelocity remains intact (the tangents need to be untouched!), but if I subtract the projection from both, then I don't have to repeatedly do that during each iteration of resolution.
+        # (Important): I project the VelocityFromAcceleration (currently only gravity) onto the contactNormal. Then I multiply this scalar with the ContactNormal, and subtract this new vector from the ContactVelocity. This means the SeparatingVelocity will already be adjusted once it's calculated, and I don't have to apply the projection every time it resolves a contact.
+        scoreboard players operation #Physics.VelocityFromAcceleration.y Physics = #Physics.ThisObject Physics.Object.DefactoGravity
+        scoreboard players operation #Physics.VelocityFromAcceleration.y Physics -= @s Physics.Object.DefactoGravity
+        scoreboard players operation #Physics.VelocityFromAcceleration.y Physics *= #Physics.ContactNormal.y Physics
+        execute store result score #Physics.SubtractVector.x Physics store result score #Physics.SubtractVector.y Physics store result score #Physics.SubtractVector.z Physics run scoreboard players operation #Physics.VelocityFromAcceleration.y Physics /= #Physics.Constants.-1000 Physics
+
+        scoreboard players operation #Physics.SubtractVector.x Physics *= #Physics.ContactNormal.x Physics
+        scoreboard players operation #Physics.SubtractVector.y Physics *= #Physics.ContactNormal.y Physics
+        scoreboard players operation #Physics.SubtractVector.z Physics *= #Physics.ContactNormal.z Physics
+        scoreboard players operation #Physics.SubtractVector.x Physics /= #Physics.Constants.1000 Physics
+        scoreboard players operation #Physics.SubtractVector.y Physics /= #Physics.Constants.1000 Physics
+        scoreboard players operation #Physics.SubtractVector.z Physics /= #Physics.Constants.1000 Physics
+
+        scoreboard players operation #Physics.SeparatingVelocity.x Physics -= #Physics.SubtractVector.x Physics
+        scoreboard players operation #Physics.SeparatingVelocity.y Physics -= #Physics.SubtractVector.y Physics
+        scoreboard players operation #Physics.SeparatingVelocity.z Physics -= #Physics.SubtractVector.z Physics
 
         # Add the point velocities together
         execute store result storage physics:temp data.NewContact.ContactVelocity[0] int 1 run scoreboard players operation #Physics.SeparatingVelocity.x Physics -= #Physics.PointVelocity.x Physics

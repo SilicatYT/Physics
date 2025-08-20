@@ -1,15 +1,16 @@
-# TODO: If no forces, impulses or torque have been added, don't update the rotation matrix, orientation and stuff
-# NOTE: As an impulse, collisions with other objects count as well. Those can displace the object.
-# TODO: MAYBE make a function for the "AddVelocity" and "AddAngularVelocity", so it doesn't have to be added (& reset) every single tick for every object. Too cumbersome?
-# TODO: Review what forces should count towards "accCausedVelocity" (Here: VelocityDifference / AngularVelocityDifference). Punches, for example, should affect the separatingVelocity in the tick they happen (otherwise they won't feel snappy). But what about "AddVelocity"? Could be used for small bursts or across long periods of time. Should damping be included?
-#       => For now, I've removed VelocityDifference and AngularVelocityDifference for everything but gravity. I will re-examine it once I have actually implemented stuff that uses them, so I can see if it actually makes a difference.
-#          (Note): "AddVelocity" and "AddAngularVelocity" should only be included if it's constant. Maybe add two different functions for adding them, one is like a constant force generator that is added to an object (as described in the book), and another is used for instant bursts only.
-#       See note from 15.08.2025 on Discord
-
-# WAIT: He said only to remove the acceleration along the contact normal. That's not the same as making it look like it just didn't accelerate at all. If gravity pulls down, it should actually *add* velocity if the contact normal points down too.
+# TODO:
+# - When adding new forces (e.g. push from flowing water), evaluate whether that's a constant force that counts towards "velocityFromAcc", or if it's an instant force that shouldn't be subtracted (along the contact normal) from contactVelocity.
+# - Once a constant force uses it (e.g. force generator that rotates the object at a constant speed), add torque into the velocityFromAcc calculations
+# - Add a way to make objects move, like "addTorque" or "addVelocity" scores, and force generators (tags?) that you can add to objects (only static objects?) so they constantly spin or move (like moving platforms. Would those count towards) for example.
+# - Perhaps optimize it in contact generation so it only applies the torque or the x/z components of linear velocity to velocityFromAcc when it's present (because most often it's not present, so it would save calculations)
+# => Right now, only gravity (y component) is accounted for
+# - See note from 15.08.2025 on Discord
 
 # Update velocity & apply linear damping
 # (Important) Scale: InverseMass /= 1,000 -> Need to scale down the acceleration by 1/100,000x so the end result is scaled by 1,000x.
+execute if score @s Physics.Object.Gravity matches -2147483648.. run scoreboard players operation @s Physics.Object.DefactoGravity = @s Physics.Object.Gravity
+execute unless score @s Physics.Object.Gravity matches -2147483648.. run scoreboard players operation @s Physics.Object.DefactoGravity = #Physics.Settings.DefaultGravity Physics
+
 scoreboard players operation #Physics.Maths.Value1 Physics = @s Physics.Object.InverseMass
 scoreboard players operation #Physics.Maths.Value1 Physics /= #Physics.Constants.1000 Physics
 scoreboard players operation @s Physics.Object.AccumulatedForce.x *= #Physics.Maths.Value1 Physics
@@ -24,8 +25,7 @@ scoreboard players operation @s Physics.Object.Velocity.x *= #Physics.Settings.L
 scoreboard players operation @s Physics.Object.Velocity.x /= #Physics.Constants.100 Physics
 
 scoreboard players operation @s Physics.Object.Velocity.y += @s Physics.Object.AccumulatedForce.y
-execute if score @s Physics.Object.Gravity matches -2147483648..2147483647 run scoreboard players operation @s Physics.Object.Velocity.y -= @s Physics.Object.Gravity
-execute unless score @s Physics.Object.Gravity matches -2147483648..2147483647 run scoreboard players operation @s Physics.Object.Velocity.y -= #Physics.Settings.DefaultGravity Physics
+scoreboard players operation @s Physics.Object.Velocity.y += @s Physics.Object.DefactoGravity
 scoreboard players operation @s Physics.Object.Velocity.y *= #Physics.Settings.LinearDamping Physics
 scoreboard players operation @s Physics.Object.Velocity.y /= #Physics.Constants.100 Physics
 

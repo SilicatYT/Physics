@@ -21,8 +21,8 @@ execute if score #Physics.ObjectA.EdgeProjection Physics > #Physics.ObjectB.Edge
 execute store result storage physics:temp data.NewContact.PenetrationDepth short 1 run scoreboard players get #Physics.PenetrationDepth Physics
 
 # Invert the contact normal if ObjectA's edge projection is larger than ObjectB's edge projection
-execute if score #Physics.PenetrationDepth Physics matches 0.. run return 0
-execute store result storage physics:temp data.NewContact.ContactNormal[1] int -1 store result score #Physics.ContactNormal.y Physics run scoreboard players get #Physics.CrossProductAxis.xx.y Physics
-execute store result storage physics:temp data.NewContact.ContactNormal[2] int -1 store result score #Physics.ContactNormal.z Physics run scoreboard players get #Physics.CrossProductAxis.xx.z Physics
+execute unless score #Physics.ObjectA.EdgeProjection Physics > #Physics.ObjectB.EdgeProjection Physics run return 0
+execute store result storage physics:temp data.NewContact.ContactNormal[1] int -1 run scoreboard players operation #Physics.ContactNormal.y Physics = #Physics.CrossProductAxis.xx.y Physics
+execute store result storage physics:temp data.NewContact.ContactNormal[2] int -1 run scoreboard players operation #Physics.ContactNormal.z Physics = #Physics.CrossProductAxis.xx.z Physics
 scoreboard players operation #Physics.ContactNormal.y Physics *= #Physics.Constants.-1 Physics
 scoreboard players operation #Physics.ContactNormal.z Physics *= #Physics.Constants.-1 Physics

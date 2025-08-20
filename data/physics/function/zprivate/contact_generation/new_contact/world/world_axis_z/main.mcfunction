@@ -63,6 +63,11 @@ execute if score #Physics.FeatureB Physics matches 15 run scoreboard players ope
         scoreboard players operation #Physics.PointVelocity.z Physics -= #Physics.ContactPoint.y Physics
         scoreboard players operation #Physics.PointVelocity.z Physics /= #Physics.Constants.-1000 Physics
 
+        # Subtract velocity from acceleration along contact normal
+        # (Important): Normally you just subtract it from SeparatingVelocity so that ContactVelocity remains intact (the tangents need to be untouched!), but if I subtract the projection from both, then I don't have to repeatedly do that during each iteration of resolution.
+        # (Important): Because the contact normal is axis-aligned, these calculations are simplified.
+        # ...
+
         # Add the linear velocity to obtain the relative velocity of the contact point
         execute store result storage physics:temp data.NewContact.ContactVelocity[0] int 1 run scoreboard players operation #Physics.PointVelocity.x Physics += #Physics.ThisObject Physics.Object.Velocity.x
         execute store result storage physics:temp data.NewContact.ContactVelocity[1] int 1 run scoreboard players operation #Physics.PointVelocity.y Physics += #Physics.ThisObject Physics.Object.Velocity.y
