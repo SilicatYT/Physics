@@ -27,5 +27,3 @@ scoreboard players operation #Physics.Projection.BlockCenter.ObjectAxis.x Physic
 # Append the contact
 $data modify storage physics:zprivate ContactGroups[-1].Objects[0].Blocks[-1].Hitboxes[-1].Contacts append value {FeatureB:$(FeatureB)b}
 execute store result storage physics:zprivate ContactGroups[-1].Objects[0].Blocks[-1].Hitboxes[-1].Contacts[-1].FeatureA byte 1 run scoreboard players get #Physics.Contact.FeatureA Physics
-
-# Calculate Contact Point
