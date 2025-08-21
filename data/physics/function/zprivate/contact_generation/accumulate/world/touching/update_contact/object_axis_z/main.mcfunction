@@ -34,16 +34,17 @@
 
     # Check if the PenetrationDepth is negative
     # (Important): In that case, it still needs to calculate the contact point, and store the contact point, penetration depth and contact normal so it can later be updated during contact resolution.
-    $execute if score #Physics.PenetrationDepth Physics matches ..-1 if score #Physics.Contact.FeatureA Physics matches 14 run return run function physics:zprivate/contact_generation/accumulate/world/touching/update_contact/object_axis_z/calc_penetration_stuff_negative with storage physics:temp data.BlockCorner[$(FeatureB)]
-    $execute if score #Physics.PenetrationDepth Physics matches ..-1 if score #Physics.Contact.FeatureA Physics matches 15 run return run function physics:zprivate/contact_generation/accumulate/world/touching/update_contact/object_axis_z/calc_penetration_stuff_positive with storage physics:temp data.BlockCorner[$(FeatureB)]
+    $execute if score #Physics.PenetrationDepth Physics matches ..-1 run return run function physics:zprivate/contact_generation/accumulate/world/touching/update_contact/object_axis_z/calc_penetration_stuff {FeatureB:$(FeatureB)b}
 
     # Check if the Contact Corner is within the hitbox
     # (Important): This is necessary because the penetration depth could be positive even if the hitboxes aren't touching. So if they aren't touching, the contact should be ignored during resolution, but it should still be stored because we can't be sure whether the hitboxes are only slightly distanced or far away.
     # (Important): A point is within a cuboid when the point's projections onto the cuboid's 3 axes all lie within the cuboid's min and max.
-    scoreboard players set #Physics.IsInside Physics 0
-    execute if score #Physics.ContactCorner.x Physics <= #Physics.ThisObject Physics.Object.ProjectionOwnAxis.x.Max if score #Physics.ThisObject Physics.Object.ProjectionOwnAxis.x.Min <= #Physics.ContactCorner.x Physics if score #Physics.ContactCorner.y Physics <= #Physics.ThisObject Physics.Object.ProjectionOwnAxis.y.Max if score #Physics.ThisObject Physics.Object.ProjectionOwnAxis.y.Min <= #Physics.ContactCorner.y Physics if score #Physics.ContactCorner.z Physics <= #Physics.ThisObject Physics.Object.ProjectionOwnAxis.z.Max if score #Physics.ThisObject Physics.Object.ProjectionOwnAxis.z.Min <= #Physics.ContactCorner.z Physics run scoreboard players set #Physics.IsInside Physics 1
-    $execute if score #Physics.IsInside Physics matches 0 run data modify storage physics:zprivate ContactGroups[-1].Objects[0].Blocks[-1].Hitboxes[-1].Contacts append value {FeatureB:$(FeatureB)b}
-    execute if score #Physics.IsInside Physics matches 0 store result storage physics:zprivate ContactGroups[-1].Objects[0].Blocks[-1].Hitboxes[-1].Contacts[-1].FeatureA byte 1 run return run scoreboard players get #Physics.Contact.FeatureA Physics
+    #scoreboard players set #Physics.IsInside Physics 0
+    #execute if score #Physics.ContactCorner.x Physics <= #Physics.ThisObject Physics.Object.ProjectionOwnAxis.x.Max if score #Physics.ThisObject Physics.Object.ProjectionOwnAxis.x.Min <= #Physics.ContactCorner.x Physics if score #Physics.ContactCorner.y Physics <= #Physics.ThisObject Physics.Object.ProjectionOwnAxis.y.Max if score #Physics.ThisObject Physics.Object.ProjectionOwnAxis.y.Min <= #Physics.ContactCorner.y Physics if score #Physics.ContactCorner.z Physics <= #Physics.ThisObject Physics.Object.ProjectionOwnAxis.z.Max if score #Physics.ThisObject Physics.Object.ProjectionOwnAxis.z.Min <= #Physics.ContactCorner.z Physics run scoreboard players set #Physics.IsInside Physics 1
+    #$execute if score #Physics.IsInside Physics matches 0 run data modify storage physics:zprivate ContactGroups[-1].Objects[0].Blocks[-1].Hitboxes[-1].Contacts append value {FeatureB:$(FeatureB)b}
+    #execute if score #Physics.IsInside Physics matches 0 store result storage physics:zprivate ContactGroups[-1].Objects[0].Blocks[-1].Hitboxes[-1].Contacts[-1].FeatureA byte 1 run return run scoreboard players get #Physics.Contact.FeatureA Physics
+
+    # ^ I will return to this. I would need to check "IsInside" when updating the penetrationDepth during resolution, too. Is this a worthwhile check that improves stability? I would need to store the penetrationdepth and contactnormal too, in this case.
 
 # Update the contact
     # Get the corner position

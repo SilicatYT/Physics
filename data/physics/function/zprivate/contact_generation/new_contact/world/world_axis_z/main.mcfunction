@@ -48,20 +48,21 @@ execute if score #Physics.FeatureB Physics matches 15 run scoreboard players ope
         # (Important): I overwrite the contact point scores here, as I don't need them anymore after this.
         # (Important): I messed up the order (relativeContactPoint x angularVelocity instead of angularVelocity x relativeContactPoint). To accomodate for that without spending hours rewriting it, I divide by -1000 instead of 1000.
         # (Important): Although I only need a single component for the separating velocity, I still need the full ContactVelocity vector to calculate the impulse (because of friction).
+        # (Important): ContactVelocity is B - A, so I invert the calculations again so the SeparatingVelocity is really just the projection of the ContactVelocity (uniformly).
         scoreboard players operation #Physics.PointVelocity.x Physics *= #Physics.ThisObject Physics.Object.AngularVelocity.z
         scoreboard players operation #Physics.ContactPoint.z Physics *= #Physics.ThisObject Physics.Object.AngularVelocity.y
         scoreboard players operation #Physics.PointVelocity.x Physics -= #Physics.ContactPoint.z Physics
-        scoreboard players operation #Physics.PointVelocity.x Physics /= #Physics.Constants.-1000 Physics
+        scoreboard players operation #Physics.PointVelocity.x Physics /= #Physics.Constants.1000 Physics
 
         scoreboard players operation #Physics.PointVelocity.y Physics *= #Physics.ThisObject Physics.Object.AngularVelocity.x
         scoreboard players operation #Physics.ContactPoint.x Physics *= #Physics.ThisObject Physics.Object.AngularVelocity.z
         scoreboard players operation #Physics.PointVelocity.y Physics -= #Physics.ContactPoint.x Physics
-        scoreboard players operation #Physics.PointVelocity.y Physics /= #Physics.Constants.-1000 Physics
+        scoreboard players operation #Physics.PointVelocity.y Physics /= #Physics.Constants.1000 Physics
 
         scoreboard players operation #Physics.PointVelocity.z Physics *= #Physics.ThisObject Physics.Object.AngularVelocity.y
         scoreboard players operation #Physics.ContactPoint.y Physics *= #Physics.ThisObject Physics.Object.AngularVelocity.x
         scoreboard players operation #Physics.PointVelocity.z Physics -= #Physics.ContactPoint.y Physics
-        scoreboard players operation #Physics.PointVelocity.z Physics /= #Physics.Constants.-1000 Physics
+        scoreboard players operation #Physics.PointVelocity.z Physics /= #Physics.Constants.1000 Physics
 
         # Subtract velocity from acceleration along contact normal
         # (Important): Normally you just subtract it from SeparatingVelocity so that ContactVelocity remains intact (the tangents need to be untouched!), but if I subtract the projection from both, then I don't have to repeatedly do that during each iteration of resolution.
@@ -69,13 +70,13 @@ execute if score #Physics.FeatureB Physics matches 15 run scoreboard players ope
         # ...
 
         # Add the linear velocity to obtain the relative velocity of the contact point
-        execute store result storage physics:temp data.NewContact.ContactVelocity[0] int 1 run scoreboard players operation #Physics.PointVelocity.x Physics += #Physics.ThisObject Physics.Object.Velocity.x
-        execute store result storage physics:temp data.NewContact.ContactVelocity[1] int 1 run scoreboard players operation #Physics.PointVelocity.y Physics += #Physics.ThisObject Physics.Object.Velocity.y
-        execute store result storage physics:temp data.NewContact.ContactVelocity[2] int 1 run scoreboard players operation #Physics.PointVelocity.z Physics += #Physics.ThisObject Physics.Object.Velocity.z
+        execute store result storage physics:temp data.NewContact.ContactVelocity[0] int 1 run scoreboard players operation #Physics.PointVelocity.x Physics -= #Physics.ThisObject Physics.Object.Velocity.x
+        execute store result storage physics:temp data.NewContact.ContactVelocity[1] int 1 run scoreboard players operation #Physics.PointVelocity.y Physics -= #Physics.ThisObject Physics.Object.Velocity.y
+        execute store result storage physics:temp data.NewContact.ContactVelocity[2] int 1 run scoreboard players operation #Physics.PointVelocity.z Physics -= #Physics.ThisObject Physics.Object.Velocity.z
 
         # Take the dot product with the contact normal
         # (Important): For the SeparatingVelocity, I only care about a single component because the contact normal is a world axis.
-        execute if score #Physics.FeatureB Physics matches 14 run scoreboard players operation #Physics.PointVelocity.z Physics *= #Physics.Constants.-1 Physics
+        execute if score #Physics.FeatureB Physics matches 15 run scoreboard players operation #Physics.PointVelocity.z Physics *= #Physics.Constants.-1 Physics
         execute store result storage physics:temp data.NewContact.SeparatingVelocity short 1 run scoreboard players get #Physics.PointVelocity.z Physics
 
 # Store the contact

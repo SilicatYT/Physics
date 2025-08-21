@@ -9,14 +9,14 @@ scoreboard players operation #Physics.Maths.Value1 Physics = #Physics.CrossProdu
 scoreboard players operation #Physics.Maths.Value1 Physics *= #Physics.ContactNormal.z Physics
 scoreboard players operation #Physics.DotProduct Physics += #Physics.Maths.Value1 Physics
 
-execute if score #Physics.ObjectA.EdgeProjection Physics > #Physics.ObjectB.EdgeProjection Physics run scoreboard players operation #Physics.DotProduct Physics *= #Physics.Constants.-1 Physics
-
-execute if score #Physics.DotProduct Physics matches ..700000 run return 0
-
 # Get the features
     # Edge A
     # (Important): Everything's cached, as there are only 4 possible values. So no "get_edge_a" function is necessary.
     $function physics:zprivate/contact_generation/accumulate/world/touching/update_contact/cross_product_axis_yz/get_edge_a with storage physics:temp data.BlockEdge.$(FeatureA)
+
+execute store success score #Physics.InvertValues Physics if score #Physics.Projection.Object.CrossProductAxis.yz.Min Physics = #Physics.PenetrationDepth Physics
+execute if score #Physics.InvertValues Physics matches 1 run scoreboard players operation #Physics.DotProduct Physics *= #Physics.Constants.-1 Physics
+execute if score #Physics.DotProduct Physics matches ..700000 run return 0
 
     # Edge B
     # (Important): To save scoreboard checks and to avoid further calculations if the contact is invalid anyway, the rest of the logic is performed in this function.
