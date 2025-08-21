@@ -6,5 +6,5 @@ $execute store result score #Physics.ObjectA.EdgeStart.x Physics run scoreboard 
 $execute store result score #Physics.ObjectA.EdgeStart.y Physics run scoreboard players operation #Physics.Maths.Value2 Physics = #Physics.ThisObject Physics.Object.CornerPosGlobal.$(StartCorner).y
 $execute store result score #Physics.ObjectA.EdgeStart.z Physics run scoreboard players operation #Physics.Maths.Value3 Physics = #Physics.ThisObject Physics.Object.CornerPosGlobal.$(StartCorner).z
 
-# Get the edge's projection (For inverting the contact normal if necessary)
-$scoreboard players operation #Physics.ObjectA.EdgeProjection Physics = #Physics.Projection.ObjectCorner$(StartCorner).CrossProductAxis.yx Physics
+# Get the edge's projection for the penetration depth
+$scoreboard players operation #Physics.PenetrationDepth Physics = #Physics.Projection.ObjectCorner$(StartCorner).CrossProductAxis.yx Physics

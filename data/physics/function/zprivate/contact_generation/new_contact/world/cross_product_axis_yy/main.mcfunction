@@ -109,9 +109,9 @@ execute if score #Physics.Projection.Block.CrossProductAxis.yy.Min Physics < #Ph
     # (Important): Because the block's y axis only has its y component set, the cross product has a y component of 0 (Not stored in the score).
     # (Important): In case ObjectA's projection is larger, it inverts the contact normal in "get_edge_b".
     # (Important): The contact normal scores are set for accumulation later.
-    execute unless score #Physics.ObjectA.EdgeProjection Physics > #Physics.ObjectB.EdgeProjection Physics store result storage physics:temp data.NewContact.ContactNormal[0] int 1 run scoreboard players operation #Physics.ContactNormal.x Physics = #Physics.CrossProductAxis.yy.x Physics
+    execute if score #Physics.InvertValues Physics matches 0 store result storage physics:temp data.NewContact.ContactNormal[0] int 1 run scoreboard players operation #Physics.ContactNormal.x Physics = #Physics.CrossProductAxis.yy.x Physics
     execute store result score #Physics.ContactNormal.y Physics run data modify storage physics:temp data.NewContact.ContactNormal[1] set value 0
-    execute unless score #Physics.ObjectA.EdgeProjection Physics > #Physics.ObjectB.EdgeProjection Physics store result storage physics:temp data.NewContact.ContactNormal[2] int 1 run scoreboard players operation #Physics.ContactNormal.z Physics =get #Physics.CrossProductAxis.yy.z Physics
+    execute if score #Physics.InvertValues Physics matches 0 store result storage physics:temp data.NewContact.ContactNormal[2] int 1 run scoreboard players operation #Physics.ContactNormal.z Physics = #Physics.CrossProductAxis.yy.z Physics
 
     # Separating Velocity
     # (Important): The separating velocity is the dot product between the contact point's relative velocity and the contact normal. The relative velocity is the cross product between the angular velocity and the contact point (relative to the object's center) that's added together with the object's linear velocity.
@@ -124,30 +124,33 @@ execute if score #Physics.Projection.Block.CrossProductAxis.yy.Min Physics < #Ph
         # (Important): I overwrite the contact point scores here, as I don't need them anymore after this.
         # (Important): Because the block's y axis component is 1, the contact normal's y component is 0. Because I only need the point velocity for the dot product later on, I could ignore calculating the y component. However, it's still necessary during contact resolution (friction calculation for the impulse), so I calculate them all.
         # (Important): I messed up the order (relativeContactPoint x angularVelocity instead of angularVelocity x relativeContactPoint). To accomodate for that without spending hours rewriting it, I divide by -1000 instead of 1000.
+        # (Important): ContactVelocity is B - A, so that the separating velocity immediately has the correct sign. Because of this, the PointVelocity divisions are inverted again. So regular 1000 instead of -1000.
         scoreboard players operation #Physics.PointVelocity.x Physics *= #Physics.ThisObject Physics.Object.AngularVelocity.z
         scoreboard players operation #Physics.ContactPoint.z Physics *= #Physics.ThisObject Physics.Object.AngularVelocity.y
         scoreboard players operation #Physics.PointVelocity.x Physics -= #Physics.ContactPoint.z Physics
-        scoreboard players operation #Physics.PointVelocity.x Physics /= #Physics.Constants.-1000 Physics
+        scoreboard players operation #Physics.PointVelocity.x Physics /= #Physics.Constants.1000 Physics
 
         scoreboard players operation #Physics.PointVelocity.y Physics *= #Physics.ThisObject Physics.Object.AngularVelocity.x
         scoreboard players operation #Physics.Maths.s Physics *= #Physics.ThisObject Physics.Object.AngularVelocity.z
         scoreboard players operation #Physics.PointVelocity.y Physics -= #Physics.Maths.s Physics
-        scoreboard players operation #Physics.PointVelocity.y Physics /= #Physics.Constants.-1000 Physics
+        scoreboard players operation #Physics.PointVelocity.y Physics /= #Physics.Constants.1000 Physics
 
         scoreboard players operation #Physics.PointVelocity.z Physics *= #Physics.ThisObject Physics.Object.AngularVelocity.y
         scoreboard players operation #Physics.ContactPoint.y Physics *= #Physics.ThisObject Physics.Object.AngularVelocity.x
         scoreboard players operation #Physics.PointVelocity.z Physics -= #Physics.ContactPoint.y Physics
-        scoreboard players operation #Physics.PointVelocity.z Physics /= #Physics.Constants.-1000 Physics
+        scoreboard players operation #Physics.PointVelocity.z Physics /= #Physics.Constants.1000 Physics
 
         # Subtract velocity from acceleration along contact normal
         # (Important): Normally you just subtract it from SeparatingVelocity so that ContactVelocity remains intact (the tangents need to be untouched!), but if I subtract the projection from both, then I don't have to repeatedly do that during each iteration of resolution.
         # (Important): I project the VelocityFromAcceleration (currently only gravity) onto the contactNormal. Then I multiply this scalar with the ContactNormal, and subtract this new vector from the ContactVelocity. This means the SeparatingVelocity will already be adjusted once it's calculated, and I don't have to apply the projection every time it resolves a contact.
+        # (Important): ContactVelocity is B - A. Because of this, the SubtractVector is added instead of subtracted.
         # ...
 
         # Add the linear velocity to obtain the relative velocity of the contact point
-        execute store result storage physics:temp data.NewContact.ContactVelocity[0] int 1 run scoreboard players operation #Physics.PointVelocity.x Physics += #Physics.ThisObject Physics.Object.Velocity.x
-        execute store result storage physics:temp data.NewContact.ContactVelocity[1] int 1 run scoreboard players operation #Physics.PointVelocity.y Physics += #Physics.ThisObject Physics.Object.Velocity.y
-        execute store result storage physics:temp data.NewContact.ContactVelocity[2] int 1 run scoreboard players operation #Physics.PointVelocity.z Physics += #Physics.ThisObject Physics.Object.Velocity.z
+        # (Important): ContactVelocity is B - A, which is why I subtract the linear velocity instead of add it.
+        execute store result storage physics:temp data.NewContact.ContactVelocity[0] int 1 run scoreboard players operation #Physics.PointVelocity.x Physics -= #Physics.ThisObject Physics.Object.Velocity.x
+        execute store result storage physics:temp data.NewContact.ContactVelocity[1] int 1 run scoreboard players operation #Physics.PointVelocity.y Physics -= #Physics.ThisObject Physics.Object.Velocity.y
+        execute store result storage physics:temp data.NewContact.ContactVelocity[2] int 1 run scoreboard players operation #Physics.PointVelocity.z Physics -= #Physics.ThisObject Physics.Object.Velocity.z
 
         # Calculate the relative velocity's dot product with the contact normal to get the separation velocity (single number, not a vector) and store it
         # (Important): Because the block's y axis component is 1, the contact normal's y component is 0. So this is simplified.
@@ -156,7 +159,7 @@ execute if score #Physics.Projection.Block.CrossProductAxis.yy.Min Physics < #Ph
         scoreboard players operation #Physics.PointVelocity.z Physics *= #Physics.ContactNormal.z Physics
 
         scoreboard players operation #Physics.PointVelocity.x Physics += #Physics.PointVelocity.z Physics
-        execute store result storage physics:temp data.NewContact.SeparatingVelocity short 1 run scoreboard players operation #Physics.PointVelocity.x Physics /= #Physics.Constants.-1000 Physics
+        execute store result storage physics:temp data.NewContact.SeparatingVelocity short 1 run scoreboard players operation #Physics.PointVelocity.x Physics /= #Physics.Constants.1000 Physics
 
 # Store the contact
 data modify storage physics:zprivate ContactGroups[-1].Objects[0].Blocks[-1].Hitboxes[-1].Contacts append from storage physics:temp data.NewContact
