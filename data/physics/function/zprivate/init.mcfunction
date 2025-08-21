@@ -207,6 +207,7 @@ data modify storage physics:temp data.IntersectionPosGlobal set value [0d,0d,0d]
 data modify storage physics:temp data.NewContact set value {ContactNormal:[I;0,0,0],ContactPoint:[I;0,0,0],ContactVelocity:[I;0,0,0]}
 data modify storage physics:temp data.BlockCorner set value [{x:"Min",y:"Min",z:"Min"},{x:"Min",y:"Min",z:"Max"},{x:"Max",y:"Min",z:"Min"},{x:"Max",y:"Min",z:"Max"},{x:"Min",y:"Max",z:"Min"},{x:"Min",y:"Max",z:"Max"},{x:"Max",y:"Max",z:"Min"},{x:"Max",y:"Max",z:"Max"}]
 data modify storage physics:temp data.BlockEdge set value {20:{StartCorner:0b},21:{StartCorner:1b},22:{StartCorner:4b},23:{StartCorner:5b},24:{StartCorner:0b},25:{StartCorner:1b},26:{StartCorner:2b},27:{StartCorner:3b},28:{StartCorner:0b},29:{StartCorner:2b},30:{StartCorner:4b},31:{StartCorner:6b}}
+data modify storage physics:temp data.ObjectAEdge set value {x:[{Edge:20b,StartCorner:0b},{Edge:21b,StartCorner:1b},{Edge:22b,StartCorner:4b},{Edge:23b,StartCorner:5b}],y:[{Edge:24b,StartCorner:0b},{Edge:25b,StartCorner:1b},{Edge:26b,StartCorner:2b},{Edge:27b,StartCorner:3b}],z:[{Edge:28b,StartCorner:0b},{Edge:29b,StartCorner:2b},{Edge:30b,StartCorner:4b},{Edge:31b,StartCorner:6b}]}
 
 # Set gamerules
 gamerule maxCommandChainLength 2147483647

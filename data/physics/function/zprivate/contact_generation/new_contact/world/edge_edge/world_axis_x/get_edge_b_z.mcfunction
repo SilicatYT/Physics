@@ -11,18 +11,15 @@ scoreboard players operation #Physics.Maths.Value1 Physics -= #Physics.ObjectB.E
 scoreboard players operation #Physics.Maths.Value2 Physics -= #Physics.ObjectB.EdgeStart.y Physics
 scoreboard players operation #Physics.Maths.Value3 Physics -= #Physics.ObjectB.EdgeStart.z Physics
 
-# Check whether penetration depth and contact normal should be inverted
-execute store success score #Physics.InvertValues Physics if score #Physics.Projection.Object.CrossProductAxis.yy.Min Physics = #Physics.PenetrationDepth Physics
-
 # Calculate the Penetration Depth
 # (Important): EdgeA projection - EdgeB projection
-$scoreboard players operation #Physics.PenetrationDepth Physics -= #Physics.Projection.BlockCornerBase$(StartCorner).CrossProductAxis.yy Physics
-scoreboard players operation #Physics.PenetrationDepth Physics -= #Physics.Projection.BlockCenter.CrossProductAxis.yy Physics
+$scoreboard players operation #Physics.PenetrationDepth Physics -= #Physics.Projection.BlockCornerBase$(StartCorner).CrossProductAxis.xz Physics
+scoreboard players operation #Physics.PenetrationDepth Physics -= #Physics.Projection.BlockCenter.CrossProductAxis.xz Physics
 
 # Invert the penetration depth & contact normal if needed
 execute if score #Physics.InvertValues Physics matches 0 store result storage physics:temp data.NewContact.PenetrationDepth short 1 run return run scoreboard players get #Physics.PenetrationDepth Physics
 execute store result storage physics:temp data.NewContact.PenetrationDepth short 1 run scoreboard players operation #Physics.PenetrationDepth Physics *= #Physics.Constants.-1 Physics
-execute store result storage physics:temp data.NewContact.ContactNormal[0] int -1 run scoreboard players operation #Physics.ContactNormal.x Physics = #Physics.CrossProductAxis.yy.x Physics
-execute store result storage physics:temp data.NewContact.ContactNormal[2] int -1 run scoreboard players operation #Physics.ContactNormal.z Physics = #Physics.CrossProductAxis.yy.z Physics
-scoreboard players operation #Physics.ContactNormal.x Physics *= #Physics.Constants.-1 Physics
+execute store result storage physics:temp data.NewContact.ContactNormal[1] int -1 run scoreboard players operation #Physics.ContactNormal.y Physics = #Physics.CrossProductAxis.xz.y Physics
+execute store result storage physics:temp data.NewContact.ContactNormal[2] int -1 run scoreboard players operation #Physics.ContactNormal.z Physics = #Physics.CrossProductAxis.xz.z Physics
+scoreboard players operation #Physics.ContactNormal.y Physics *= #Physics.Constants.-1 Physics
 scoreboard players operation #Physics.ContactNormal.z Physics *= #Physics.Constants.-1 Physics

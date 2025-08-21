@@ -11,9 +11,6 @@ scoreboard players operation #Physics.Maths.Value1 Physics -= #Physics.ObjectB.E
 scoreboard players operation #Physics.Maths.Value2 Physics -= #Physics.ObjectB.EdgeStart.y Physics
 scoreboard players operation #Physics.Maths.Value3 Physics -= #Physics.ObjectB.EdgeStart.z Physics
 
-# Check whether penetration depth and contact normal should be inverted
-execute store success score #Physics.InvertValues Physics if score #Physics.Projection.Object.CrossProductAxis.yx.Min Physics = #Physics.PenetrationDepth Physics
-
 # Calculate the Penetration Depth
 # (Important): EdgeA projection - EdgeB projection
 $scoreboard players operation #Physics.PenetrationDepth Physics -= #Physics.Projection.BlockCornerBase$(StartCorner).CrossProductAxis.yx Physics

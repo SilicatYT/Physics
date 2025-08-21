@@ -610,7 +610,7 @@ execute store result storage physics:zprivate ContactGroups[-1].Objects[0].Block
     scoreboard players operation #Physics.Maths.Value1 Physics -= #Physics.Projection.Object.CrossProductAxis.zz.Min Physics
     execute if score #Physics.Overlap.CrossProductAxis.zz Physics > #Physics.Maths.Value1 Physics run scoreboard players operation #Physics.Overlap.CrossProductAxis.zz Physics = #Physics.Maths.Value1 Physics
 
-    execute if score #Physics.MinOverlap Physics > #Physics.Overlap.CrossProductAxis.zz Physics unless score #Physics.Overlap.CrossProductAxis.zz Physics matches 0 run return run function physics:zprivate/contact_generation/new_contact/world/cross_product_axis_zz/main
+    execute if score #Physics.MinOverlap Physics > #Physics.Overlap.CrossProductAxis.zz Physics unless score #Physics.Overlap.CrossProductAxis.zz Physics matches 0 run return run function physics:zprivate/contact_generation/new_contact/world/edge_edge/world_axis_z/main {ObjectAxis:"z",StartCorner0:0b,StartCorner1:2b,StartCorner2:4b,StartCorner3:6b}
 
 # Get the involved features of both objects
 execute if score #Physics.MinOverlap Physics = #Physics.Overlap.WorldAxis.y Physics run return run function physics:zprivate/contact_generation/new_contact/world/world_axis_y/main
@@ -619,11 +619,11 @@ execute if score #Physics.MinOverlap Physics = #Physics.Overlap.WorldAxis.z Phys
 execute if score #Physics.MinOverlap Physics = #Physics.Overlap.ObjectAxis.x Physics run return run function physics:zprivate/contact_generation/new_contact/world/object_axis_x/main
 execute if score #Physics.MinOverlap Physics = #Physics.Overlap.ObjectAxis.y Physics run return run function physics:zprivate/contact_generation/new_contact/world/object_axis_y/main
 execute if score #Physics.MinOverlap Physics = #Physics.Overlap.ObjectAxis.z Physics run return run function physics:zprivate/contact_generation/new_contact/world/object_axis_z/main
-execute if score #Physics.MinOverlap Physics = #Physics.Overlap.CrossProductAxis.xx Physics run return run function physics:zprivate/contact_generation/new_contact/world/cross_product_axis_xx/main
-execute if score #Physics.MinOverlap Physics = #Physics.Overlap.CrossProductAxis.xy Physics run return run function physics:zprivate/contact_generation/new_contact/world/cross_product_axis_xy/main
-execute if score #Physics.MinOverlap Physics = #Physics.Overlap.CrossProductAxis.xz Physics run return run function physics:zprivate/contact_generation/new_contact/world/cross_product_axis_xz/main
-execute if score #Physics.MinOverlap Physics = #Physics.Overlap.CrossProductAxis.yx Physics run return run function physics:zprivate/contact_generation/new_contact/world/cross_product_axis_yx/main
-execute if score #Physics.MinOverlap Physics = #Physics.Overlap.CrossProductAxis.yy Physics run return run function physics:zprivate/contact_generation/new_contact/world/cross_product_axis_yy/main
-execute if score #Physics.MinOverlap Physics = #Physics.Overlap.CrossProductAxis.yz Physics run return run function physics:zprivate/contact_generation/new_contact/world/cross_product_axis_yz/main
-execute if score #Physics.MinOverlap Physics = #Physics.Overlap.CrossProductAxis.zx Physics run return run function physics:zprivate/contact_generation/new_contact/world/cross_product_axis_zx/main
-function physics:zprivate/contact_generation/new_contact/world/cross_product_axis_zy/main
+execute if score #Physics.MinOverlap Physics = #Physics.Overlap.CrossProductAxis.xx Physics run return run function physics:zprivate/contact_generation/new_contact/world/edge_edge/world_axis_x/main {ObjectAxis:"x",StartCorner0:0b,StartCorner1:1b,StartCorner2:4b,StartCorner3:5b}
+execute if score #Physics.MinOverlap Physics = #Physics.Overlap.CrossProductAxis.xy Physics run return run function physics:zprivate/contact_generation/new_contact/world/edge_edge/world_axis_x/main {ObjectAxis:"y",StartCorner0:0b,StartCorner1:1b,StartCorner2:2b,StartCorner3:3b}
+execute if score #Physics.MinOverlap Physics = #Physics.Overlap.CrossProductAxis.xz Physics run return run function physics:zprivate/contact_generation/new_contact/world/edge_edge/world_axis_x/main {ObjectAxis:"z",StartCorner0:0b,StartCorner1:2b,StartCorner2:4b,StartCorner3:6b}
+execute if score #Physics.MinOverlap Physics = #Physics.Overlap.CrossProductAxis.yx Physics run return run function physics:zprivate/contact_generation/new_contact/world/edge_edge/world_axis_y/main {ObjectAxis:"x",StartCorner0:0b,StartCorner1:1b,StartCorner2:4b,StartCorner3:5b}
+execute if score #Physics.MinOverlap Physics = #Physics.Overlap.CrossProductAxis.yy Physics run return run function physics:zprivate/contact_generation/new_contact/world/edge_edge/world_axis_y/main {ObjectAxis:"y",StartCorner0:0b,StartCorner1:1b,StartCorner2:2b,StartCorner3:3b}
+execute if score #Physics.MinOverlap Physics = #Physics.Overlap.CrossProductAxis.yz Physics run return run function physics:zprivate/contact_generation/new_contact/world/edge_edge/world_axis_y/main {ObjectAxis:"z",StartCorner0:0b,StartCorner1:2b,StartCorner2:4b,StartCorner3:6b}
+execute if score #Physics.MinOverlap Physics = #Physics.Overlap.CrossProductAxis.zx Physics run return run function physics:zprivate/contact_generation/new_contact/world/edge_edge/world_axis_z/main {ObjectAxis:"x",StartCorner0:0b,StartCorner1:1b,StartCorner2:4b,StartCorner3:5b}
+function physics:zprivate/contact_generation/new_contact/world/edge_edge/world_axis_z/main {ObjectAxis:"y",StartCorner0:0b,StartCorner1:1b,StartCorner2:2b,StartCorner3:3b}
