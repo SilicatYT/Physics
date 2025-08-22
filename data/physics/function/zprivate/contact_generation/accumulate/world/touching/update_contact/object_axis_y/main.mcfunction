@@ -34,7 +34,7 @@
 
     # Check if the PenetrationDepth is negative
     # (Important): In that case, it still needs to store the contact point, penetration depth and contact normal so it can later be updated during contact resolution.
-    $execute if score #Physics.PenetrationDepth Physics matches ..-1 run return run function physics:zprivate/contact_generation/accumulate/world/touching/update_contact/object_axis_x/penetration_depth_negative {FeatureB:$(FeatureB)b,ObjectAxis:"y",NegativeFace:12b}
+    $execute if score #Physics.PenetrationDepth Physics matches ..-1 run return run function physics:zprivate/contact_generation/accumulate/world/touching/update_contact/object_axis_y/penetration_depth_negative {FeatureB:$(FeatureB)b}
 
     # Check if the Contact Corner is within the hitbox
     # (Important): This is necessary because the penetration depth could be positive even if the hitboxes aren't touching. So if they aren't touching, the contact should be ignored during resolution, but it should still be stored because we can't be sure whether the hitboxes are only slightly distanced or far away.
