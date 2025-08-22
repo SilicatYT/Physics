@@ -33,24 +33,80 @@
     execute if score #Physics.DotProduct Physics matches ..900000 store result storage physics:zprivate ContactGroups[-1].Objects[0].Blocks[-1].Hitboxes[-1].Contacts[-1].FeatureA byte 1 run return run scoreboard players get #Physics.Contact.FeatureA Physics
 
     # Check if the PenetrationDepth is negative
-    # (Important): In that case, it still needs to calculate the contact point, and store the contact point, penetration depth and contact normal so it can later be updated during contact resolution.
-    $execute if score #Physics.PenetrationDepth Physics matches ..-1 run return run function physics:zprivate/contact_generation/accumulate/world/touching/update_contact/object_axis_y/calc_penetration_stuff {FeatureB:$(FeatureB)b}
+    # (Important): In that case, it still needs to store the contact point, penetration depth and contact normal so it can later be updated during contact resolution.
+    $execute if score #Physics.PenetrationDepth Physics matches ..-1 run return run function physics:zprivate/contact_generation/accumulate/world/touching/update_contact/object_axis_x/penetration_depth_negative {FeatureB:$(FeatureB)b,ObjectAxis:"y",NegativeFace:12b}
 
     # Check if the Contact Corner is within the hitbox
     # (Important): This is necessary because the penetration depth could be positive even if the hitboxes aren't touching. So if they aren't touching, the contact should be ignored during resolution, but it should still be stored because we can't be sure whether the hitboxes are only slightly distanced or far away.
     # (Important): A point is within a cuboid when the point's projections onto the cuboid's 3 axes all lie within the cuboid's min and max.
     #scoreboard players set #Physics.IsInside Physics 0
-    #execute if score #Physics.ContactCorner.x Physics <= #Physics.ThisObject Physics.Object.ProjectionOwnAxis.x.Max if score #Physics.ThisObject Physics.Object.ProjectionOwnAxis.x.Min <= #Physics.ContactCorner.x Physics if score #Physics.ContactCorner.y Physics <= #Physics.ThisObject Physics.Object.ProjectionOwnAxis.y.Max if score #Physics.ThisObject Physics.Object.ProjectionOwnAxis.y.Min <= #Physics.ContactCorner.y Physics if score #Physics.ContactCorner.z Physics <= #Physics.ThisObject Physics.Object.ProjectionOwnAxis.z.Max if score #Physics.ThisObject Physics.Object.ProjectionOwnAxis.z.Min <= #Physics.ContactCorner.z Physics run scoreboard players set #Physics.IsInside Physics 1
+    #execute if score #Physics.ContactCorner.x Physics <= #Physics.ThisObject Physics.Object.ProjectionOwnAxis.y.Max if score #Physics.ThisObject Physics.Object.ProjectionOwnAxis.y.Min <= #Physics.ContactCorner.x Physics if score #Physics.ContactCorner.y Physics <= #Physics.ThisObject Physics.Object.ProjectionOwnAxis.y.Max if score #Physics.ThisObject Physics.Object.ProjectionOwnAxis.y.Min <= #Physics.ContactCorner.y Physics if score #Physics.ContactCorner.z Physics <= #Physics.ThisObject Physics.Object.ProjectionOwnAxis.z.Max if score #Physics.ThisObject Physics.Object.ProjectionOwnAxis.z.Min <= #Physics.ContactCorner.z Physics run scoreboard players set #Physics.IsInside Physics 1
     #$execute if score #Physics.IsInside Physics matches 0 run data modify storage physics:zprivate ContactGroups[-1].Objects[0].Blocks[-1].Hitboxes[-1].Contacts append value {FeatureB:$(FeatureB)b}
     #execute if score #Physics.IsInside Physics matches 0 store result storage physics:zprivate ContactGroups[-1].Objects[0].Blocks[-1].Hitboxes[-1].Contacts[-1].FeatureA byte 1 run return run scoreboard players get #Physics.Contact.FeatureA Physics
 
     # ^ I will return to this. I would need to check "IsInside" when updating the penetrationDepth during resolution, too. Is this a worthwhile check that improves stability? I would need to store the penetrationdepth and contactnormal too, in this case.
 
 # Update the contact
+execute store result storage physics:temp data.NewContact.PenetrationDepth short 1 run scoreboard players get #Physics.PenetrationDepth Physics
+
     # Get the corner position
-    # (Important): Updates the contact point, contact normal and separating velocity if the penetration depth is positive.
     $execute if score #Physics.Contact.FeatureA Physics matches 12 run function physics:zprivate/contact_generation/accumulate/world/touching/update_contact/object_axis_y/get_corner_negative with storage physics:temp data.BlockCorner[$(FeatureB)]
     $execute if score #Physics.Contact.FeatureA Physics matches 13 run function physics:zprivate/contact_generation/accumulate/world/touching/update_contact/object_axis_y/get_corner_positive with storage physics:temp data.BlockCorner[$(FeatureB)]
+
+    # Separating Velocity
+        # Calculate relative contact point
+        execute store result score #Physics.PointVelocity.z Physics run scoreboard players operation #Physics.ContactPoint.x Physics -= #Physics.ThisObject Physics.Object.Pos.x
+        execute store result score #Physics.PointVelocity.x Physics run scoreboard players operation #Physics.ContactPoint.y Physics -= #Physics.ThisObject Physics.Object.Pos.y
+        execute store result score #Physics.PointVelocity.y Physics run scoreboard players operation #Physics.ContactPoint.z Physics -= #Physics.ThisObject Physics.Object.Pos.z
+
+        # Calculate cross product between angular velocity and relative contact point
+        scoreboard players operation #Physics.PointVelocity.x Physics *= #Physics.ThisObject Physics.Object.AngularVelocity.z
+        scoreboard players operation #Physics.ContactPoint.z Physics *= #Physics.ThisObject Physics.Object.AngularVelocity.y
+        scoreboard players operation #Physics.PointVelocity.x Physics -= #Physics.ContactPoint.z Physics
+        scoreboard players operation #Physics.PointVelocity.x Physics /= #Physics.Constants.1000 Physics
+
+        scoreboard players operation #Physics.PointVelocity.y Physics *= #Physics.ThisObject Physics.Object.AngularVelocity.x
+        scoreboard players operation #Physics.ContactPoint.x Physics *= #Physics.ThisObject Physics.Object.AngularVelocity.z
+        scoreboard players operation #Physics.PointVelocity.y Physics -= #Physics.ContactPoint.x Physics
+        scoreboard players operation #Physics.PointVelocity.y Physics /= #Physics.Constants.1000 Physics
+
+        scoreboard players operation #Physics.PointVelocity.z Physics *= #Physics.ThisObject Physics.Object.AngularVelocity.y
+        scoreboard players operation #Physics.ContactPoint.y Physics *= #Physics.ThisObject Physics.Object.AngularVelocity.x
+        scoreboard players operation #Physics.PointVelocity.z Physics -= #Physics.ContactPoint.y Physics
+        scoreboard players operation #Physics.PointVelocity.z Physics /= #Physics.Constants.1000 Physics
+
+        # Subtract velocity from acceleration along contact normal
+        # (Important): Because I multiply by ObjectAxis and then again by ObjectAxis, it doesn't matter that I don't have the direction-corrected contact normal. I don't have to invert the result.
+        scoreboard players operation #Physics.VelocityFromAcceleration.y Physics = #Physics.ThisObject Physics.Object.DefactoGravity
+        scoreboard players operation #Physics.VelocityFromAcceleration.y Physics *= #Physics.ThisObject Physics.Object.Axis.y.y
+        execute store result score #Physics.SubtractVector.x Physics store result score #Physics.SubtractVector.y Physics store result score #Physics.SubtractVector.z Physics run scoreboard players operation #Physics.VelocityFromAcceleration.y Physics /= #Physics.Constants.1000 Physics
+
+        scoreboard players operation #Physics.SubtractVector.x Physics *= #Physics.ThisObject Physics.Object.Axis.y.x
+        scoreboard players operation #Physics.SubtractVector.y Physics *= #Physics.ThisObject Physics.Object.Axis.y.y
+        scoreboard players operation #Physics.SubtractVector.z Physics *= #Physics.ThisObject Physics.Object.Axis.y.z
+        scoreboard players operation #Physics.SubtractVector.x Physics /= #Physics.Constants.1000 Physics
+        scoreboard players operation #Physics.SubtractVector.y Physics /= #Physics.Constants.1000 Physics
+        scoreboard players operation #Physics.SubtractVector.z Physics /= #Physics.Constants.1000 Physics
+
+        scoreboard players operation #Physics.PointVelocity.x Physics += #Physics.SubtractVector.x Physics
+        scoreboard players operation #Physics.PointVelocity.y Physics += #Physics.SubtractVector.y Physics
+        scoreboard players operation #Physics.PointVelocity.z Physics += #Physics.SubtractVector.z Physics
+
+        # Add the linear velocity to obtain the relative velocity of the contact point
+        execute store result storage physics:temp data.NewContact.ContactVelocity[0] int 1 run scoreboard players operation #Physics.PointVelocity.x Physics -= #Physics.ThisObject Physics.Object.Velocity.x
+        execute store result storage physics:temp data.NewContact.ContactVelocity[1] int 1 run scoreboard players operation #Physics.PointVelocity.y Physics -= #Physics.ThisObject Physics.Object.Velocity.y
+        execute store result storage physics:temp data.NewContact.ContactVelocity[2] int 1 run scoreboard players operation #Physics.PointVelocity.z Physics -= #Physics.ThisObject Physics.Object.Velocity.z
+
+        # Calculate the relative velocity's dot product with the contact normal to get the separation velocity (single number, not a vector) and store it
+        scoreboard players operation #Physics.PointVelocity.x Physics *= @s Physics.Object.Axis.y.x
+        scoreboard players operation #Physics.PointVelocity.y Physics *= @s Physics.Object.Axis.y.y
+        scoreboard players operation #Physics.PointVelocity.z Physics *= @s Physics.Object.Axis.y.z
+
+        scoreboard players operation #Physics.PointVelocity.x Physics += #Physics.PointVelocity.y Physics
+        scoreboard players operation #Physics.PointVelocity.x Physics += #Physics.PointVelocity.z Physics
+
+        execute if score #Physics.Contact.FeatureA Physics matches 12 run scoreboard players operation #Physics.PointVelocity.x Physics *= #Physics.Constants.-1 Physics
+        execute store result storage physics:temp data.NewContact.SeparatingVelocity short 1 run scoreboard players operation #Physics.PointVelocity.x Physics /= #Physics.Constants.1000 Physics
 
     # Store the contact
     data modify storage physics:zprivate ContactGroups[-1].Objects[0].Blocks[-1].Hitboxes[-1].Contacts append from storage physics:temp data.NewContact
