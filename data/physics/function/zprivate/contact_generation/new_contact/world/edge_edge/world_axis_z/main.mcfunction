@@ -1,6 +1,6 @@
 # Get the object's feature (Edge that's closest to the world-geometry block)
 # (Important): The edge is perpendicular to the axis with the minimum overlap, so it projects onto a single point. Meaning I only have to look at 1 corner point of each of the 4 candidate edges to see which one is farther along the axis.
-$execute store result score #Physics.InvertValues Physics if score #Physics.Projection.Block.CrossProductAxis.z$(ObjectAxis).Min Physics >= #Physics.Projection.Object.CrossProductAxis.z$(ObjectAxis).Min Physics
+$execute store success score #Physics.InvertValues Physics if score #Physics.Projection.Block.CrossProductAxis.z$(ObjectAxis).Min Physics >= #Physics.Projection.Object.CrossProductAxis.z$(ObjectAxis).Min Physics
 $execute if score #Physics.InvertValues Physics matches 0 run scoreboard players operation #Physics.DeepestProjection Physics = #Physics.Projection.Object.CrossProductAxis.z$(ObjectAxis).Min Physics
 $execute if score #Physics.InvertValues Physics matches 1 run scoreboard players operation #Physics.DeepestProjection Physics = #Physics.Projection.Object.CrossProductAxis.z$(ObjectAxis).Max Physics
 
