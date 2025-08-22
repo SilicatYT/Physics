@@ -1,6 +1,6 @@
 # (VERY IMPORTANT): Apparently, blindly using the axis of minimum overlap is not correct, and could lead to point-face contacts being detected where not a single corner intersects. After implementing resolution, check how much of a problem this is. To fix, either verify the proposed contact somehow, or use Ian Millington's method that doesn't use the axis of min overlap but instead checks every combination. Whatever is faster.
 # (IMPORTANT): In world "touching" object_axis_? accumulation, I have a commented out check for whether the point is inside the object. See whether that's worthwhile for stability, and whether to implement something like this for other contacts (edge-edge) too.
-
+# (Important): To avoid having a side contact being detected for blocks whose only exposed surface is the top (for example), possibly leading to sideways collisions on a flat ground, maybe add some checks for whether the part of collision is covered by an adjacent block's hitbox.
 
 
 
