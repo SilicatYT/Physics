@@ -43,6 +43,8 @@ scoreboard objectives remove Physics.Object.MinSeparatingVelocity
 scoreboard objectives remove Physics.Object.MaxPenetrationDepth
 scoreboard objectives remove Physics.Object.MinSeparatingVelocity.World
 scoreboard objectives remove Physics.Object.MaxPenetrationDepth.World
+scoreboard objectives remove Physics.Object.FrictionCoefficient
+scoreboard objectives remove Physics.Object.RestitutionCoefficient
 
 scoreboard objectives remove Physics.Object.RotationMatrix.0
 scoreboard objectives remove Physics.Object.RotationMatrix.1

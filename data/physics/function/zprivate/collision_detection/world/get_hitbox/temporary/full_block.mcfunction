@@ -28,10 +28,12 @@ execute if score #Physics.Touching Physics matches 0 run return 0
 
 
 
-
-
-
-
+# Set the friction & restitution coefficients
+# (Important): To avoid having to hardcode a giant table, I take the min of both.
+execute if score #Physics.ThisObject Physics.Object.FrictionCoefficient < #Physics.FrictionCoefficient Physics run scoreboard players operation #Physics.FrictionCoefficient Physics = #Physics.ThisObject Physics.Object.FrictionCoefficient
+execute store result storage physics:zprivate ContactGroups[-1].Objects[0].Blocks[-1].FrictionCoefficient byte 1 run scoreboard players get #Physics.FrictionCoefficient Physics
+execute if score #Physics.ThisObject Physics.Object.RestitutionCoefficient < #Physics.RestitutionCoefficient Physics run scoreboard players operation #Physics.RestitutionCoefficient Physics = #Physics.ThisObject Physics.Object.RestitutionCoefficient
+execute store result storage physics:zprivate ContactGroups[-1].Objects[0].Blocks[-1].RestitutionCoefficient byte 1 run scoreboard players get #Physics.RestitutionCoefficient Physics
 
 # Update the previous tick's contacts with that hitbox
 # (Important): It needs to make sure that it only runs the "update" function if data for this hitbox was found, and remember that "set storage from storage" keeps the previous value if the source is empty or not found.

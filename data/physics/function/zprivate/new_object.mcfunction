@@ -34,6 +34,8 @@ scoreboard players set @s Physics.Object.BoundingBoxLocalMax.z 500
 scoreboard players set @s Physics.Object.BoundingBoxStepCount.x 2
 scoreboard players set @s Physics.Object.BoundingBoxStepCount.y 2
 scoreboard players set @s Physics.Object.BoundingBoxStepCount.z 2
+scoreboard players set @s Physics.Object.FrictionCoefficient 50
+scoreboard players set @s Physics.Object.RestitutionCoefficient 30
 
 # Remove tag
 tag @s remove Physics.New

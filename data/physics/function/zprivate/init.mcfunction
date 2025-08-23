@@ -35,6 +35,8 @@ scoreboard objectives add Physics.Object.MinSeparatingVelocity dummy
 scoreboard objectives add Physics.Object.MaxPenetrationDepth dummy
 scoreboard objectives add Physics.Object.MinSeparatingVelocity.World dummy
 scoreboard objectives add Physics.Object.MaxPenetrationDepth.World dummy
+scoreboard objectives add Physics.Object.FrictionCoefficient dummy
+scoreboard objectives add Physics.Object.RestitutionCoefficient dummy
 
     # Temporary. Remove once a proper system is added for all x, y and z components for velocityFromAcc
     scoreboard objectives add Physics.Object.DefactoGravity dummy

@@ -7,7 +7,7 @@
 
 # (Important): In touching accumulation, I run a check to see whether the contactPoint is in an invalid location (despite positive penetration depth). I need to remember to also do these checks during resolution (when updating contacts' penetration depth), and mark contacts that fail these checks with "Invalid:1b".
 
-
+# (Important): Optimize getting the friction & restitution coefficients in "new_block", maybe by using binary search. Also, add more materials
 
 
 
