@@ -1,6 +1,6 @@
 # Get ObjectB's feature (Face that's closest to ObjectA)
 # (Important): There are 2 candidate faces (those normal to the axis), and I select the correct one by looking at the projection of a single point of them and looking which is closer. If I look at the same point for both faces, I can easily get which face is closer.
-# (Important): The FeatureA score is set in "get_features", so I don't have to try all the 6 possibilities here. Better for performance.
+# (Important): The FeatureB score is set in "get_features", so I don't have to try all the 6 possibilities here. Better for performance.
 $execute store success score #Physics.InvertValues Physics if score #Physics.Projection.Object.OtherObjectAxis.$(OtherAxis).Min Physics < @s Physics.Object.ProjectionOwnAxis.$(OtherAxis).Min
 
 # Get ObjectA's feature (Corner that's closest to ObjectB)

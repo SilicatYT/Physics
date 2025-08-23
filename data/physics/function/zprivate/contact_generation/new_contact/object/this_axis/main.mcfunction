@@ -1,33 +1,30 @@
 # Get ObjectA's feature (Face that's closest to ObjectB)
 # (Important): There are 2 candidate faces (those normal to the axis), and I select the correct one by looking at the projection of a single point of them and looking which is closer. If I look at the same point for both faces, I can easily get which face is closer.
-execute if score #Physics.Projection.OtherObject.ObjectAxis.y.Min Physics < #Physics.ThisObject Physics.Object.ProjectionOwnAxis.y.Min store result storage physics:temp data.NewContact.FeatureA byte 1 store result storage physics:temp data.FeatureA byte 1 run scoreboard players set #Physics.FeatureA Physics 12
-execute if score #Physics.Projection.OtherObject.ObjectAxis.y.Min Physics >= #Physics.ThisObject Physics.Object.ProjectionOwnAxis.y.Min store result storage physics:temp data.NewContact.FeatureA byte 1 store result storage physics:temp data.FeatureA byte 1 run scoreboard players set #Physics.FeatureA Physics 13
+# (Important): The FeatureA score is set in "get_features", so I don't have to try all the 6 possibilities here. Better for performance.
+$execute store success score #Physics.InvertValues Physics if score #Physics.Projection.OtherObject.ObjectAxis.$(ObjectAxis).Min Physics < #Physics.ThisObject Physics.Object.ProjectionOwnAxis.$(ObjectAxis).Min
 
 # Get ObjectB's feature (Corner that's closest to ObjectA)
 # (Important): I check which of the 8 corners' projection is the closest to ObjectA along the axis (furthest along the axis), so I have to get either the min or the max.
-scoreboard players operation #Physics.DeepestProjection Physics = #Physics.Projection.OtherObject.ObjectAxis.y.Max Physics
+$scoreboard players operation #Physics.DeepestProjection Physics = #Physics.Projection.OtherObject.ObjectAxis.$(ObjectAxis).Max Physics
 
     # Set the feature
     # (Important): There are only 8 corners (and unique macro variable combinations), so everything is cached. Reduces duplicate files.
     # (Important): Because only the min and max projections are scaled down, I need to scale the corner projections down here and turn the DeepestProjection relative again. In addition, to account for rounding errors that are different for positive and negative values (It matters whether I first multiply by -1 and then divide, or the other way around), I turn the min back to the max and just invert which corner matches which corner projection if it tries to get the min projection's corner.
-    scoreboard players operation #Physics.DeepestProjection Physics -= #Physics.Projection.OtherObjectCenter.ObjectAxis.y Physics
-    execute if score #Physics.FeatureA Physics matches 12 run function physics:zprivate/contact_generation/new_contact/object/this_axis_y/check_corner_max
-    execute if score #Physics.FeatureA Physics matches 13 run function physics:zprivate/contact_generation/new_contact/object/this_axis_y/check_corner_min
+    $scoreboard players operation #Physics.DeepestProjection Physics -= #Physics.Projection.OtherObjectCenter.ObjectAxis.$(ObjectAxis) Physics
+    $execute if score #Physics.InvertValues Physics matches 0 run function physics:zprivate/contact_generation/new_contact/object/this_axis/check_corner_min {ObjectAxis:"$(ObjectAxis)"}
+    $execute if score #Physics.InvertValues Physics matches 1 run function physics:zprivate/contact_generation/new_contact/object/this_axis/check_corner_max {ObjectAxis:"$(ObjectAxis)"}
 
 # Calculate Penetration Depth, Contact Normal, Contact Point & Separating Velocity
     # Penetration Depth
     # (Important): For point-face collisions, the penetration depth is the projection of (point - <any point on the face>) onto the contact normal. It's distributive, so I can also subtract the projection of any point on the face from the (already calculated) projection of the corner.
-    # (Important): Calculations are done in "get_corner/..." to avoid redundant score checks and to utilize "return run".
+    # (Important): Calculations are done in "get_features" to avoid redundant score checks and to utilize "return run".
 
     # Contact Normal
-    # (Important): For point-face collisions, the contact normal is the face's normal. So it's the axis of minimum overlap.
+    # (Important): For point-face collisions, the contact normal is the face's normal. So it's the axis of minimum overlap. Also set in "get_features".
 
     # Contact Point
     # (Important): For point-face collisions, the contact point is the point projected onto the surface (= moved along contact normal with the penetration depth as the amount).
     # (Important): I use the "execute store" from earlier to avoid an additional scoreboard call. Also, the point's coordinates are copied over in "get_corner/...".
-    # (Important): I need to invert the contact normal scores so they always face away from the face, but instead I invert the penetration depth. This is faster, and I don't need the score later anyway.
-    execute if score #Physics.FeatureA Physics matches 12 run scoreboard players operation #Physics.PenetrationDepth Physics *= #Physics.Constants.-1 Physics
-
     scoreboard players operation #Physics.Maths.Value1 Physics *= #Physics.PenetrationDepth Physics
     scoreboard players operation #Physics.Maths.Value1 Physics /= #Physics.Constants.1000 Physics
     execute store result storage physics:temp data.NewContact.ContactPoint[0] int 1 store result score #Physics.ContactPointCopy.x Physics run scoreboard players operation #Physics.ContactPoint.x Physics += #Physics.Maths.Value1 Physics
@@ -74,32 +71,32 @@ scoreboard players operation #Physics.DeepestProjection Physics = #Physics.Proje
 
         # Separating Velocity for ObjectB
             # Calculate relative contact point
-            execute store result score #Physics.SeparatingVelocity.z Physics run scoreboard players operation #Physics.ContactPointCopy.x Physics -= #Physics.ThisObject Physics.Object.Pos.x
-            execute store result score #Physics.SeparatingVelocity.x Physics run scoreboard players operation #Physics.ContactPointCopy.y Physics -= #Physics.ThisObject Physics.Object.Pos.y
-            execute store result score #Physics.SeparatingVelocity.y Physics run scoreboard players operation #Physics.ContactPointCopy.z Physics -= #Physics.ThisObject Physics.Object.Pos.z
+            execute store result score #Physics.SeparatingVelocity.z Physics run scoreboard players operation #Physics.ContactPointCopy.x Physics -= @s Physics.Object.Pos.x
+            execute store result score #Physics.SeparatingVelocity.x Physics run scoreboard players operation #Physics.ContactPointCopy.y Physics -= @s Physics.Object.Pos.y
+            execute store result score #Physics.SeparatingVelocity.y Physics run scoreboard players operation #Physics.ContactPointCopy.z Physics -= @s Physics.Object.Pos.z
 
             # Calculate cross product between angular velocity and relative contact point
             # (Important): I overwrite the contact point scores here, as I don't need those values (relative to this object) anymore.
             # (Important): I messed up the order (relativeContactPoint x angularVelocity instead of angularVelocity x relativeContactPoint). To accomodate for that without spending hours rewriting it, I divide by -1000 instead of 1000.
-            scoreboard players operation #Physics.SeparatingVelocity.x Physics *= #Physics.ThisObject Physics.Object.AngularVelocity.z
-            scoreboard players operation #Physics.ContactPointCopy.z Physics *= #Physics.ThisObject Physics.Object.AngularVelocity.y
+            scoreboard players operation #Physics.SeparatingVelocity.x Physics *= @s Physics.Object.AngularVelocity.z
+            scoreboard players operation #Physics.ContactPointCopy.z Physics *= @s Physics.Object.AngularVelocity.y
             scoreboard players operation #Physics.SeparatingVelocity.x Physics -= #Physics.ContactPointCopy.z Physics
             scoreboard players operation #Physics.SeparatingVelocity.x Physics /= #Physics.Constants.-1000 Physics
 
-            scoreboard players operation #Physics.SeparatingVelocity.y Physics *= #Physics.ThisObject Physics.Object.AngularVelocity.x
-            scoreboard players operation #Physics.ContactPointCopy.x Physics *= #Physics.ThisObject Physics.Object.AngularVelocity.z
+            scoreboard players operation #Physics.SeparatingVelocity.y Physics *= @s Physics.Object.AngularVelocity.x
+            scoreboard players operation #Physics.ContactPointCopy.x Physics *= @s Physics.Object.AngularVelocity.z
             scoreboard players operation #Physics.SeparatingVelocity.y Physics -= #Physics.ContactPointCopy.x Physics
             scoreboard players operation #Physics.SeparatingVelocity.y Physics /= #Physics.Constants.-1000 Physics
 
-            scoreboard players operation #Physics.SeparatingVelocity.z Physics *= #Physics.ThisObject Physics.Object.AngularVelocity.y
-            scoreboard players operation #Physics.ContactPointCopy.y Physics *= #Physics.ThisObject Physics.Object.AngularVelocity.x
+            scoreboard players operation #Physics.SeparatingVelocity.z Physics *= @s Physics.Object.AngularVelocity.y
+            scoreboard players operation #Physics.ContactPointCopy.y Physics *= @s Physics.Object.AngularVelocity.x
             scoreboard players operation #Physics.SeparatingVelocity.z Physics -= #Physics.ContactPointCopy.y Physics
             scoreboard players operation #Physics.SeparatingVelocity.z Physics /= #Physics.Constants.-1000 Physics
 
             # Add the linear velocity to obtain the relative velocity of the contact point
-            scoreboard players operation #Physics.SeparatingVelocity.x Physics += #Physics.ThisObject Physics.Object.Velocity.x
-            scoreboard players operation #Physics.SeparatingVelocity.y Physics += #Physics.ThisObject Physics.Object.Velocity.y
-            scoreboard players operation #Physics.SeparatingVelocity.z Physics += #Physics.ThisObject Physics.Object.Velocity.z
+            scoreboard players operation #Physics.SeparatingVelocity.x Physics += @s Physics.Object.Velocity.x
+            scoreboard players operation #Physics.SeparatingVelocity.y Physics += @s Physics.Object.Velocity.y
+            scoreboard players operation #Physics.SeparatingVelocity.z Physics += @s Physics.Object.Velocity.z
 
         # Subtract velocity from acceleration along contact normal
         # (Important): Normally you just subtract it from SeparatingVelocity so that ContactVelocity remains intact (the tangents need to be untouched!), but if I subtract the projection from both, then I don't have to repeatedly do that during each iteration of resolution.
@@ -107,7 +104,7 @@ scoreboard players operation #Physics.DeepestProjection Physics = #Physics.Proje
         scoreboard players operation #Physics.VelocityFromAcceleration.y Physics = @s Physics.Object.DefactoGravity
         scoreboard players operation #Physics.VelocityFromAcceleration.y Physics -= #Physics.ThisObject Physics.Object.DefactoGravity
         scoreboard players operation #Physics.VelocityFromAcceleration.y Physics *= #Physics.ContactNormal.y Physics
-        execute store result score #Physics.SubtractVector.x Physics store result score #Physics.SubtractVector.y Physics store result score #Physics.SubtractVector.z Physics run scoreboard players operation #Physics.VelocityFromAcceleration.y Physics /= #Physics.Constants.-1000 Physics
+        execute store result score #Physics.SubtractVector.x Physics store result score #Physics.SubtractVector.y Physics store result score #Physics.SubtractVector.z Physics run scoreboard players operation #Physics.VelocityFromAcceleration.y Physics /= #Physics.Constants.1000 Physics
 
         scoreboard players operation #Physics.SubtractVector.x Physics *= #Physics.ContactNormal.x Physics
         scoreboard players operation #Physics.SubtractVector.y Physics *= #Physics.ContactNormal.y Physics
@@ -126,16 +123,14 @@ scoreboard players operation #Physics.DeepestProjection Physics = #Physics.Proje
         execute store result storage physics:temp data.NewContact.ContactVelocity[2] int 1 run scoreboard players operation #Physics.SeparatingVelocity.z Physics -= #Physics.PointVelocity.z Physics
 
         # Calculate the relative velocity's dot product with the contact normal to get the separation velocity (single number, not a vector) and store it
-        # (Important): Because the contact normal scores (Physics.Object.Axis.?.?) are not adjusted to face away from the face, I may multiply the final result with -1.
         # (Important): I also adjust the scale and invert the number here instead of doing it for both individual velocities.
-        scoreboard players operation #Physics.SeparatingVelocity.x Physics *= #Physics.ThisObject Physics.Object.Axis.x.x
-        scoreboard players operation #Physics.SeparatingVelocity.y Physics *= #Physics.ThisObject Physics.Object.Axis.x.y
-        scoreboard players operation #Physics.SeparatingVelocity.z Physics *= #Physics.ThisObject Physics.Object.Axis.x.z
+        scoreboard players operation #Physics.SeparatingVelocity.x Physics *= #Physics.ContactNormal.x Physics
+        scoreboard players operation #Physics.SeparatingVelocity.y Physics *= #Physics.ContactNormal.y Physics
+        scoreboard players operation #Physics.SeparatingVelocity.z Physics *= #Physics.ContactNormal.z Physics
 
         scoreboard players operation #Physics.SeparatingVelocity.x Physics += #Physics.SeparatingVelocity.y Physics
         scoreboard players operation #Physics.SeparatingVelocity.x Physics += #Physics.SeparatingVelocity.z Physics
 
-        execute if score #Physics.FeatureA Physics matches 12 run scoreboard players operation #Physics.SeparatingVelocity.x Physics *= #Physics.Constants.-1 Physics
         execute store result storage physics:temp data.NewContact.SeparatingVelocity short 1 store result storage physics:zprivate ContactGroups[-1].Objects[-1].MinSeparatingVelocity short 1 run scoreboard players operation #Physics.SeparatingVelocity.x Physics /= #Physics.Constants.1000 Physics
 
 # Store the new contact
