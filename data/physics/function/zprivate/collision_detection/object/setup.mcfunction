@@ -57,13 +57,6 @@ scoreboard players operation #Physics.ThisObject Physics.Object.CornerPosGlobal.
 scoreboard players operation #Physics.ThisObject Physics.Object.CornerPosGlobal.7.y = @s Physics.Object.CornerPosGlobal.7.y
 scoreboard players operation #Physics.ThisObject Physics.Object.CornerPosGlobal.7.z = @s Physics.Object.CornerPosGlobal.7.z
 
-scoreboard players operation #Physics.ThisObject Physics.Object.BoundingBoxGlobalMin.x = @s Physics.Object.BoundingBoxGlobalMin.x
-scoreboard players operation #Physics.ThisObject Physics.Object.BoundingBoxGlobalMax.x = @s Physics.Object.BoundingBoxGlobalMax.x
-scoreboard players operation #Physics.ThisObject Physics.Object.BoundingBoxGlobalMin.y = @s Physics.Object.BoundingBoxGlobalMin.y
-scoreboard players operation #Physics.ThisObject Physics.Object.BoundingBoxGlobalMax.y = @s Physics.Object.BoundingBoxGlobalMax.y
-scoreboard players operation #Physics.ThisObject Physics.Object.BoundingBoxGlobalMin.z = @s Physics.Object.BoundingBoxGlobalMin.z
-scoreboard players operation #Physics.ThisObject Physics.Object.BoundingBoxGlobalMax.z = @s Physics.Object.BoundingBoxGlobalMax.z
-
 scoreboard players operation #Physics.ThisObject Physics.Object.ProjectionOwnAxis.x.Min = @s Physics.Object.ProjectionOwnAxis.x.Min
 scoreboard players operation #Physics.ThisObject Physics.Object.ProjectionOwnAxis.x.Max = @s Physics.Object.ProjectionOwnAxis.x.Max
 scoreboard players operation #Physics.ThisObject Physics.Object.ProjectionOwnAxis.y.Min = @s Physics.Object.ProjectionOwnAxis.y.Min
