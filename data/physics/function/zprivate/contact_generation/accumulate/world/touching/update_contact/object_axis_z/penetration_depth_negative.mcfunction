@@ -7,6 +7,6 @@ execute store result storage physics:zprivate ContactGroups[-1].Objects[0].Block
 
 # Contact Normal
 execute if score #Physics.Contact.FeatureA Physics matches 14 run return run function physics:zprivate/contact_generation/accumulate/world/touching/update_contact/object_axis_x/penetration_depth_negative_2 {ObjectAxis:"z"}
-execute store result storage physics:zprivate ContactGroups[-1].Objects[0].Blocks[-1].Hitboxes[-1].Contacts[-1].ContactNormal[0] int 1 run scoreboard players get @s Physics.Object.Axis.z.x
-execute store result storage physics:zprivate ContactGroups[-1].Objects[0].Blocks[-1].Hitboxes[-1].Contacts[-1].ContactNormal[1] int 1 run scoreboard players get @s Physics.Object.Axis.z.y
-execute store result storage physics:zprivate ContactGroups[-1].Objects[0].Blocks[-1].Hitboxes[-1].Contacts[-1].ContactNormal[2] int 1 run scoreboard players get @s Physics.Object.Axis.z.z
+execute store result storage physics:zprivate ContactGroups[-1].Objects[0].Blocks[-1].Hitboxes[-1].Contacts[-1].ContactNormal[0] int 1 run scoreboard players get #Physics.ThisObject Physics.Object.Axis.z.x
+execute store result storage physics:zprivate ContactGroups[-1].Objects[0].Blocks[-1].Hitboxes[-1].Contacts[-1].ContactNormal[1] int 1 run scoreboard players get #Physics.ThisObject Physics.Object.Axis.z.y
+execute store result storage physics:zprivate ContactGroups[-1].Objects[0].Blocks[-1].Hitboxes[-1].Contacts[-1].ContactNormal[2] int 1 run scoreboard players get #Physics.ThisObject Physics.Object.Axis.z.z

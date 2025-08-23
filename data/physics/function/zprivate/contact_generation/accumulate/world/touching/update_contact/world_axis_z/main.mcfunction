@@ -26,13 +26,12 @@
 # Check if the Contact Corner is within the hitbox
 # (Important): This is necessary because the penetration depth could be positive even if the hitboxes aren't touching. So if they aren't touching, the contact should be ignored during resolution, but it should still be stored because we can't be sure whether the hitboxes are only slightly distanced or far away.
 # (Important): A point is within a cuboid when the point's projections onto the cuboid's 3 axes all lie within the cuboid's min and max.
+# (Important): If this check fails, the contact is still kept for later ticks, but it will be completely ignored during resolution.
 # (Important): The contact point's z component is defined to be the min or max, so I don't have to check for that.
-#scoreboard players set #Physics.IsInside Physics 0
-#$execute if score #Physics.Projection.Block.WorldAxis.x.Min Physics <= #Physics.ThisObject Physics.Object.CornerPosGlobal.$(FeatureA).x if score #Physics.ThisObject Physics.Object.CornerPosGlobal.$(FeatureA).x <= #Physics.Projection.Block.WorldAxis.x.Max Physics if score #Physics.Projection.Block.WorldAxis.y.Min Physics <= #Physics.ThisObject Physics.Object.CornerPosGlobal.$(FeatureA).y if score #Physics.ThisObject Physics.Object.CornerPosGlobal.$(FeatureA).y <= #Physics.Projection.Block.WorldAxis.y.Max Physics run scoreboard players set #Physics.IsInside Physics 1
-#$execute if score #Physics.IsInside Physics matches 0 run data modify storage physics:zprivate ContactGroups[-1].Objects[0].Blocks[-1].Hitboxes[-1].Contacts append value {FeatureA:$(FeatureA)b}
-#execute if score #Physics.IsInside Physics matches 0 store result storage physics:zprivate ContactGroups[-1].Objects[0].Blocks[-1].Hitboxes[-1].Contacts[-1].FeatureB byte 1 run return run scoreboard players get #Physics.Contact.FeatureB Physics
-
-# ^ revisit (If used, I need to store the penetrationDepth and contactNormal too, most likely, and update them throughout penetration resolution. Also, mayhaps apply this in edge-edge too? See notes in object_axis_? and also the world SAT)
+scoreboard players set #Physics.IsInside Physics 0
+$execute if score #Physics.Projection.Block.WorldAxis.x.Min Physics <= #Physics.ThisObject Physics.Object.CornerPosGlobal.$(FeatureA).x if score #Physics.ThisObject Physics.Object.CornerPosGlobal.$(FeatureA).x <= #Physics.Projection.Block.WorldAxis.x.Max Physics if score #Physics.Projection.Block.WorldAxis.y.Min Physics <= #Physics.ThisObject Physics.Object.CornerPosGlobal.$(FeatureA).y if score #Physics.ThisObject Physics.Object.CornerPosGlobal.$(FeatureA).y <= #Physics.Projection.Block.WorldAxis.y.Max Physics run scoreboard players set #Physics.IsInside Physics 1
+$execute if score #Physics.IsInside Physics matches 0 run data modify storage physics:zprivate ContactGroups[-1].Objects[0].Blocks[-1].Hitboxes[-1].Contacts append value {FeatureA:$(FeatureA)b,Invalid:1b}
+execute if score #Physics.IsInside Physics matches 0 store result storage physics:zprivate ContactGroups[-1].Objects[0].Blocks[-1].Hitboxes[-1].Contacts[-1].FeatureB byte 1 run return run scoreboard players get #Physics.Contact.FeatureB Physics
 
 # Update the contact
     # Update the Penetration Depth

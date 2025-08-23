@@ -1,14 +1,14 @@
 # Project the block's center onto the object's axis
 # (Important): This is done once per contact, although I could re-use the data for the block. But it's not guaranteed that such a contact exists that needs this, so it's better to do it here anyway.
 scoreboard players operation #Physics.Projection.BlockCenter.ObjectAxis.x Physics = #Physics.BlockCenterPos.x Physics
-scoreboard players operation #Physics.Projection.BlockCenter.ObjectAxis.x Physics *= @s Physics.Object.Axis.x.x
+scoreboard players operation #Physics.Projection.BlockCenter.ObjectAxis.x Physics *= #Physics.ThisObject Physics.Object.Axis.x.x
 
 scoreboard players operation #Physics.Maths.Value1 Physics = #Physics.BlockCenterPos.y Physics
-scoreboard players operation #Physics.Maths.Value1 Physics *= @s Physics.Object.Axis.x.y
+scoreboard players operation #Physics.Maths.Value1 Physics *= #Physics.ThisObject Physics.Object.Axis.x.y
 scoreboard players operation #Physics.Projection.BlockCenter.ObjectAxis.x Physics += #Physics.Maths.Value1 Physics
 
 scoreboard players operation #Physics.Maths.Value1 Physics = #Physics.BlockCenterPos.z Physics
-scoreboard players operation #Physics.Maths.Value1 Physics *= @s Physics.Object.Axis.x.z
+scoreboard players operation #Physics.Maths.Value1 Physics *= #Physics.ThisObject Physics.Object.Axis.x.z
 scoreboard players operation #Physics.Projection.BlockCenter.ObjectAxis.x Physics += #Physics.Maths.Value1 Physics
 
 scoreboard players operation #Physics.Projection.BlockCenter.ObjectAxis.x Physics /= #Physics.Constants.1000 Physics

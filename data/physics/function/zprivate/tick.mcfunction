@@ -26,6 +26,10 @@ execute as @e[type=minecraft:item_display,tag=Physics.Object] run function physi
 
 # Contact Generation: Setup
 # (Important): The last command is run so the "HitboxHasPreviousContacts" score doesn't get set to 0 if the data matches the previous tick's data exactly (Which only really happens if only one object exists).
+    # Remove the Invalid:1b tag from all contacts
+    data remove storage physics:temp data.ContactGroups[].Objects[].Contacts[].Invalid
+    data remove storage physics:temp data.ContactGroups[].Objects[].Blocks[].Hitboxes[].Contacts[].Invalid
+
 data modify storage physics:temp data.ContactGroupsPrevious set from storage physics:zprivate ContactGroups
 data modify storage physics:zprivate ContactGroups set value []
 data remove storage physics:temp data.Hitbox
