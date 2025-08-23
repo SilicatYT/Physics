@@ -5,7 +5,7 @@ execute if score #Physics.InvertValues Physics matches 1 run scoreboard players 
 
 # Check if the contact is valid
     # Check if the Penetration Depth is within the threshold (Can be slightly negative)
-    execute if score #Physics.PenetrationDepth Physics < #Physics.Settings.MinPenetrationDepth Physics run return 0
+    execute if score #Physics.PenetrationDepth Physics < #Physics.Settings.Accumulation.MinPenetrationDepth Physics run return 0
     $execute if score #Physics.PenetrationDepth Physics matches ..-1 run return run function physics:zprivate/contact_generation/accumulate/world/touching/update_contact/cross_product_axis_yx/penetration_depth_negative {Edge:$(Edge)b}
 
     # Check if the contact is still relevant (Part 2)

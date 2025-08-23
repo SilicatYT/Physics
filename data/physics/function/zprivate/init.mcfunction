@@ -198,7 +198,9 @@ scoreboard players set #Physics.Settings.ReactToBlockUpdates Physics 1
 scoreboard players set #Physics.Settings.DefaultGravity Physics -490
 scoreboard players set #Physics.Settings.LinearDamping Physics 98
 scoreboard players set #Physics.Settings.AngularDamping Physics 98
-scoreboard players set #Physics.Settings.MinPenetrationDepth Physics -50
+scoreboard players set #Physics.Settings.Accumulation.MinPenetrationDepth Physics -50
+scoreboard players set #Physics.Settings.Resolution.MinPenetrationDepth Physics 0
+scoreboard players set #Physics.Settings.Resolution.MaxSeparatingVelocity Physics 0
 
 # Setup starting values for data storages
 data modify storage physics:temp data.HitboxPos set value [0d,0d,0d]

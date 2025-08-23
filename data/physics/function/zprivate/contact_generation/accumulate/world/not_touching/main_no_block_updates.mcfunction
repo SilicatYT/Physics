@@ -18,12 +18,12 @@ data remove storage physics:zprivate ContactGroups[-1].Objects[0].Blocks[-1].Hit
     execute store result score #Physics.BlockAABB.z.Max Physics store result score #Physics.Projection.Block.WorldAxis.z.Max Physics run data get storage physics:temp data.Hitbox.BoundingBox[5]
 
     # Update the hitbox's contacts
-    scoreboard players operation #Physics.BlockAABB.x.Min Physics += #Physics.Settings.MinPenetrationDepth Physics
-    scoreboard players operation #Physics.BlockAABB.y.Min Physics += #Physics.Settings.MinPenetrationDepth Physics
-    scoreboard players operation #Physics.BlockAABB.z.Min Physics += #Physics.Settings.MinPenetrationDepth Physics
-    scoreboard players operation #Physics.BlockAABB.x.Max Physics -= #Physics.Settings.MinPenetrationDepth Physics
-    scoreboard players operation #Physics.BlockAABB.y.Max Physics -= #Physics.Settings.MinPenetrationDepth Physics
-    scoreboard players operation #Physics.BlockAABB.z.Max Physics -= #Physics.Settings.MinPenetrationDepth Physics
+    scoreboard players operation #Physics.BlockAABB.x.Min Physics += #Physics.Settings.Accumulation.MinPenetrationDepth Physics
+    scoreboard players operation #Physics.BlockAABB.y.Min Physics += #Physics.Settings.Accumulation.MinPenetrationDepth Physics
+    scoreboard players operation #Physics.BlockAABB.z.Min Physics += #Physics.Settings.Accumulation.MinPenetrationDepth Physics
+    scoreboard players operation #Physics.BlockAABB.x.Max Physics -= #Physics.Settings.Accumulation.MinPenetrationDepth Physics
+    scoreboard players operation #Physics.BlockAABB.y.Max Physics -= #Physics.Settings.Accumulation.MinPenetrationDepth Physics
+    scoreboard players operation #Physics.BlockAABB.z.Max Physics -= #Physics.Settings.Accumulation.MinPenetrationDepth Physics
 
     execute store result score #Physics.ContactCount Physics if data storage physics:temp data.Hitbox.Contacts[]
     execute if score #Physics.BlockAABB.x.Min Physics <= #Physics.ThisObject Physics.Object.BoundingBoxGlobalMax.x if score #Physics.ThisObject Physics.Object.BoundingBoxGlobalMin.x <= #Physics.BlockAABB.x.Max Physics if score #Physics.BlockAABB.y.Min Physics <= #Physics.ThisObject Physics.Object.BoundingBoxGlobalMax.y if score #Physics.ThisObject Physics.Object.BoundingBoxGlobalMin.y <= #Physics.BlockAABB.y.Max Physics if score #Physics.BlockAABB.z.Min Physics <= #Physics.ThisObject Physics.Object.BoundingBoxGlobalMax.z if score #Physics.ThisObject Physics.Object.BoundingBoxGlobalMin.z <= #Physics.BlockAABB.z.Max Physics run function physics:zprivate/contact_generation/accumulate/world/not_touching/update_hitbox
@@ -44,12 +44,12 @@ data remove storage physics:zprivate ContactGroups[-1].Objects[0].Blocks[-1].Hit
     execute store result score #Physics.BlockAABB.z.Max Physics store result score #Physics.Projection.Block.WorldAxis.z.Max Physics run data get storage physics:temp data.Hitbox.BoundingBox[5]
 
     # Update the hitbox's contacts
-    scoreboard players operation #Physics.BlockAABB.x.Min Physics += #Physics.Settings.MinPenetrationDepth Physics
-    scoreboard players operation #Physics.BlockAABB.y.Min Physics += #Physics.Settings.MinPenetrationDepth Physics
-    scoreboard players operation #Physics.BlockAABB.z.Min Physics += #Physics.Settings.MinPenetrationDepth Physics
-    scoreboard players operation #Physics.BlockAABB.x.Max Physics -= #Physics.Settings.MinPenetrationDepth Physics
-    scoreboard players operation #Physics.BlockAABB.y.Max Physics -= #Physics.Settings.MinPenetrationDepth Physics
-    scoreboard players operation #Physics.BlockAABB.z.Max Physics -= #Physics.Settings.MinPenetrationDepth Physics
+    scoreboard players operation #Physics.BlockAABB.x.Min Physics += #Physics.Settings.Accumulation.MinPenetrationDepth Physics
+    scoreboard players operation #Physics.BlockAABB.y.Min Physics += #Physics.Settings.Accumulation.MinPenetrationDepth Physics
+    scoreboard players operation #Physics.BlockAABB.z.Min Physics += #Physics.Settings.Accumulation.MinPenetrationDepth Physics
+    scoreboard players operation #Physics.BlockAABB.x.Max Physics -= #Physics.Settings.Accumulation.MinPenetrationDepth Physics
+    scoreboard players operation #Physics.BlockAABB.y.Max Physics -= #Physics.Settings.Accumulation.MinPenetrationDepth Physics
+    scoreboard players operation #Physics.BlockAABB.z.Max Physics -= #Physics.Settings.Accumulation.MinPenetrationDepth Physics
 
     execute store result score #Physics.ContactCount Physics if data storage physics:temp data.Hitbox.Contacts[]
     execute if score #Physics.BlockAABB.x.Min Physics <= #Physics.ThisObject Physics.Object.BoundingBoxGlobalMax.x if score #Physics.ThisObject Physics.Object.BoundingBoxGlobalMin.x <= #Physics.BlockAABB.x.Max Physics if score #Physics.BlockAABB.y.Min Physics <= #Physics.ThisObject Physics.Object.BoundingBoxGlobalMax.y if score #Physics.ThisObject Physics.Object.BoundingBoxGlobalMin.y <= #Physics.BlockAABB.y.Max Physics if score #Physics.BlockAABB.z.Min Physics <= #Physics.ThisObject Physics.Object.BoundingBoxGlobalMax.z if score #Physics.ThisObject Physics.Object.BoundingBoxGlobalMin.z <= #Physics.BlockAABB.z.Max Physics run function physics:zprivate/contact_generation/accumulate/world/not_touching/update_hitbox
@@ -70,12 +70,12 @@ data remove storage physics:zprivate ContactGroups[-1].Objects[0].Blocks[-1].Hit
     execute store result score #Physics.BlockAABB.z.Max Physics store result score #Physics.Projection.Block.WorldAxis.z.Max Physics run data get storage physics:temp data.Hitbox.BoundingBox[5]
 
     # Update the hitbox's contacts
-    scoreboard players operation #Physics.BlockAABB.x.Min Physics += #Physics.Settings.MinPenetrationDepth Physics
-    scoreboard players operation #Physics.BlockAABB.y.Min Physics += #Physics.Settings.MinPenetrationDepth Physics
-    scoreboard players operation #Physics.BlockAABB.z.Min Physics += #Physics.Settings.MinPenetrationDepth Physics
-    scoreboard players operation #Physics.BlockAABB.x.Max Physics -= #Physics.Settings.MinPenetrationDepth Physics
-    scoreboard players operation #Physics.BlockAABB.y.Max Physics -= #Physics.Settings.MinPenetrationDepth Physics
-    scoreboard players operation #Physics.BlockAABB.z.Max Physics -= #Physics.Settings.MinPenetrationDepth Physics
+    scoreboard players operation #Physics.BlockAABB.x.Min Physics += #Physics.Settings.Accumulation.MinPenetrationDepth Physics
+    scoreboard players operation #Physics.BlockAABB.y.Min Physics += #Physics.Settings.Accumulation.MinPenetrationDepth Physics
+    scoreboard players operation #Physics.BlockAABB.z.Min Physics += #Physics.Settings.Accumulation.MinPenetrationDepth Physics
+    scoreboard players operation #Physics.BlockAABB.x.Max Physics -= #Physics.Settings.Accumulation.MinPenetrationDepth Physics
+    scoreboard players operation #Physics.BlockAABB.y.Max Physics -= #Physics.Settings.Accumulation.MinPenetrationDepth Physics
+    scoreboard players operation #Physics.BlockAABB.z.Max Physics -= #Physics.Settings.Accumulation.MinPenetrationDepth Physics
 
     execute store result score #Physics.ContactCount Physics if data storage physics:temp data.Hitbox.Contacts[]
     execute if score #Physics.BlockAABB.x.Min Physics <= #Physics.ThisObject Physics.Object.BoundingBoxGlobalMax.x if score #Physics.ThisObject Physics.Object.BoundingBoxGlobalMin.x <= #Physics.BlockAABB.x.Max Physics if score #Physics.BlockAABB.y.Min Physics <= #Physics.ThisObject Physics.Object.BoundingBoxGlobalMax.y if score #Physics.ThisObject Physics.Object.BoundingBoxGlobalMin.y <= #Physics.BlockAABB.y.Max Physics if score #Physics.BlockAABB.z.Min Physics <= #Physics.ThisObject Physics.Object.BoundingBoxGlobalMax.z if score #Physics.ThisObject Physics.Object.BoundingBoxGlobalMin.z <= #Physics.BlockAABB.z.Max Physics run function physics:zprivate/contact_generation/accumulate/world/not_touching/update_hitbox
@@ -96,12 +96,12 @@ data remove storage physics:zprivate ContactGroups[-1].Objects[0].Blocks[-1].Hit
     execute store result score #Physics.BlockAABB.z.Max Physics store result score #Physics.Projection.Block.WorldAxis.z.Max Physics run data get storage physics:temp data.Hitbox.BoundingBox[5]
 
     # Update the hitbox's contacts
-    scoreboard players operation #Physics.BlockAABB.x.Min Physics += #Physics.Settings.MinPenetrationDepth Physics
-    scoreboard players operation #Physics.BlockAABB.y.Min Physics += #Physics.Settings.MinPenetrationDepth Physics
-    scoreboard players operation #Physics.BlockAABB.z.Min Physics += #Physics.Settings.MinPenetrationDepth Physics
-    scoreboard players operation #Physics.BlockAABB.x.Max Physics -= #Physics.Settings.MinPenetrationDepth Physics
-    scoreboard players operation #Physics.BlockAABB.y.Max Physics -= #Physics.Settings.MinPenetrationDepth Physics
-    scoreboard players operation #Physics.BlockAABB.z.Max Physics -= #Physics.Settings.MinPenetrationDepth Physics
+    scoreboard players operation #Physics.BlockAABB.x.Min Physics += #Physics.Settings.Accumulation.MinPenetrationDepth Physics
+    scoreboard players operation #Physics.BlockAABB.y.Min Physics += #Physics.Settings.Accumulation.MinPenetrationDepth Physics
+    scoreboard players operation #Physics.BlockAABB.z.Min Physics += #Physics.Settings.Accumulation.MinPenetrationDepth Physics
+    scoreboard players operation #Physics.BlockAABB.x.Max Physics -= #Physics.Settings.Accumulation.MinPenetrationDepth Physics
+    scoreboard players operation #Physics.BlockAABB.y.Max Physics -= #Physics.Settings.Accumulation.MinPenetrationDepth Physics
+    scoreboard players operation #Physics.BlockAABB.z.Max Physics -= #Physics.Settings.Accumulation.MinPenetrationDepth Physics
 
     execute store result score #Physics.ContactCount Physics if data storage physics:temp data.Hitbox.Contacts[]
     execute if score #Physics.BlockAABB.x.Min Physics <= #Physics.ThisObject Physics.Object.BoundingBoxGlobalMax.x if score #Physics.ThisObject Physics.Object.BoundingBoxGlobalMin.x <= #Physics.BlockAABB.x.Max Physics if score #Physics.BlockAABB.y.Min Physics <= #Physics.ThisObject Physics.Object.BoundingBoxGlobalMax.y if score #Physics.ThisObject Physics.Object.BoundingBoxGlobalMin.y <= #Physics.BlockAABB.y.Max Physics if score #Physics.BlockAABB.z.Min Physics <= #Physics.ThisObject Physics.Object.BoundingBoxGlobalMax.z if score #Physics.ThisObject Physics.Object.BoundingBoxGlobalMin.z <= #Physics.BlockAABB.z.Max Physics run function physics:zprivate/contact_generation/accumulate/world/not_touching/update_hitbox
@@ -122,12 +122,12 @@ data remove storage physics:zprivate ContactGroups[-1].Objects[0].Blocks[-1].Hit
     execute store result score #Physics.BlockAABB.z.Max Physics store result score #Physics.Projection.Block.WorldAxis.z.Max Physics run data get storage physics:temp data.Hitbox.BoundingBox[5]
 
     # Update the hitbox's contacts
-    scoreboard players operation #Physics.BlockAABB.x.Min Physics += #Physics.Settings.MinPenetrationDepth Physics
-    scoreboard players operation #Physics.BlockAABB.y.Min Physics += #Physics.Settings.MinPenetrationDepth Physics
-    scoreboard players operation #Physics.BlockAABB.z.Min Physics += #Physics.Settings.MinPenetrationDepth Physics
-    scoreboard players operation #Physics.BlockAABB.x.Max Physics -= #Physics.Settings.MinPenetrationDepth Physics
-    scoreboard players operation #Physics.BlockAABB.y.Max Physics -= #Physics.Settings.MinPenetrationDepth Physics
-    scoreboard players operation #Physics.BlockAABB.z.Max Physics -= #Physics.Settings.MinPenetrationDepth Physics
+    scoreboard players operation #Physics.BlockAABB.x.Min Physics += #Physics.Settings.Accumulation.MinPenetrationDepth Physics
+    scoreboard players operation #Physics.BlockAABB.y.Min Physics += #Physics.Settings.Accumulation.MinPenetrationDepth Physics
+    scoreboard players operation #Physics.BlockAABB.z.Min Physics += #Physics.Settings.Accumulation.MinPenetrationDepth Physics
+    scoreboard players operation #Physics.BlockAABB.x.Max Physics -= #Physics.Settings.Accumulation.MinPenetrationDepth Physics
+    scoreboard players operation #Physics.BlockAABB.y.Max Physics -= #Physics.Settings.Accumulation.MinPenetrationDepth Physics
+    scoreboard players operation #Physics.BlockAABB.z.Max Physics -= #Physics.Settings.Accumulation.MinPenetrationDepth Physics
 
     execute store result score #Physics.ContactCount Physics if data storage physics:temp data.Hitbox.Contacts[]
     execute if score #Physics.BlockAABB.x.Min Physics <= #Physics.ThisObject Physics.Object.BoundingBoxGlobalMax.x if score #Physics.ThisObject Physics.Object.BoundingBoxGlobalMin.x <= #Physics.BlockAABB.x.Max Physics if score #Physics.BlockAABB.y.Min Physics <= #Physics.ThisObject Physics.Object.BoundingBoxGlobalMax.y if score #Physics.ThisObject Physics.Object.BoundingBoxGlobalMin.y <= #Physics.BlockAABB.y.Max Physics if score #Physics.BlockAABB.z.Min Physics <= #Physics.ThisObject Physics.Object.BoundingBoxGlobalMax.z if score #Physics.ThisObject Physics.Object.BoundingBoxGlobalMin.z <= #Physics.BlockAABB.z.Max Physics run function physics:zprivate/contact_generation/accumulate/world/not_touching/update_hitbox
@@ -148,12 +148,12 @@ data remove storage physics:zprivate ContactGroups[-1].Objects[0].Blocks[-1].Hit
     execute store result score #Physics.BlockAABB.z.Max Physics store result score #Physics.Projection.Block.WorldAxis.z.Max Physics run data get storage physics:temp data.Hitbox.BoundingBox[5]
 
     # Update the hitbox's contacts
-    scoreboard players operation #Physics.BlockAABB.x.Min Physics += #Physics.Settings.MinPenetrationDepth Physics
-    scoreboard players operation #Physics.BlockAABB.y.Min Physics += #Physics.Settings.MinPenetrationDepth Physics
-    scoreboard players operation #Physics.BlockAABB.z.Min Physics += #Physics.Settings.MinPenetrationDepth Physics
-    scoreboard players operation #Physics.BlockAABB.x.Max Physics -= #Physics.Settings.MinPenetrationDepth Physics
-    scoreboard players operation #Physics.BlockAABB.y.Max Physics -= #Physics.Settings.MinPenetrationDepth Physics
-    scoreboard players operation #Physics.BlockAABB.z.Max Physics -= #Physics.Settings.MinPenetrationDepth Physics
+    scoreboard players operation #Physics.BlockAABB.x.Min Physics += #Physics.Settings.Accumulation.MinPenetrationDepth Physics
+    scoreboard players operation #Physics.BlockAABB.y.Min Physics += #Physics.Settings.Accumulation.MinPenetrationDepth Physics
+    scoreboard players operation #Physics.BlockAABB.z.Min Physics += #Physics.Settings.Accumulation.MinPenetrationDepth Physics
+    scoreboard players operation #Physics.BlockAABB.x.Max Physics -= #Physics.Settings.Accumulation.MinPenetrationDepth Physics
+    scoreboard players operation #Physics.BlockAABB.y.Max Physics -= #Physics.Settings.Accumulation.MinPenetrationDepth Physics
+    scoreboard players operation #Physics.BlockAABB.z.Max Physics -= #Physics.Settings.Accumulation.MinPenetrationDepth Physics
 
     execute store result score #Physics.ContactCount Physics if data storage physics:temp data.Hitbox.Contacts[]
     execute if score #Physics.BlockAABB.x.Min Physics <= #Physics.ThisObject Physics.Object.BoundingBoxGlobalMax.x if score #Physics.ThisObject Physics.Object.BoundingBoxGlobalMin.x <= #Physics.BlockAABB.x.Max Physics if score #Physics.BlockAABB.y.Min Physics <= #Physics.ThisObject Physics.Object.BoundingBoxGlobalMax.y if score #Physics.ThisObject Physics.Object.BoundingBoxGlobalMin.y <= #Physics.BlockAABB.y.Max Physics if score #Physics.BlockAABB.z.Min Physics <= #Physics.ThisObject Physics.Object.BoundingBoxGlobalMax.z if score #Physics.ThisObject Physics.Object.BoundingBoxGlobalMin.z <= #Physics.BlockAABB.z.Max Physics run function physics:zprivate/contact_generation/accumulate/world/not_touching/update_hitbox
@@ -174,12 +174,12 @@ data remove storage physics:zprivate ContactGroups[-1].Objects[0].Blocks[-1].Hit
     execute store result score #Physics.BlockAABB.z.Max Physics store result score #Physics.Projection.Block.WorldAxis.z.Max Physics run data get storage physics:temp data.Hitbox.BoundingBox[5]
 
     # Update the hitbox's contacts
-    scoreboard players operation #Physics.BlockAABB.x.Min Physics += #Physics.Settings.MinPenetrationDepth Physics
-    scoreboard players operation #Physics.BlockAABB.y.Min Physics += #Physics.Settings.MinPenetrationDepth Physics
-    scoreboard players operation #Physics.BlockAABB.z.Min Physics += #Physics.Settings.MinPenetrationDepth Physics
-    scoreboard players operation #Physics.BlockAABB.x.Max Physics -= #Physics.Settings.MinPenetrationDepth Physics
-    scoreboard players operation #Physics.BlockAABB.y.Max Physics -= #Physics.Settings.MinPenetrationDepth Physics
-    scoreboard players operation #Physics.BlockAABB.z.Max Physics -= #Physics.Settings.MinPenetrationDepth Physics
+    scoreboard players operation #Physics.BlockAABB.x.Min Physics += #Physics.Settings.Accumulation.MinPenetrationDepth Physics
+    scoreboard players operation #Physics.BlockAABB.y.Min Physics += #Physics.Settings.Accumulation.MinPenetrationDepth Physics
+    scoreboard players operation #Physics.BlockAABB.z.Min Physics += #Physics.Settings.Accumulation.MinPenetrationDepth Physics
+    scoreboard players operation #Physics.BlockAABB.x.Max Physics -= #Physics.Settings.Accumulation.MinPenetrationDepth Physics
+    scoreboard players operation #Physics.BlockAABB.y.Max Physics -= #Physics.Settings.Accumulation.MinPenetrationDepth Physics
+    scoreboard players operation #Physics.BlockAABB.z.Max Physics -= #Physics.Settings.Accumulation.MinPenetrationDepth Physics
 
     execute store result score #Physics.ContactCount Physics if data storage physics:temp data.Hitbox.Contacts[]
     execute if score #Physics.BlockAABB.x.Min Physics <= #Physics.ThisObject Physics.Object.BoundingBoxGlobalMax.x if score #Physics.ThisObject Physics.Object.BoundingBoxGlobalMin.x <= #Physics.BlockAABB.x.Max Physics if score #Physics.BlockAABB.y.Min Physics <= #Physics.ThisObject Physics.Object.BoundingBoxGlobalMax.y if score #Physics.ThisObject Physics.Object.BoundingBoxGlobalMin.y <= #Physics.BlockAABB.y.Max Physics if score #Physics.BlockAABB.z.Min Physics <= #Physics.ThisObject Physics.Object.BoundingBoxGlobalMax.z if score #Physics.ThisObject Physics.Object.BoundingBoxGlobalMin.z <= #Physics.BlockAABB.z.Max Physics run function physics:zprivate/contact_generation/accumulate/world/not_touching/update_hitbox

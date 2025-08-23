@@ -13,17 +13,17 @@
 
         # Check AABB
         # (Important): All contacts should be discarded if the object's AABB and the block's extended AABB (extended by the MinPenetrationDepth) don't intersect.
-        scoreboard players operation #Physics.BlockAABB.x.Min Physics += #Physics.Settings.MinPenetrationDepth Physics
+        scoreboard players operation #Physics.BlockAABB.x.Min Physics += #Physics.Settings.Accumulation.MinPenetrationDepth Physics
         execute unless score #Physics.BlockAABB.x.Min Physics <= #Physics.ThisObject Physics.Object.BoundingBoxGlobalMax.x run return 0
-        scoreboard players operation #Physics.BlockAABB.x.Max Physics -= #Physics.Settings.MinPenetrationDepth Physics
+        scoreboard players operation #Physics.BlockAABB.x.Max Physics -= #Physics.Settings.Accumulation.MinPenetrationDepth Physics
         execute unless score #Physics.ThisObject Physics.Object.BoundingBoxGlobalMin.x <= #Physics.BlockAABB.x.Max Physics run return 0
-        scoreboard players operation #Physics.BlockAABB.y.Min Physics += #Physics.Settings.MinPenetrationDepth Physics
+        scoreboard players operation #Physics.BlockAABB.y.Min Physics += #Physics.Settings.Accumulation.MinPenetrationDepth Physics
         execute unless score #Physics.BlockAABB.y.Min Physics <= #Physics.ThisObject Physics.Object.BoundingBoxGlobalMax.y run return 0
-        scoreboard players operation #Physics.BlockAABB.y.Max Physics -= #Physics.Settings.MinPenetrationDepth Physics
+        scoreboard players operation #Physics.BlockAABB.y.Max Physics -= #Physics.Settings.Accumulation.MinPenetrationDepth Physics
         execute unless score #Physics.ThisObject Physics.Object.BoundingBoxGlobalMin.y <= #Physics.BlockAABB.y.Max Physics run return 0
-        scoreboard players operation #Physics.BlockAABB.z.Min Physics += #Physics.Settings.MinPenetrationDepth Physics
+        scoreboard players operation #Physics.BlockAABB.z.Min Physics += #Physics.Settings.Accumulation.MinPenetrationDepth Physics
         execute unless score #Physics.BlockAABB.z.Min Physics <= #Physics.ThisObject Physics.Object.BoundingBoxGlobalMax.z run return 0
-        scoreboard players operation #Physics.BlockAABB.z.Max Physics += #Physics.Settings.MinPenetrationDepth Physics
+        scoreboard players operation #Physics.BlockAABB.z.Max Physics += #Physics.Settings.Accumulation.MinPenetrationDepth Physics
         execute unless score #Physics.ThisObject Physics.Object.BoundingBoxGlobalMin.z <= #Physics.BlockAABB.z.Max Physics run return 0
 
         # Add hitbox

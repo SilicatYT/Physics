@@ -4,7 +4,7 @@ scoreboard players operation #Physics.PenetrationDepth Physics -= #Physics.Proje
 execute if score #Physics.InvertValues Physics matches 1 run scoreboard players operation #Physics.PenetrationDepth Physics *= #Physics.Constants.-1 Physics
 
 # Check if the Penetration Depth is within the threshold (Can be slightly negative)
-execute if score #Physics.PenetrationDepth Physics < #Physics.Settings.MinPenetrationDepth Physics run return 0
+execute if score #Physics.PenetrationDepth Physics < #Physics.Settings.Accumulation.MinPenetrationDepth Physics run return 0
 
 # Append the contact
 $data modify storage physics:zprivate ContactGroups[-1].Objects[0].Blocks[-1].Hitboxes[-1].Contacts append value {FeatureB:$(Edge)b,ContactNormal:[I;0,0,0]}
