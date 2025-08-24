@@ -38,7 +38,12 @@ data remove storage physics:temp data.Hitbox
 execute as @e[type=minecraft:item_display,tag=Physics.Object] run function physics:zprivate/collision_detection/main
 
 # Contact Resolution
-# ...
+execute store result score #Physics.MaxIterations Physics if data storage physics:zprivate ContactGroups[].Objects[].Contacts[]
+execute store result score #Physics.Temp Physics if data storage physics:zprivate ContactGroups[].Objects[].Blocks[].Hitboxes[].Contacts[]
+execute store result score #Physics.RemainingIterations Physics run scoreboard players operation #Physics.MaxIterations Physics += #Physics.Temp Physics
+execute if score #Physics.RemainingIterations Physics matches 1.. run function physics:zprivate/resolution/velocity/main
+scoreboard players operation #Physics.RemainingIterations Physics = #Physics.MaxIterations Physics
+execute if score #Physics.RemainingIterations Physics matches 1.. run function physics:zprivate/resolution/penetration/main
 
 # Integration (Part 2): Update visual state
 execute as @e[type=minecraft:item_display,tag=Physics.Object] run function physics:zprivate/integration/2

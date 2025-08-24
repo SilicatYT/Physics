@@ -1,6 +1,9 @@
 # Setup (Precalculations)
 scoreboard players set #Physics.SetupDone Physics 0
 
+scoreboard players set @s Physics.Object.MinSeparatingVelocity 2147483647
+scoreboard players set @s Physics.Object.MaxPenetrationDepth -2147483648
+
 # Prepare the contacts storage & copy over this object's stored contacts from the previous tick (If there are any)
 # (Important): The ID in the data storage is also used when generating the new contact
 # (Important): I use a placeholder "MinSeparatingVelocity" so it doesn't get selected during resolution and is immediately replaced when a contact is found / updated.
@@ -9,9 +12,6 @@ data modify storage physics:temp data.Blocks set value []
 data modify storage physics:zprivate ContactGroups append value {Objects:[{Blocks:[]}]}
 execute store result storage physics:temp data.A int 1 store result storage physics:zprivate ContactGroups[-1].A int 1 run scoreboard players operation #Physics.ThisObject Physics.Object.ID = @s Physics.Object.ID
 execute if entity @s[tag=Physics.HasContacts] run function physics:zprivate/contact_generation/accumulate/get_previous_contacts with storage physics:temp data
-
-scoreboard players set @s Physics.Object.MinSeparatingVelocity 2147483647
-scoreboard players set @s Physics.Object.MaxPenetrationDepth -2147483648
 
 # Iterate over every minecraft block that intersects with the interaction entity's hitbox (AABB), so I can then perform the Separating Axes Theorem (SAT) to check for fine collisions
 # (Important): I only have the global coords for the bounding box, so instead of using a few scoreboard commands, I just don't use relative coordinates here. If I do need the relative coordinates later, I will change that.
@@ -36,8 +36,8 @@ execute if score #Physics.BlockCount Physics matches 1.. run function physics:zp
 execute unless data storage physics:zprivate ContactGroups[-1].Objects[0].Blocks[0] run data remove storage physics:zprivate ContactGroups[-1].Objects[0]
 
 # Set the MinSeparatingVelocity & MaxPenetrationDepth for all world contacts combined
-scoreboard players operation @s Physics.Object.MinSeparatingVelocity.World = @s Physics.Object.MinSeparatingVelocity
-scoreboard players operation @s Physics.Object.MaxPenetrationDepth.World = @s Physics.Object.MaxPenetrationDepth
+scoreboard players operation #Physics.ThisObject Physics.Object.MinSeparatingVelocity.World = #Physics.ThisObject Physics.Object.MinSeparatingVelocity
+scoreboard players operation #Physics.ThisObject Physics.Object.MaxPenetrationDepth.World = #Physics.ThisObject Physics.Object.MaxPenetrationDepth
 
 # Check for coarse collisions with other dynamic objects, so I can then perform the SAT to check for fine collisions
 # (Important): Only checks objects in a range of 6.929 blocks, which is the sum of both objects' maximum supported bounding box divided by 2 (so from the center of both entities), assuming I cap the dimensions at 4 blocks. The reasoning is explained in the set_attributes/dimension function.
@@ -51,11 +51,14 @@ execute at @s as @e[type=minecraft:item_display,tag=Physics.Object,distance=..6.
 # (Important): Contacts for objects that are in contact are already updated directly after their respective SAT, so this only updates contacts for objects that were in contact last tick but aren't anymore.
 #execute if data storage physics:temp data.ContactsPrevious[0] run function physics:zprivate/contact_generation/accumulate/update/object/not_touching/main
 
-# Update scores
-execute if score #Physics.SetupDone Physics matches 1 run scoreboard players operation @s Physics.Object.MaxPenetrationDepth = #Physics.ThisObject Physics.Object.MaxPenetrationDepth
-execute if score #Physics.SetupDone Physics matches 1 run scoreboard players operation @s Physics.Object.MinSeparatingVelocity = #Physics.ThisObject Physics.Object.MinSeparatingVelocity
-
 # Update the "HasContacts" tag
 tag @s remove Physics.HasContacts
 execute unless data storage physics:zprivate ContactGroups[-1].Objects[0] run return run data remove storage physics:zprivate ContactGroups[-1]
 tag @s add Physics.HasContacts
+
+# Update scores
+execute if score #Physics.SetupDone Physics matches 0 run return 0
+scoreboard players operation @s Physics.Object.MaxPenetrationDepth = #Physics.ThisObject Physics.Object.MaxPenetrationDepth
+scoreboard players operation @s Physics.Object.MinSeparatingVelocity = #Physics.ThisObject Physics.Object.MinSeparatingVelocity
+scoreboard players operation @s Physics.Object.MaxPenetrationDepth.World = #Physics.ThisObject Physics.Object.MaxPenetrationDepth.World
+scoreboard players operation @s Physics.Object.MinSeparatingVelocity.World = #Physics.ThisObject Physics.Object.MinSeparatingVelocity.World
