@@ -11,4 +11,9 @@ data modify storage physics:resolution Contact set from storage physics:resoluti
 data remove storage physics:resolution Hitbox.Contacts[{HasMinSeparatingVelocity:0b}]
 
 # Resolve the contact
-# x
+execute store result score #Physics.FeatureB Physics run data get storage physics:resolution Contact.FeatureB
+execute if score #Physics.FeatureB Physics matches 10..11 run return run function physics:zprivate/resolution/velocity/world/world_axis_x/main
+execute if score #Physics.FeatureB Physics matches 12..13 run return run function physics:zprivate/resolution/velocity/world/world_axis_y/main
+execute if score #Physics.FeatureB Physics matches 14..15 run return run function physics:zprivate/resolution/velocity/world/world_axis_z/main
+
+#execute store result score #Physics.FeatureA Physics run data get storage physics:resolution Contact.FeatureA

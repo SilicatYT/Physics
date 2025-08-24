@@ -201,6 +201,7 @@ scoreboard players set #Physics.Settings.AngularDamping Physics 98
 scoreboard players set #Physics.Settings.Accumulation.MinPenetrationDepth Physics -50
 scoreboard players set #Physics.Settings.Resolution.MinPenetrationDepth Physics 0
 scoreboard players set #Physics.Settings.Resolution.MaxSeparatingVelocity Physics 0
+scoreboard players set #Physics.Settings.Resolution.RestitutionThreshold Physics -50
 
 # Setup starting values for data storages
 data modify storage physics:temp data.HitboxPos set value [0d,0d,0d]
