@@ -18,4 +18,5 @@ execute store result score #Physics.Maths.ContactVelocityContactSpace.y Physics 
 execute store result score #Physics.Maths.ContactVelocityContactSpace.z Physics run data get storage physics:resolution Contact.ContactVelocity[2]
 
 # Calculate effective mass along the 3 contact axes (3 columns of the orthonormal basis)
-# xxx
+# (Important): Because the effective mass stays the same if the contact normal doesn't change, I only calculate it once per tick for each contact.
+execute unless data storage physics:resolution Contact.EffectiveMass run function physics:zprivate/resolution/velocity/world/world_axis_x/effective_mass
