@@ -11,6 +11,7 @@ scoreboard objectives add Physics.Object.Velocity.x dummy
 scoreboard objectives add Physics.Object.Velocity.y dummy
 scoreboard objectives add Physics.Object.Velocity.z dummy
 scoreboard objectives add Physics.Object.InverseMass dummy
+scoreboard objectives add Physics.Object.InverseMassScaled dummy
 scoreboard objectives add Physics.Object.Gravity dummy
 scoreboard objectives add Physics.Object.Dimension.x dummy
 scoreboard objectives add Physics.Object.Dimension.y dummy
@@ -161,9 +162,7 @@ scoreboard objectives add Physics.Player.LookingAtDirection.x dummy
 scoreboard objectives add Physics.Player.LookingAtDirection.y dummy
 scoreboard objectives add Physics.Player.LookingAtDirection.z dummy
 scoreboard objectives add Physics.Player.ID dummy
-
-# Set global variables
-scoreboard players set #Physics.Global.PlayerAttackForceMagnitude Physics 300
+scoreboard objectives add Physics.Player.PunchStrength dummy
 
 # Set value constants
 scoreboard players set #Physics.Constants.-1000 Physics -1000
@@ -194,6 +193,7 @@ scoreboard players set #Physics.InteractionCount Physics 0
 scoreboard players set #Physics.MinDistance Physics 2147483647
 scoreboard players set #Physics.LookingAtID Physics 0
 
+scoreboard players set #Physics.Settings.DefaultPlayerStrength Physics 30
 scoreboard players set #Physics.Settings.ReactToBlockUpdates Physics 1
 scoreboard players set #Physics.Settings.DefaultGravity Physics -490
 scoreboard players set #Physics.Settings.LinearDamping Physics 98

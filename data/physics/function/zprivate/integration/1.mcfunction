@@ -11,11 +11,9 @@
 execute if score @s Physics.Object.Gravity matches -2147483648.. run scoreboard players operation @s Physics.Object.DefactoGravity = @s Physics.Object.Gravity
 execute unless score @s Physics.Object.Gravity matches -2147483648.. run scoreboard players operation @s Physics.Object.DefactoGravity = #Physics.Settings.DefaultGravity Physics
 
-scoreboard players operation #Physics.Maths.Value1 Physics = @s Physics.Object.InverseMass
-scoreboard players operation #Physics.Maths.Value1 Physics /= #Physics.Constants.1000 Physics
-scoreboard players operation @s Physics.Object.AccumulatedForce.x *= #Physics.Maths.Value1 Physics
-scoreboard players operation @s Physics.Object.AccumulatedForce.y *= #Physics.Maths.Value1 Physics
-scoreboard players operation @s Physics.Object.AccumulatedForce.z *= #Physics.Maths.Value1 Physics
+scoreboard players operation @s Physics.Object.AccumulatedForce.x *= @s Physics.Object.InverseMassScaled
+scoreboard players operation @s Physics.Object.AccumulatedForce.y *= @s Physics.Object.InverseMassScaled
+scoreboard players operation @s Physics.Object.AccumulatedForce.z *= @s Physics.Object.InverseMassScaled
 scoreboard players operation @s Physics.Object.AccumulatedForce.x /= #Physics.Constants.100000 Physics
 scoreboard players operation @s Physics.Object.AccumulatedForce.y /= #Physics.Constants.100000 Physics
 scoreboard players operation @s Physics.Object.AccumulatedForce.z /= #Physics.Constants.100000 Physics
@@ -43,8 +41,8 @@ scoreboard players operation @s Physics.Object.Pos.y += @s Physics.Object.Veloci
 scoreboard players operation @s Physics.Object.Pos.z += @s Physics.Object.Velocity.z
 
 # Update angular velocity
-    # AngularAcceleration = InverseGlobalInertiaTensor * AccumulatedTorque
-    # (Important): InverseGlobalInertiaTensor is scaled by 100,000x and AccumulatedTorque is scaled by 1,000x.
+    # AngularAcceleration = InverseInertiaTensorGlobal * AccumulatedTorque
+    # (Important): InverseInertiaTensorGlobal is scaled by 100,000x and AccumulatedTorque is scaled by 1,000x.
     scoreboard players operation #Physics.Maths.AngularAcceleration.x Physics = @s Physics.Object.InverseInertiaTensorGlobal.0
     scoreboard players operation #Physics.Maths.AngularAcceleration.x Physics *= @s Physics.Object.AccumulatedTorque.x
     scoreboard players operation #Physics.Maths.Value1 Physics = @s Physics.Object.InverseInertiaTensorGlobal.1

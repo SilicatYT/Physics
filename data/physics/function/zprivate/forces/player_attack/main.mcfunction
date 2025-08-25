@@ -4,6 +4,9 @@ advancement revoke @s only physics:hit_hitbox
 execute if score @s Physics.Player.LookingAtID matches 0 run return 0
 
 # Punch the physics object
+execute if score @s Physics.Player.PunchStrength matches -2147483648.. run scoreboard players operation #Physics.PlayerPunchStrength Physics = @s Physics.Player.PunchStrength
+execute unless score @s Physics.Player.PunchStrength matches -2147483648.. run scoreboard players operation #Physics.PlayerPunchStrength Physics = #Physics.Settings.DefaultPlayerStrength Physics
+
 execute store result storage physics:temp data.HitboxPos[0] double 0.001 store result score #Physics.IntersectionPos.x Physics run scoreboard players get @s Physics.Player.LookingAtPos.x
 execute store result storage physics:temp data.HitboxPos[1] double 0.001 store result score #Physics.IntersectionPos.y Physics run scoreboard players get @s Physics.Player.LookingAtPos.y
 execute store result storage physics:temp data.HitboxPos[2] double 0.001 store result score #Physics.IntersectionPos.z Physics run scoreboard players get @s Physics.Player.LookingAtPos.z

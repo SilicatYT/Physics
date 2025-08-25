@@ -5,6 +5,9 @@ execute if score #Physics.SetAttribute.Mass Physics matches ..0 run scoreboard p
 
 scoreboard players operation @s Physics.Object.InverseMass /= #Physics.SetAttribute.Mass Physics
 
+scoreboard players operation @s Physics.Object.InverseMassScaled = @s Physics.Object.InverseMass
+scoreboard players operation @s Physics.Object.InverseMassScaled /= #Physics.Constants.1000 Physics
+
 # Update the local inverse inertia tensor (Scaling: InverseMass scaled by 1,000,000/x instead of 100,000,000/x)
 # (Important): To prevent an overflow when squaring the dimension, I calculate <added squared dimensions / inversemass> at a scale where the added squared dimensions are 100x too small, but then instead of dividing by 12 after the division, I multiply by 833 and then divide by 100, so that the end result is scaled the same.
     # Calculate the inverted local inertia tensor

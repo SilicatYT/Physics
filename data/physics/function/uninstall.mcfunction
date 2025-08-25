@@ -19,6 +19,7 @@ scoreboard objectives remove Physics.Object.Velocity.x
 scoreboard objectives remove Physics.Object.Velocity.y
 scoreboard objectives remove Physics.Object.Velocity.z
 scoreboard objectives remove Physics.Object.InverseMass
+scoreboard objectives remove Physics.Object.InverseMassScaled
 scoreboard objectives remove Physics.Object.Gravity
 scoreboard objectives remove Physics.Object.AccumulatedForce.x
 scoreboard objectives remove Physics.Object.AccumulatedForce.y
@@ -156,7 +157,14 @@ scoreboard objectives remove Physics.Object.Gametime
 scoreboard objectives remove Physics.Hitbox.Gametime
 
 scoreboard objectives remove Physics.Player.LookingAtID
+scoreboard objectives remove Physics.Player.LookingAtPos.x
+scoreboard objectives remove Physics.Player.LookingAtPos.y
+scoreboard objectives remove Physics.Player.LookingAtPos.z
+scoreboard objectives remove Physics.Player.LookingAtDirection.x
+scoreboard objectives remove Physics.Player.LookingAtDirection.y
+scoreboard objectives remove Physics.Player.LookingAtDirection.z
 scoreboard objectives remove Physics.Player.ID
+scoreboard objectives remove Physics.Player.PunchStrength
 
 # Reset scores
 # (Important): It resets all Physics.Hitbox.Gametime scores to avoid having unloaded interaction entities be killed after uninstalling, which would permanently offset the InteractionCount score and break things.

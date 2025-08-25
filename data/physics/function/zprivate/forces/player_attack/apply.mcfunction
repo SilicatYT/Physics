@@ -18,12 +18,14 @@ execute in minecraft:overworld run tp 0-0-0-0-0 0.0 0.0 0.0
         # Torque = r x force (With r being the vector from the object origin to the global point that was hit)
         # (Important): Because both Pos and Direction are scaled by 1,000x, this means their product is scaled by 1,000,000x. So I have to divide the result by 1,000x before adding it to the accumulated torque.
         # ^ wrong
+        # ^ What's wrong? I just reverted that and instead added a multiplier for player attack strength, and it looks fine?
         scoreboard players operation #Physics.Maths.Value1 Physics = #Physics.IntersectionPos.y Physics
         scoreboard players operation #Physics.Maths.Value1 Physics *= #Physics.RayDirection.z Physics
         scoreboard players operation #Physics.Maths.Value2 Physics = #Physics.IntersectionPos.z Physics
         scoreboard players operation #Physics.Maths.Value2 Physics *= #Physics.RayDirection.y Physics
         scoreboard players operation #Physics.Maths.Value1 Physics -= #Physics.Maths.Value2 Physics
-        #scoreboard players operation #Physics.Maths.Value1 Physics /= #Physics.Constants.1000 Physics
+        scoreboard players operation #Physics.Maths.Value1 Physics *= #Physics.PlayerPunchStrength Physics
+        scoreboard players operation #Physics.Maths.Value1 Physics /= #Physics.Constants.1000 Physics
         scoreboard players operation @s Physics.Object.AccumulatedTorque.x += #Physics.Maths.Value1 Physics
 
         scoreboard players operation #Physics.Maths.Value1 Physics = #Physics.IntersectionPos.z Physics
@@ -31,7 +33,8 @@ execute in minecraft:overworld run tp 0-0-0-0-0 0.0 0.0 0.0
         scoreboard players operation #Physics.Maths.Value2 Physics = #Physics.IntersectionPos.x Physics
         scoreboard players operation #Physics.Maths.Value2 Physics *= #Physics.RayDirection.z Physics
         scoreboard players operation #Physics.Maths.Value1 Physics -= #Physics.Maths.Value2 Physics
-        #scoreboard players operation #Physics.Maths.Value1 Physics /= #Physics.Constants.1000 Physics
+        scoreboard players operation #Physics.Maths.Value1 Physics *= #Physics.PlayerPunchStrength Physics
+        scoreboard players operation #Physics.Maths.Value1 Physics /= #Physics.Constants.1000 Physics
         scoreboard players operation @s Physics.Object.AccumulatedTorque.y += #Physics.Maths.Value1 Physics
 
         scoreboard players operation #Physics.Maths.Value1 Physics = #Physics.IntersectionPos.x Physics
@@ -39,13 +42,14 @@ execute in minecraft:overworld run tp 0-0-0-0-0 0.0 0.0 0.0
         scoreboard players operation #Physics.Maths.Value2 Physics = #Physics.IntersectionPos.y Physics
         scoreboard players operation #Physics.Maths.Value2 Physics *= #Physics.RayDirection.x Physics
         scoreboard players operation #Physics.Maths.Value1 Physics -= #Physics.Maths.Value2 Physics
-        #scoreboard players operation #Physics.Maths.Value1 Physics /= #Physics.Constants.1000 Physics
+        scoreboard players operation #Physics.Maths.Value1 Physics *= #Physics.PlayerPunchStrength Physics
+        scoreboard players operation #Physics.Maths.Value1 Physics /= #Physics.Constants.1000 Physics
         scoreboard players operation @s Physics.Object.AccumulatedTorque.z += #Physics.Maths.Value1 Physics
 
     # Linear force
-    scoreboard players operation #Physics.RayDirection.x Physics *= #Physics.Constants.1000 Physics
-    scoreboard players operation #Physics.RayDirection.y Physics *= #Physics.Constants.1000 Physics
-    scoreboard players operation #Physics.RayDirection.z Physics *= #Physics.Constants.1000 Physics
+    scoreboard players operation #Physics.RayDirection.x Physics *= #Physics.PlayerPunchStrength Physics
+    scoreboard players operation #Physics.RayDirection.y Physics *= #Physics.PlayerPunchStrength Physics
+    scoreboard players operation #Physics.RayDirection.z Physics *= #Physics.PlayerPunchStrength Physics
 
     scoreboard players operation @s Physics.Object.AccumulatedForce.x += #Physics.RayDirection.x Physics
     scoreboard players operation @s Physics.Object.AccumulatedForce.y += #Physics.RayDirection.y Physics

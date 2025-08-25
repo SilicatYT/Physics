@@ -9,7 +9,7 @@
 
 # (Important): Optimize getting the friction & restitution coefficients in "new_block", maybe by using binary search. Also, add more materials
 
-
+# (Important): Scale of local inertia and/or inverse mass *could* maybe be adjusted without losing accuracy? Could save some divisions
 
 
 
