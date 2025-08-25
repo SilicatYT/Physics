@@ -1,4 +1,4 @@
-# Calculate DeltaVelocity (Desired velocity change)
+# Calculate DeltaVelocity (Desired velocity change along the contact normal)
 # (Important): -(1 + RestitutionCoefficient) * SeparatingVelocity
 execute store result score #Physics.Maths.DeltaVelocity Physics run data get storage physics:resolution Contact.RestitutionCoefficient
 scoreboard players add #Physics.Maths.DeltaVelocity Physics 100
@@ -23,3 +23,6 @@ execute if data storage physics:resolution Contact.EffectiveMass run function ph
 execute unless data storage physics:resolution Contact.EffectiveMass run function physics:zprivate/resolution/velocity/world/world_axis_x/calculate_effective_mass
 
 # TODO: Only calculate the effective mass along each world axis *once* per tick, score it in the object score so having multiple contacts along the same axis is cheaper
+# TODO: Remove InverseMassScaled2 if it's unused even for edge-edge effective mass
+
+# Calculate xxx
