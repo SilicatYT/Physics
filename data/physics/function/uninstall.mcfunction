@@ -20,6 +20,7 @@ scoreboard objectives remove Physics.Object.Velocity.y
 scoreboard objectives remove Physics.Object.Velocity.z
 scoreboard objectives remove Physics.Object.InverseMass
 scoreboard objectives remove Physics.Object.InverseMassScaled
+scoreboard objectives remove Physics.Object.InverseMassScaled2
 scoreboard objectives remove Physics.Object.Gravity
 scoreboard objectives remove Physics.Object.AccumulatedForce.x
 scoreboard objectives remove Physics.Object.AccumulatedForce.y

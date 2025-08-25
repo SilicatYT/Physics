@@ -7,6 +7,7 @@ execute store result score @s Physics.Object.Pos.y run data get storage physics:
 execute store result score @s Physics.Object.Pos.z run data get storage physics:temp data.Object.Pos[2] 1000
 scoreboard players set @s Physics.Object.InverseMass 100000
 scoreboard players set @s Physics.Object.InverseMassScaled 100
+scoreboard players set @s Physics.Object.InverseMassScaled2 1
 scoreboard players set @s Physics.Object.Dimension.x 1000
 scoreboard players set @s Physics.Object.Dimension.y 1000
 scoreboard players set @s Physics.Object.Dimension.z 1000

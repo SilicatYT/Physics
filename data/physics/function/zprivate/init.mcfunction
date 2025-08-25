@@ -12,6 +12,7 @@ scoreboard objectives add Physics.Object.Velocity.y dummy
 scoreboard objectives add Physics.Object.Velocity.z dummy
 scoreboard objectives add Physics.Object.InverseMass dummy
 scoreboard objectives add Physics.Object.InverseMassScaled dummy
+scoreboard objectives add Physics.Object.InverseMassScaled2 dummy
 scoreboard objectives add Physics.Object.Gravity dummy
 scoreboard objectives add Physics.Object.Dimension.x dummy
 scoreboard objectives add Physics.Object.Dimension.y dummy
