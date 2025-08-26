@@ -8,8 +8,8 @@ data modify storage physics:resolution Contact.EffectiveMass set value [I;0,0,0]
     execute store result score #Physics.Maths.RelativeContactPos.x Physics run data get storage physics:resolution Contact.ContactPoint[0]
     execute store result score #Physics.Maths.RelativeContactPos.y Physics run data get storage physics:resolution Contact.ContactPoint[1]
     execute store result score #Physics.Maths.RelativeContactPos.z Physics run data get storage physics:resolution Contact.ContactPoint[2]
-    execute store result score #Physics.Maths.Value4 Physics store result score #Physics.Maths.Value3 Physics store result score #Physics.Maths.a2.z Physics run scoreboard players operation #Physics.Maths.RelativeContactPos.x Physics -= @s Physics.Object.Pos.x
-    execute store result score #Physics.Maths.a1.z Physics run scoreboard players operation #Physics.Maths.RelativeContactPos.y Physics -= @s Physics.Object.Pos.y
+    execute store result score #Physics.Maths.a3.y Physics store result score #Physics.Maths.Value4 Physics store result score #Physics.Maths.Value3 Physics store result score #Physics.Maths.a2.z Physics run scoreboard players operation #Physics.Maths.RelativeContactPos.x Physics -= @s Physics.Object.Pos.x
+    execute store result score #Physics.Maths.a3.x Physics store result score #Physics.Maths.a1.z Physics run scoreboard players operation #Physics.Maths.RelativeContactPos.y Physics -= @s Physics.Object.Pos.y
     execute store result score #Physics.Maths.a2.x Physics store result score #Physics.Maths.a1.y Physics run scoreboard players operation #Physics.Maths.RelativeContactPos.z Physics -= @s Physics.Object.Pos.z
 
     # Axis 1: ContactNormal [±1.0, 0.0, 0.0]
@@ -60,7 +60,6 @@ data modify storage physics:resolution Contact.EffectiveMass set value [I;0,0,0]
 
         # b = InverseInertiaTensorGlobal * a
         # (Important): Because the next step calculates the cross product between the axis and b, and only the second component of that cross product will be used, I don't need to calculate the y component of b.
-        # (Important): I overwrite a's scores for efficiency reasons. "a.x" is "b.x".
         scoreboard players operation #Physics.Maths.b2.x Physics *= @s Physics.Object.InverseInertiaTensorGlobal.0
         scoreboard players operation #Physics.Maths.Value3 Physics *= @s Physics.Object.InverseInertiaTensorGlobal.2
         scoreboard players operation #Physics.Maths.b2.x Physics += #Physics.Maths.Value3 Physics
@@ -79,3 +78,34 @@ data modify storage physics:resolution Contact.EffectiveMass set value [I;0,0,0]
 
         # EffectiveMass = InverseMass + c
         execute store result storage physics:resolution Contact.EffectiveMass[1] int 1 run scoreboard players operation #Physics.Maths.a2.x Physics += @s Physics.Object.InverseMass
+
+    # Axis 3: Tangent 2 [0.0, 0.0, 1.0]
+        # a = RelativeContactPos x Axis
+            # x component
+
+            # y component
+            execute store result score #Physics.Maths.Value6 Physics store result score #Physics.Maths.Value5 Physics run scoreboard players operation #Physics.Maths.a3.y Physics *= #Physics.Constants.-1 Physics
+
+            # z component
+            # (Important): It's always 0.
+
+        # b = InverseInertiaTensosrGlobal * a
+        # (Important): Because the next step calculates the cross product between the axis and b, and only the third component of that cross product will be used, I don't need to calculate the z component of b.
+        scoreboard players operation #Physics.Maths.b3.x Physics *= @s Physics.Object.InverseInertiaTensorGlobal.0
+        scoreboard players operation #Physics.Maths.Value5 Physics *= @s Physics.Object.InverseInertiaTensorGlobal.1
+        scoreboard players operation #Physics.Maths.b3.x Physics += #Physics.Maths.Value5 Physics
+        scoreboard players operation #Physics.Maths.b3.x Physics /= #Physics.Constants.1000 Physics
+
+        scoreboard players operation #Physics.Maths.b3.y Physics *= @s Physics.Object.InverseInertiaTensorGlobal.3
+        scoreboard players operation #Physics.Maths.Value6 Physics *= @s Physics.Object.InverseInertiaTensorGlobal.4
+        scoreboard players operation #Physics.Maths.b3.y Physics += #Physics.Maths.Value6 Physics
+        scoreboard players operation #Physics.Maths.b3.y Physics /= #Physics.Constants.1000 Physics
+
+        # c = a * b
+        # (Important): I overwrite a's scores for efficiency reasons. "a.x" is "c".
+        scoreboard players operation #Physics.Maths.a3.x Physics *= #Physics.Maths.b3.x Physics
+        scoreboard players operation #Physics.Maths.a3.y Physics *= #Physics.Maths.b3.y Physics
+        scoreboard players operation #Physics.Maths.a3.x Physics += #Physics.Maths.a3.y Physics
+
+        # EffectiveMass = InverseMass + c
+        execute store result storage physics:resolution Contact.EffectiveMass[2] int 1 run scoreboard players operation #Physics.Maths.a3.x Physics += @s Physics.Object.InverseMass

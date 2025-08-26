@@ -39,6 +39,7 @@ scoreboard objectives add Physics.Object.MinSeparatingVelocity.World dummy
 scoreboard objectives add Physics.Object.MaxPenetrationDepth.World dummy
 scoreboard objectives add Physics.Object.FrictionCoefficient dummy
 scoreboard objectives add Physics.Object.RestitutionCoefficient dummy
+scoreboard objectives add Physics.Object.Gametime dummy
 
     # Temporary. Remove once a proper system is added for all x, y and z components for velocityFromAcc
     scoreboard objectives add Physics.Object.DefactoGravity dummy
@@ -149,7 +150,6 @@ scoreboard objectives add Physics.Object.ProjectionOwnAxis.y.Min dummy
 scoreboard objectives add Physics.Object.ProjectionOwnAxis.y.Max dummy
 scoreboard objectives add Physics.Object.ProjectionOwnAxis.z.Min dummy
 scoreboard objectives add Physics.Object.ProjectionOwnAxis.z.Max dummy
-scoreboard objectives add Physics.Object.Gametime dummy
 
 # Add hitbox attributes
 scoreboard objectives add Physics.Hitbox.Gametime dummy
@@ -202,7 +202,7 @@ scoreboard players set #Physics.Settings.AngularDamping Physics 98
 scoreboard players set #Physics.Settings.Accumulation.MinPenetrationDepth Physics -50
 scoreboard players set #Physics.Settings.Resolution.MinPenetrationDepth Physics 0
 scoreboard players set #Physics.Settings.Resolution.MaxSeparatingVelocity Physics 0
-scoreboard players set #Physics.Settings.Resolution.RestitutionThreshold Physics -50
+scoreboard players set #Physics.Settings.Resolution.RestitutionThreshold Physics 22500
 
 # Setup starting values for data storages
 data modify storage physics:temp data.HitboxPos set value [0d,0d,0d]

@@ -47,6 +47,7 @@ scoreboard objectives remove Physics.Object.MinSeparatingVelocity.World
 scoreboard objectives remove Physics.Object.MaxPenetrationDepth.World
 scoreboard objectives remove Physics.Object.FrictionCoefficient
 scoreboard objectives remove Physics.Object.RestitutionCoefficient
+scoreboard objectives remove Physics.Object.Gametime
 
 scoreboard objectives remove Physics.Object.RotationMatrix.0
 scoreboard objectives remove Physics.Object.RotationMatrix.1
@@ -153,7 +154,6 @@ scoreboard objectives remove Physics.Object.ProjectionOwnAxis.y.Min
 scoreboard objectives remove Physics.Object.ProjectionOwnAxis.y.Max
 scoreboard objectives remove Physics.Object.ProjectionOwnAxis.z.Min
 scoreboard objectives remove Physics.Object.ProjectionOwnAxis.z.Max
-scoreboard objectives remove Physics.Object.Gametime
 
 scoreboard objectives remove Physics.Hitbox.Gametime
 
