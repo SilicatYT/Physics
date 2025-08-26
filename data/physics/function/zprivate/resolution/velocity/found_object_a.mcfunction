@@ -2,7 +2,7 @@
 execute store result storage physics:temp data.A int 1 run scoreboard players get @s Physics.Object.ID
 function physics:zprivate/resolution/velocity/get_object_data with storage physics:temp data
 data modify storage physics:resolution Object set from storage physics:zprivate ContactGroups[{R:1b}]
-#data remove storage physics:zprivate ContactGroups[{R:1b}]
+data remove storage physics:zprivate ContactGroups[{R:1b}]
 data remove storage physics:resolution Object.R
 
 # Select the type of contact that needs to be resolved (World or object-object)

@@ -14,7 +14,7 @@
     scoreboard players operation #Physics.Maths.SquaredMagnitude Physics += #Physics.Maths.Value2 Physics
 
     execute if score #Physics.Maths.SquaredMagnitude Physics <= #Physics.Settings.Resolution.RestitutionThreshold Physics run scoreboard players set #Physics.Maths.DeltaVelocity Physics 0
-    execute unless score #Physics.Maths.SquaredMagnitude Physics <= #Physics.Settings.Resolution.RestitutionThreshold Physics store result score #Physics.Maths.DeltaVelocity Physics run data get storage physics:resolution Contact.RestitutionCoefficient
+    execute unless score #Physics.Maths.SquaredMagnitude Physics <= #Physics.Settings.Resolution.RestitutionThreshold Physics store result score #Physics.Maths.DeltaVelocity Physics run data get storage physics:resolution Block.RestitutionCoefficient
 
 scoreboard players add #Physics.Maths.DeltaVelocity Physics 100
 
@@ -26,7 +26,7 @@ scoreboard players operation #Physics.Maths.DeltaVelocity Physics *= #Physics.Co
 # (Important): For axis-aligned contact normals like here, this is trivial, so I just directly incorporate it into subsequent formulas for performance reasons. Here, it's: [[±1.0, 0.0, 0.0],[0.0, 1.0, 0.0],[0.0, 0.0, 1.0]]
 
 # Transform ContactVelocity from world space to contact space
-# (Important): To avoid matrix multiplication, I instead do: ContactVelocity.<x/y/z> = ContactVelocity * <respective column of orthonormal basis> (Dot product)
+# (Important): To avoid matrix multiplication, I instead do: ContactVelocityContactSpace.<x/y/z> = ContactVelocity * <respective column of orthonormal basis> (Dot product)
 # (Important): Here, the ContactVelocity is already in contact space.
 
 # Calculate effective mass along the 3 contact axes (3 columns of the orthonormal basis)
@@ -52,7 +52,7 @@ execute store result score #Physics.Maths.ImpulseCopy.z Physics run scoreboard p
 
     # Calculate squared MaxFriction (& keep track of non-squared)
     # (Important): The scaling of MaxFrictionSquared is still 1x, same as PlanarImpulseSquared, but MaxFriction is 100x.
-    execute store result score #Physics.Maths.MaxFrictionSquared Physics run data get storage physics:resolution Contact.FrictionCoefficient
+    execute store result score #Physics.Maths.MaxFrictionSquared Physics run data get storage physics:resolution Block.FrictionCoefficient
     execute store result score #Physics.Maths.MaxFriction Physics run scoreboard players operation #Physics.Maths.MaxFrictionSquared Physics *= #Physics.Maths.DeltaVelocity Physics
     scoreboard players operation #Physics.Maths.MaxFrictionSquared Physics /= #Physics.Constants.100 Physics
     scoreboard players operation #Physics.Maths.MaxFrictionSquared Physics *= #Physics.Maths.MaxFrictionSquared Physics
@@ -61,3 +61,26 @@ execute store result score #Physics.Maths.ImpulseCopy.z Physics run scoreboard p
     execute if score #Physics.Maths.PlanarImpulse Physics > #Physics.Maths.MaxFrictionSquared Physics run function physics:zprivate/resolution/velocity/world/world_axis_x/dynamic_friction
 
 # Transform impulse from contact space to world space
+# (Important): To avoid matrix multiplication, I calculate: ImpulseWorldSpace = (ImpulseContactSpace.x * ContactNormal) + (ImpulseContactSpace.y * Tangent1) + (ImpulseContactSpace.z * Tangent2)
+execute if score #Physics.FeatureB Physics matches 10 run scoreboard players operation #Physics.Maths.DeltaVelocity Physics *= #Physics.Constants.-1 Physics
+
+# Apply the impulse
+    # LinearVelocityChange = Impulse * InverseMass
+    scoreboard players operation #Phyics.Maths.DeltaVelocity Physics *= @s Physics.Object.InverseMassScaled
+    scoreboard players operation #Phyics.Maths.DeltaVelocity Physics /= #Physics.Constants.100 Physics
+
+    scoreboard players operation #Phyics.Maths.ContactVelocity.y Physics *= @s Physics.Object.InverseMassScaled
+    scoreboard players operation #Phyics.Maths.ContactVelocity.y Physics /= #Physics.Constants.100 Physics
+
+    scoreboard players operation #Phyics.Maths.ContactVelocity.z Physics *= @s Physics.Object.InverseMassScaled
+    scoreboard players operation #Phyics.Maths.ContactVelocity.z Physics /= #Physics.Constants.100 Physics
+    scoreboard players operation @s Physics.Object.Velocity.x += #Physics.Maths.DeltaVelocity Physics
+    scoreboard players operation @s Physics.Object.Velocity.y += #Physics.Maths.ContactVelocity.y Physics
+    scoreboard players operation @s Physics.Object.Velocity.z += #Physics.Maths.ContactVelocity.z Physics
+
+    # ImpulsiveTorque = RelativeContactPos x Impulse
+
+    # AngularVelocityChange = InverseInertiaTensorGlobal * ImpulsiveTorque
+
+
+# Evtl den Impuls (DeltaVelocity, ContactVelocity.y/z) noch upscaled lassen von der Friction Calculation, sodass es mehr Detail behält bei "apply the impulse"
