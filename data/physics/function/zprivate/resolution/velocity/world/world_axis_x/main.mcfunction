@@ -1,10 +1,15 @@
 # Calculate DeltaVelocity (Desired velocity change along the contact normal)
 # (Important): -(1 + RestitutionCoefficient) * SeparatingVelocity
+# (Important): DeltaVelocity is scaled up by 1,000x * 100x = 100,000x.
 execute store result score #Physics.Maths.DeltaVelocity Physics run data get storage physics:resolution Contact.RestitutionCoefficient
 scoreboard players add #Physics.Maths.DeltaVelocity Physics 100
 
 scoreboard players operation #Physics.Maths.DeltaVelocity Physics *= #Physics.MinSeparatingVelocityTotal Physics
-scoreboard players operation #Physics.Maths.DeltaVelocity Physics *= #Physics.Constants.-1 Physics
+#scoreboard players operation #Physics.Maths.DeltaVelocity Physics *= #Physics.Constants.-1 Physics
+
+
+# ^ do the inverting in "calculate impulse", where I invert all the three contactVelocities in once place, and also scale them up in the same multiplication
+
 
 # Calculate orthonormal basis
 # (Important): The orthonormal basis is a 3x3 matrix. The first column is the contact normal, the 2nd and 3rd columns are tangents.
