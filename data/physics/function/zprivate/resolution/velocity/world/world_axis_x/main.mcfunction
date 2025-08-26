@@ -58,29 +58,75 @@ execute store result score #Physics.Maths.ImpulseCopy.z Physics run scoreboard p
     scoreboard players operation #Physics.Maths.MaxFrictionSquared Physics *= #Physics.Maths.MaxFrictionSquared Physics
 
     # If PlanarImpulseSquared is greater than MaxFrictionSquared, apply dynamic friction
-    execute if score #Physics.Maths.PlanarImpulse Physics > #Physics.Maths.MaxFrictionSquared Physics run function physics:zprivate/resolution/velocity/world/world_axis_x/dynamic_friction
+    execute store result score #Physics.Check Physics if score #Physics.Maths.PlanarImpulse Physics > #Physics.Maths.MaxFrictionSquared Physics
+    execute if score #Physics.Check Physics matches 0 run function physics:zprivate/resolution/velocity/world/world_axis_x/static_friction
+    execute if score #Physics.Check Physics matches 1 run function physics:zprivate/resolution/velocity/world/world_axis_x/dynamic_friction
 
 # Transform impulse from contact space to world space
 # (Important): To avoid matrix multiplication, I calculate: ImpulseWorldSpace = (ImpulseContactSpace.x * ContactNormal) + (ImpulseContactSpace.y * Tangent1) + (ImpulseContactSpace.z * Tangent2)
 execute if score #Physics.FeatureB Physics matches 10 run scoreboard players operation #Physics.Maths.DeltaVelocity Physics *= #Physics.Constants.-1 Physics
 
 # Apply the impulse
+# (Important): The backups for the tangential impulses are set in dynamic_friction or static_friction.
+scoreboard players operation #Physics.Maths.Impulse.x Physics = #Physics.Maths.DeltaVelocity Physics
+
     # LinearVelocityChange = Impulse * InverseMass
-    scoreboard players operation #Phyics.Maths.DeltaVelocity Physics *= @s Physics.Object.InverseMassScaled
-    scoreboard players operation #Phyics.Maths.DeltaVelocity Physics /= #Physics.Constants.100 Physics
+    # (Important): The tangential impulses are still scaled 1,000x from the friction calculations (I manually scaled them up if friction calculations didn't happen) so they keep more precision. No overflow should occur.
+    scoreboard players operation #Physics.Maths.DeltaVelocity Physics *= @s Physics.Object.InverseMassScaled
+    scoreboard players operation #Physics.Maths.DeltaVelocity Physics /= #Physics.Constants.100 Physics
 
-    scoreboard players operation #Phyics.Maths.ContactVelocity.y Physics *= @s Physics.Object.InverseMassScaled
-    scoreboard players operation #Phyics.Maths.ContactVelocity.y Physics /= #Physics.Constants.100 Physics
+    scoreboard players operation #Physics.Maths.ContactVelocity.y Physics *= @s Physics.Object.InverseMassScaled
+    scoreboard players operation #Physics.Maths.ContactVelocity.y Physics /= #Physics.Constants.100000 Physics
 
-    scoreboard players operation #Phyics.Maths.ContactVelocity.z Physics *= @s Physics.Object.InverseMassScaled
-    scoreboard players operation #Phyics.Maths.ContactVelocity.z Physics /= #Physics.Constants.100 Physics
+    scoreboard players operation #Physics.Maths.ContactVelocity.z Physics *= @s Physics.Object.InverseMassScaled
+    scoreboard players operation #Physics.Maths.ContactVelocity.z Physics /= #Physics.Constants.100000 Physics
+
     scoreboard players operation @s Physics.Object.Velocity.x += #Physics.Maths.DeltaVelocity Physics
     scoreboard players operation @s Physics.Object.Velocity.y += #Physics.Maths.ContactVelocity.y Physics
     scoreboard players operation @s Physics.Object.Velocity.z += #Physics.Maths.ContactVelocity.z Physics
 
     # ImpulsiveTorque = RelativeContactPos x Impulse
+    execute store result score #Physics.Maths.Torque.z Physics run data get storage physics:resolution Contact.ContactPoint[0]
+    execute store result score #Physics.Maths.Torque.x Physics run data get storage physics:resolution Contact.ContactPoint[1]
+    execute store result score #Physics.Maths.Torque.y Physics run data get storage physics:resolution Contact.ContactPoint[2]
+    execute store result score #Physics.Maths.Value2 Physics run scoreboard players operation #Physics.Maths.Torque.z Physics -= @s Physics.Object.Pos.x
+    execute store result score #Physics.Maths.Value3 Physics run scoreboard players operation #Physics.Maths.Torque.x Physics -= @s Physics.Object.Pos.y
+    execute store result score #Physics.Maths.Value1 Physics run scoreboard players operation #Physics.Maths.Torque.y Physics -= @s Physics.Object.Pos.z
+
+    scoreboard players operation #Physics.Maths.Torque.x Physics *= #Physics.Maths.Impulse.z Physics
+    scoreboard players operation #Physics.Maths.Value1 Physics *= #Physics.Maths.Impulse.y Physics
+    execute store result score #Physics.Maths.Value7 Physics store result score #Physics.Maths.Value4 Physics run scoreboard players operation #Physics.Maths.Torque.x Physics -= #Physics.Maths.Value1 Physics
+
+    scoreboard players operation #Physics.Maths.Torque.y Physics *= #Physics.Maths.Impulse.x Physics
+    scoreboard players operation #Physics.Maths.Value2 Physics *= #Physics.Maths.Impulse.z Physics
+    execute store result score #Physics.Maths.Value8 Physics store result score #Physics.Maths.Value5 Physics run scoreboard players operation #Physics.Maths.Torque.y Physics -= #Physics.Maths.Value2 Physics
+
+    scoreboard players operation #Physics.Maths.Torque.z Physics *= #Physics.Maths.Impulse.y Physics
+    scoreboard players operation #Physics.Maths.Value3 Physics *= #Physics.Maths.Impulse.x Physics
+    execute store result score #Physics.Maths.Value9 Physics store result score #Physics.Maths.Value6 Physics run scoreboard players operation #Physics.Maths.Torque.z Physics -= #Physics.Maths.Value3 Physics
 
     # AngularVelocityChange = InverseInertiaTensorGlobal * ImpulsiveTorque
+    scoreboard players operation #Physics.Maths.Torque.x Physics *= @s Physics.Object.InverseInertiaTensorGlobal.0
+    scoreboard players operation #Physics.Maths.Torque.y Physics *= @s Physics.Object.InverseInertiaTensorGlobal.1
+    scoreboard players operation #Physics.Maths.Torque.x Physics += #Physics.Maths.Torque.y Physics
+    scoreboard players operation #Physics.Maths.Torque.z Physics *= @s Physics.Object.InverseInertiaTensorGlobal.2
+    scoreboard players operation #Physics.Maths.Torque.x Physics += #Physics.Maths.Torque.z Physics
+    scoreboard players operation #Physics.Maths.Torque.x Physics /= #Physics.Constants.100000 Physics
 
+    scoreboard players operation #Physics.Maths.Value4 Physics *= @s Physics.Object.InverseInertiaTensorGlobal.3
+    scoreboard players operation #Physics.Maths.Value5 Physics *= @s Physics.Object.InverseInertiaTensorGlobal.4
+    scoreboard players operation #Physics.Maths.Value4 Physics += #Physics.Maths.Value5 Physics
+    scoreboard players operation #Physics.Maths.Value6 Physics *= @s Physics.Object.InverseInertiaTensorGlobal.5
+    scoreboard players operation #Physics.Maths.Value4 Physics += #Physics.Maths.Value6 Physics
+    scoreboard players operation #Physics.Maths.Value4 Physics /= #Physics.Constants.100000 Physics
 
-# Evtl den Impuls (DeltaVelocity, ContactVelocity.y/z) noch upscaled lassen von der Friction Calculation, sodass es mehr Detail behält bei "apply the impulse"
+    scoreboard players operation #Physics.Maths.Value7 Physics *= @s Physics.Object.InverseInertiaTensorGlobal.6
+    scoreboard players operation #Physics.Maths.Value8 Physics *= @s Physics.Object.InverseInertiaTensorGlobal.7
+    scoreboard players operation #Physics.Maths.Value7 Physics += #Physics.Maths.Value8 Physics
+    scoreboard players operation #Physics.Maths.Value9 Physics *= @s Physics.Object.InverseInertiaTensorGlobal.8
+    scoreboard players operation #Physics.Maths.Value7 Physics += #Physics.Maths.Value9 Physics
+    scoreboard players operation #Physics.Maths.Value7 Physics /= #Physics.Constants.100000 Physics
+
+    scoreboard players operation @s Physics.Object.AngularVelocity.x += #Physics.Maths.Torque.x Physics
+    scoreboard players operation @s Physics.Object.AngularVelocity.y += #Physics.Maths.Value4 Physics
+    scoreboard players operation @s Physics.Object.AngularVelocity.z += #Physics.Maths.Value7 Physics

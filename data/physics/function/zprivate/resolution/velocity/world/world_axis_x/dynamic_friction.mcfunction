@@ -12,8 +12,9 @@ function physics:zprivate/maths/get_square_root
 scoreboard players operation #Physics.Maths.MaxFriction Physics /= #Physics.Maths.SquareRoot.Output Physics
 
 # Apply friction to tangential impulses
-scoreboard players operation #Physics.Maths.ContactVelocity.y Physics *= #Physics.Maths.MaxFriction Physics
-scoreboard players operation #Physics.Maths.ContactVelocity.z Physics *= #Physics.Maths.MaxFriction Physics
+execute store result score #Physics.Maths.Impulse.y Physics run scoreboard players operation #Physics.Maths.ContactVelocity.y Physics *= #Physics.Maths.MaxFriction Physics
+execute store result score #Physics.Maths.Impulse.z Physics run scoreboard players operation #Physics.Maths.ContactVelocity.z Physics *= #Physics.Maths.MaxFriction Physics
 
-scoreboard players operation #Physics.Maths.ContactVelocity.y Physics /= #Physics.Constants.1000 Physics
-scoreboard players operation #Physics.Maths.ContactVelocity.z Physics /= #Physics.Constants.1000 Physics
+# Set score backups for later use
+scoreboard players operation #Physics.Maths.Impulse.y Physics /= #Physics.Constants.1000 Physics
+scoreboard players operation #Physics.Maths.Impulse.z Physics /= #Physics.Constants.1000 Physics

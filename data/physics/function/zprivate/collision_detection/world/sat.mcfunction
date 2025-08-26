@@ -12,6 +12,7 @@
 # (Important): Scale of local inertia and/or inverse mass *could* maybe be adjusted without losing accuracy? Could save some divisions
 # TODO: Remove InverseMassScaled2 if it's unused even for edge-edge effective mass
 
+# Maybe store the relativeContactPos in the data alongside effective mass (after being resolved once, ofc)? Would avoid calculating it twice when it's already calculated for the effective mass stuff. For world contacts, maybe I can overwrite "ContactPoint"? For object-object, that wouldn't work though
 
 
 
