@@ -42,18 +42,22 @@ execute if score #Physics.Check Physics matches 1 store result score #Physics.Ma
 # (Important): Due to the dividend and divisor having the same scaling, the resulting values are scaled 1x. This is okay though.
 scoreboard players operation #Physics.Maths.DeltaVelocity Physics /= #Physics.Maths.a1.y Physics
 execute store result score #Physics.Maths.PlanarImpulse Physics run scoreboard players operation #Physics.Maths.ContactVelocity.y Physics /= #Physics.Maths.a2.x Physics
-execute store result score #Physics.Maths.ImpulseCopy.z Physics run scoreboard players operation #Physics.Maths.ContactVelocityContactSpace.z Physics /= #Physics.Maths.a3.x Physics
+execute store result score #Physics.Maths.ImpulseCopy.z Physics run scoreboard players operation #Physics.Maths.ContactVelocity.z Physics /= #Physics.Maths.a3.x Physics
 
 # Apply friction to the impulse
-# (Important): If PlanarImpulseSquared is greater than MaxFriction, apply dynamic friction. Otherwise,
     # Calculate squared planar impulse
     scoreboard players operation #Physics.Maths.PlanarImpulse Physics *= #Physics.Maths.PlanarImpulse Physics
     scoreboard players operation #Physics.Maths.ImpulseCopy.z Physics *= #Physics.Maths.ImpulseCopy.z Physics
     scoreboard players operation #Physics.Maths.PlanarImpulse Physics += #Physics.Maths.ImpulseCopy.z Physics
 
     # Calculate squared MaxFriction (& keep track of non-squared)
-    # (Important): The scaling of MaxFriction and MaxFrictionSquared is still 1x, same as PlanarImpulseSquared.
+    # (Important): The scaling of MaxFrictionSquared is still 1x, same as PlanarImpulseSquared, but MaxFriction is 100x.
     execute store result score #Physics.Maths.MaxFrictionSquared Physics run data get storage physics:resolution Contact.FrictionCoefficient
-    scoreboard players operation #Physics.Maths.MaxFrictionSquared Physics *= #Physics.Maths.DeltaVelocity Physics
-    execute store result score #Physics.Maths.MaxFriction Physics run scoreboard players operation #Physics.Maths.MaxFrictionSquared Physics /= #Physics.Constants.100 Physics
+    execute store result score #Physics.Maths.MaxFriction Physics run scoreboard players operation #Physics.Maths.MaxFrictionSquared Physics *= #Physics.Maths.DeltaVelocity Physics
+    scoreboard players operation #Physics.Maths.MaxFrictionSquared Physics /= #Physics.Constants.100 Physics
     scoreboard players operation #Physics.Maths.MaxFrictionSquared Physics *= #Physics.Maths.MaxFrictionSquared Physics
+
+    # If PlanarImpulseSquared is greater than MaxFrictionSquared, apply dynamic friction
+    execute if score #Physics.Maths.PlanarImpulse Physics > #Physics.Maths.MaxFrictionSquared Physics run function physics:zprivate/resolution/velocity/world/world_axis_x/dynamic_friction
+
+# Transform impulse from contact space to world space
