@@ -3,8 +3,8 @@
 # (Important): DeltaVelocity is scaled up by 1,000x * 100x = 100,000x. I scale it up to 100,000,000x at the end so it has the same scaling as EffectiveMass. It should not overflow.
     # Set restitution coefficient to 0 if squared magnitude of contact velocity is too low
     scoreboard players operation #Physics.Maths.SquaredMagnitude Physics = #Physics.MinSeparatingVelocityTotal Physics
-    execute store result score #Physics.Maths.Value1 Physics store result score #Physics.Maths.ContactVelocity.y Physics run data get storage physics:resolution Contact.ContactVelocity[1]
-    execute store result score #Physics.Maths.Value2 Physics store result score #Physics.Maths.ContactVelocity.z Physics run data get storage physics:resolution Contact.ContactVelocity[2]
+    execute store result score #Physics.Maths.ContactVelocityBackup.y Physics store result score #Physics.Maths.Value1 Physics store result score #Physics.Maths.ContactVelocity.y Physics run data get storage physics:resolution Contact.ContactVelocity[1]
+    execute store result score #Physics.Maths.ContactVelocityBackup.z Physics store result score #Physics.Maths.Value2 Physics store result score #Physics.Maths.ContactVelocity.z Physics run data get storage physics:resolution Contact.ContactVelocity[2]
 
     scoreboard players operation #Physics.Maths.SquaredMagnitude Physics *= #Physics.Maths.SquaredMagnitude Physics
     scoreboard players operation #Physics.Maths.Value1 Physics *= #Physics.Maths.Value1 Physics
@@ -73,60 +73,113 @@ scoreboard players operation #Physics.Maths.Impulse.x Physics = #Physics.Maths.D
     # LinearVelocityChange = Impulse * InverseMass
     # (Important): The tangential impulses are still scaled 1,000x from the friction calculations (I manually scaled them up if friction calculations didn't happen) so they keep more precision. No overflow should occur.
     scoreboard players operation #Physics.Maths.DeltaVelocity Physics *= @s Physics.Object.InverseMassScaled
-    scoreboard players operation #Physics.Maths.DeltaVelocity Physics /= #Physics.Constants.100 Physics
+    execute store result score #Physics.LinearVelocityChange.x Physics run scoreboard players operation #Physics.Maths.DeltaVelocity Physics /= #Physics.Constants.100 Physics
 
     scoreboard players operation #Physics.Maths.ContactVelocity.y Physics *= @s Physics.Object.InverseMassScaled
-    scoreboard players operation #Physics.Maths.ContactVelocity.y Physics /= #Physics.Constants.100000 Physics
+    execute store result score #Physics.LinearVelocityChange.y Physics run scoreboard players operation #Physics.Maths.ContactVelocity.y Physics /= #Physics.Constants.100000 Physics
 
     scoreboard players operation #Physics.Maths.ContactVelocity.z Physics *= @s Physics.Object.InverseMassScaled
-    scoreboard players operation #Physics.Maths.ContactVelocity.z Physics /= #Physics.Constants.100000 Physics
+    execute store result score #Physics.LinearVelocityChange.z Physics run scoreboard players operation #Physics.Maths.ContactVelocity.z Physics /= #Physics.Constants.100000 Physics
 
-    scoreboard players operation @s Physics.Object.Velocity.x += #Physics.Maths.DeltaVelocity Physics
-    scoreboard players operation @s Physics.Object.Velocity.y += #Physics.Maths.ContactVelocity.y Physics
-    scoreboard players operation @s Physics.Object.Velocity.z += #Physics.Maths.ContactVelocity.z Physics
+    scoreboard players operation @s Physics.Object.Velocity.x += #Physics.LinearVelocityChange.x Physics
+    scoreboard players operation @s Physics.Object.Velocity.y += #Physics.LinearVelocityChange.y Physics
+    scoreboard players operation @s Physics.Object.Velocity.z += #Physics.LinearVelocityChange.z Physics
 
     # ImpulsiveTorque = RelativeContactPos x Impulse
     execute store result score #Physics.Maths.Torque.z Physics run data get storage physics:resolution Contact.ContactPoint[0]
-    execute store result score #Physics.Maths.Torque.x Physics run data get storage physics:resolution Contact.ContactPoint[1]
+    execute store result score #Physics.AngularVelocityChange.x Physics run data get storage physics:resolution Contact.ContactPoint[1]
     execute store result score #Physics.Maths.Torque.y Physics run data get storage physics:resolution Contact.ContactPoint[2]
-    execute store result score #Physics.Maths.Value2 Physics run scoreboard players operation #Physics.Maths.Torque.z Physics -= @s Physics.Object.Pos.x
-    execute store result score #Physics.Maths.Value3 Physics run scoreboard players operation #Physics.Maths.Torque.x Physics -= @s Physics.Object.Pos.y
-    execute store result score #Physics.Maths.Value1 Physics run scoreboard players operation #Physics.Maths.Torque.y Physics -= @s Physics.Object.Pos.z
+    execute store result score #Physics.Maths.RelativeContactPos.x Physics store result score #Physics.Maths.Value2 Physics run scoreboard players operation #Physics.Maths.Torque.z Physics -= @s Physics.Object.Pos.x
+    execute store result score #Physics.Maths.RelativeContactPos.y Physics store result score #Physics.Maths.Value3 Physics run scoreboard players operation #Physics.AngularVelocityChange.x Physics -= @s Physics.Object.Pos.y
+    execute store result score #Physics.Maths.RelativeContactPos.z Physics store result score #Physics.Maths.Value1 Physics run scoreboard players operation #Physics.Maths.Torque.y Physics -= @s Physics.Object.Pos.z
 
-    scoreboard players operation #Physics.Maths.Torque.x Physics *= #Physics.Maths.Impulse.z Physics
+    scoreboard players operation #Physics.AngularVelocityChange.x Physics *= #Physics.Maths.Impulse.z Physics
     scoreboard players operation #Physics.Maths.Value1 Physics *= #Physics.Maths.Impulse.y Physics
-    execute store result score #Physics.Maths.Value7 Physics store result score #Physics.Maths.Value4 Physics run scoreboard players operation #Physics.Maths.Torque.x Physics -= #Physics.Maths.Value1 Physics
+    execute store result score #Physics.AngularVelocityChange.z Physics store result score #Physics.AngularVelocityChange.y Physics run scoreboard players operation #Physics.AngularVelocityChange.x Physics -= #Physics.Maths.Value1 Physics
 
     scoreboard players operation #Physics.Maths.Torque.y Physics *= #Physics.Maths.Impulse.x Physics
     scoreboard players operation #Physics.Maths.Value2 Physics *= #Physics.Maths.Impulse.z Physics
-    execute store result score #Physics.Maths.Value8 Physics store result score #Physics.Maths.Value5 Physics run scoreboard players operation #Physics.Maths.Torque.y Physics -= #Physics.Maths.Value2 Physics
+    execute store result score #Physics.Maths.Value6 Physics store result score #Physics.Maths.Value4 Physics run scoreboard players operation #Physics.Maths.Torque.y Physics -= #Physics.Maths.Value2 Physics
 
     scoreboard players operation #Physics.Maths.Torque.z Physics *= #Physics.Maths.Impulse.y Physics
     scoreboard players operation #Physics.Maths.Value3 Physics *= #Physics.Maths.Impulse.x Physics
-    execute store result score #Physics.Maths.Value9 Physics store result score #Physics.Maths.Value6 Physics run scoreboard players operation #Physics.Maths.Torque.z Physics -= #Physics.Maths.Value3 Physics
+    execute store result score #Physics.Maths.Value7 Physics store result score #Physics.Maths.Value5 Physics run scoreboard players operation #Physics.Maths.Torque.z Physics -= #Physics.Maths.Value3 Physics
 
     # AngularVelocityChange = InverseInertiaTensorGlobal * ImpulsiveTorque
-    scoreboard players operation #Physics.Maths.Torque.x Physics *= @s Physics.Object.InverseInertiaTensorGlobal.0
+    scoreboard players operation #Physics.AngularVelocityChange.x Physics *= @s Physics.Object.InverseInertiaTensorGlobal.0
     scoreboard players operation #Physics.Maths.Torque.y Physics *= @s Physics.Object.InverseInertiaTensorGlobal.1
-    scoreboard players operation #Physics.Maths.Torque.x Physics += #Physics.Maths.Torque.y Physics
+    scoreboard players operation #Physics.AngularVelocityChange.x Physics += #Physics.Maths.Torque.y Physics
     scoreboard players operation #Physics.Maths.Torque.z Physics *= @s Physics.Object.InverseInertiaTensorGlobal.2
-    scoreboard players operation #Physics.Maths.Torque.x Physics += #Physics.Maths.Torque.z Physics
-    scoreboard players operation #Physics.Maths.Torque.x Physics /= #Physics.Constants.100000 Physics
+    scoreboard players operation #Physics.AngularVelocityChange.x Physics += #Physics.Maths.Torque.z Physics
+    execute store result score #Physics.Maths.Value9 Physics store result score #Physics.ContactVelocityChange.y Physics run scoreboard players operation #Physics.AngularVelocityChange.x Physics /= #Physics.Constants.100000 Physics
 
-    scoreboard players operation #Physics.Maths.Value4 Physics *= @s Physics.Object.InverseInertiaTensorGlobal.3
-    scoreboard players operation #Physics.Maths.Value5 Physics *= @s Physics.Object.InverseInertiaTensorGlobal.4
-    scoreboard players operation #Physics.Maths.Value4 Physics += #Physics.Maths.Value5 Physics
-    scoreboard players operation #Physics.Maths.Value6 Physics *= @s Physics.Object.InverseInertiaTensorGlobal.5
-    scoreboard players operation #Physics.Maths.Value4 Physics += #Physics.Maths.Value6 Physics
-    scoreboard players operation #Physics.Maths.Value4 Physics /= #Physics.Constants.100000 Physics
+    scoreboard players operation #Physics.AngularVelocityChange.y Physics *= @s Physics.Object.InverseInertiaTensorGlobal.3
+    scoreboard players operation #Physics.Maths.Value4 Physics *= @s Physics.Object.InverseInertiaTensorGlobal.4
+    scoreboard players operation #Physics.AngularVelocityChange.y Physics += #Physics.Maths.Value4 Physics
+    scoreboard players operation #Physics.Maths.Value5 Physics *= @s Physics.Object.InverseInertiaTensorGlobal.5
+    scoreboard players operation #Physics.AngularVelocityChange.y Physics += #Physics.Maths.Value5 Physics
+    execute store result score #Physics.Maths.Value10 Physics store result score #Physics.ContactVelocityChange.z Physics run scoreboard players operation #Physics.AngularVelocityChange.y Physics /= #Physics.Constants.100000 Physics
 
-    scoreboard players operation #Physics.Maths.Value7 Physics *= @s Physics.Object.InverseInertiaTensorGlobal.6
-    scoreboard players operation #Physics.Maths.Value8 Physics *= @s Physics.Object.InverseInertiaTensorGlobal.7
-    scoreboard players operation #Physics.Maths.Value7 Physics += #Physics.Maths.Value8 Physics
-    scoreboard players operation #Physics.Maths.Value9 Physics *= @s Physics.Object.InverseInertiaTensorGlobal.8
-    scoreboard players operation #Physics.Maths.Value7 Physics += #Physics.Maths.Value9 Physics
-    scoreboard players operation #Physics.Maths.Value7 Physics /= #Physics.Constants.100000 Physics
+    scoreboard players operation #Physics.AngularVelocityChange.z Physics *= @s Physics.Object.InverseInertiaTensorGlobal.6
+    scoreboard players operation #Physics.Maths.Value6 Physics *= @s Physics.Object.InverseInertiaTensorGlobal.7
+    scoreboard players operation #Physics.AngularVelocityChange.z Physics += #Physics.Maths.Value6 Physics
+    scoreboard players operation #Physics.Maths.Value7 Physics *= @s Physics.Object.InverseInertiaTensorGlobal.8
+    scoreboard players operation #Physics.AngularVelocityChange.z Physics += #Physics.Maths.Value7 Physics
+    execute store result score #Physics.Maths.Value8 Physics store result score #Physics.ContactVelocityChange.x Physics run scoreboard players operation #Physics.AngularVelocityChange.z Physics /= #Physics.Constants.100000 Physics
 
-    scoreboard players operation @s Physics.Object.AngularVelocity.x += #Physics.Maths.Torque.x Physics
-    scoreboard players operation @s Physics.Object.AngularVelocity.y += #Physics.Maths.Value4 Physics
-    scoreboard players operation @s Physics.Object.AngularVelocity.z += #Physics.Maths.Value7 Physics
+    scoreboard players operation @s Physics.Object.AngularVelocity.x += #Physics.AngularVelocityChange.x Physics
+    scoreboard players operation @s Physics.Object.AngularVelocity.y += #Physics.AngularVelocityChange.y Physics
+    scoreboard players operation @s Physics.Object.AngularVelocity.z += #Physics.AngularVelocityChange.z Physics
+
+# Update this contact's ContactVelocity & SeparatingVelocity
+# (Important): ContactVelocityChange = LinearVelocityChange + (AngularVelocityChange x RelativeContactPos)
+scoreboard players operation #Physics.ContactVelocityChange.x Physics *= #Physics.Maths.RelativeContactPos.z Physics
+scoreboard players operation #Physics.Maths.Value8 Physics *= #Physics.Maths.RelativeContactPos.y Physics
+scoreboard players operation #Physics.ContactVelocityChange.x Physics += #Physics.Maths.Value8 Physics
+scoreboard players operation #Physics.ContactVelocityChange.x Physics /= #Physics.Constants.1000 Physics
+
+scoreboard players operation #Physics.ContactVelocityChange.y Physics *= #Physics.Maths.RelativeContactPos.x Physics
+scoreboard players operation #Physics.Maths.Value9 Physics *= #Physics.Maths.RelativeContactPos.z Physics
+scoreboard players operation #Physics.ContactVelocityChange.y Physics += #Physics.Maths.Value9 Physics
+scoreboard players operation #Physics.ContactVelocityChange.y Physics /= #Physics.Constants.1000 Physics
+
+scoreboard players operation #Physics.ContactVelocityChange.z Physics *= #Physics.Maths.RelativeContactPos.y Physics
+scoreboard players operation #Physics.Maths.Value10 Physics *= #Physics.Maths.RelativeContactPos.x Physics
+scoreboard players operation #Physics.ContactVelocityChange.z Physics += #Physics.Maths.Value10 Physics
+scoreboard players operation #Physics.ContactVelocityChange.z Physics /= #Physics.Constants.1000 Physics
+
+scoreboard players operation #Physics.ContactVelocityChange.x Physics += #Physics.LinearVelocityChange.x Physics
+scoreboard players operation #Physics.ContactVelocityChange.y Physics += #Physics.LinearVelocityChange.y Physics
+scoreboard players operation #Physics.ContactVelocityChange.z Physics += #Physics.LinearVelocityChange.z Physics
+
+execute if score #Physics.FeatureB Physics matches 10 store result score @s Physics.Object.MinSeparatingVelocityTotal store result storage physics:resolution Contact.SeparatingVelocity short 1 store result storage physics:resolution Contact.ContactVelocity[0] int -1 run scoreboard players operation #Physics.MinSeparatingVelocityTotal Physics -= #Physics.ContactVelocityChange.x Physics
+execute if score #Physics.FeatureB Physics matches 11 store result score @s Physics.Object.MinSeparatingVelocityTotal store result storage physics:resolution Contact.SeparatingVelocity short 1 store result storage physics:resolution Contact.ContactVelocity[0] int 1 run scoreboard players operation #Physics.MinSeparatingVelocityTotal Physics += #Physics.ContactVelocityChange.x Physics
+execute store result storage physics:resolution Contact.ContactVelocity[1] int 1 run scoreboard players operation #Physics.Maths.ContactVelocityBackup.y Physics += #Physics.ContactVelocityChange.y Physics
+execute store result storage physics:resolution Contact.ContactVelocity[2] int 1 run scoreboard players operation #Physics.Maths.ContactVelocityBackup.z Physics += #Physics.ContactVelocityChange.z Physics
+
+# Update other contacts' ContactVelocity & SeparatingVelocity
+    # World contacts
+        # Update the contacts from the current hitbox
+
+        # Update the contacts from the current block
+
+        # Update the contacts from the remaining blocks
+        execute store result score #Physics.BlockCount Physics if data storage physics:resolution Object.Objects[0].Blocks[]
+        execute if score #Physics.BlockCount Physics matches 1.. run function physics:zprivate/resolution/velocity/world/update_separating_velocity/main
+
+    # Object-object contacts
+    # ...
+
+
+
+
+
+
+
+
+    # Order: 1. Update this contact's separatingvelocity and contactvelocity, and set the object's MinSeparatingVelocity to it. (DONE)
+    #        2. Update the other contacts from this hitbox
+    #        3. Update the other contacts from this block
+    #        4. Update the other blocks (Will code that one first because maybe I can re-use the same functions for 2 and 3)
+    #        5. Append the current contact to the hitbox, then append the hitbox to the block, then append the block to the other blocks in the final storage
+    #        6. Don't forget to set the MinSeparatingVelocityTotal.World score to MinSeparatingVelocityTotal after updating every world contact! Because afterwards, object-object contacts would be updated
