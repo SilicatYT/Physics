@@ -152,20 +152,29 @@ scoreboard players operation #Physics.ContactVelocityChange.x Physics += #Physic
 scoreboard players operation #Physics.ContactVelocityChange.y Physics += #Physics.LinearVelocityChange.y Physics
 scoreboard players operation #Physics.ContactVelocityChange.z Physics += #Physics.LinearVelocityChange.z Physics
 
-execute if score #Physics.FeatureB Physics matches 10 store result score @s Physics.Object.MinSeparatingVelocity store result storage physics:resolution Contact.SeparatingVelocity short 1 store result storage physics:resolution Contact.ContactVelocity[0] int -1 run scoreboard players operation #Physics.MinSeparatingVelocityTotal Physics -= #Physics.ContactVelocityChange.x Physics
-execute if score #Physics.FeatureB Physics matches 11 store result score @s Physics.Object.MinSeparatingVelocity store result storage physics:resolution Contact.SeparatingVelocity short 1 store result storage physics:resolution Contact.ContactVelocity[0] int 1 run scoreboard players operation #Physics.MinSeparatingVelocityTotal Physics += #Physics.ContactVelocityChange.x Physics
+execute if score #Physics.FeatureB Physics matches 10 store result storage physics:resolution Contact.SeparatingVelocity short 1 store result storage physics:resolution Contact.ContactVelocity[0] int -1 run scoreboard players operation #Physics.MinSeparatingVelocityTotal Physics -= #Physics.ContactVelocityChange.x Physics
+execute if score #Physics.FeatureB Physics matches 11 store result storage physics:resolution Contact.SeparatingVelocity short 1 store result storage physics:resolution Contact.ContactVelocity[0] int 1 run scoreboard players operation #Physics.MinSeparatingVelocityTotal Physics += #Physics.ContactVelocityChange.x Physics
 execute store result storage physics:resolution Contact.ContactVelocity[1] int 1 run scoreboard players operation #Physics.Maths.ContactVelocityBackup.y Physics += #Physics.ContactVelocityChange.y Physics
 execute store result storage physics:resolution Contact.ContactVelocity[2] int 1 run scoreboard players operation #Physics.Maths.ContactVelocityBackup.z Physics += #Physics.ContactVelocityChange.z Physics
 
 # Update other contacts' ContactVelocity & SeparatingVelocity
     # World contacts
+        # Update the contacts from the remaining blocks (Blocks that don't contain the newly resolved contact)
+        execute store result score #Physics.BlockCount Physics if data storage physics:resolution Object.Objects[0].Blocks[]
+        execute if score #Physics.BlockCount Physics matches 1.. run data modify storage physics:temp UpdateBlocks set from storage physics:resolution Object.Objects[0].Blocks
+        execute if score #Physics.BlockCount Physics matches 1.. run data modify storage physics:resolution Object.Objects[0].Blocks set value []
+        execute if score #Physics.BlockCount Physics matches 1.. run function physics:zprivate/resolution/velocity/world/update_separating_velocity/main
+
         # Update the contacts from the current hitbox
+
+        # Tag the newly resolved contact if necessary and add it to the hitbox
 
         # Update the contacts from the current block
 
-        # Update the contacts from the remaining blocks
-        execute store result score #Physics.BlockCount Physics if data storage physics:resolution Object.Objects[0].Blocks[]
-        execute if score #Physics.BlockCount Physics matches 1.. run function physics:zprivate/resolution/velocity/world/update_separating_velocity/main
+
+
+        # NOTE: The current hitbox still has the "HasMinSeparatingVelocity:0b". It should be removed and then only re-given if updating the contacts for the current block or hitbox surpasses the min again. So basically: Start from a clean slate, update the other blocks' contacts first and tag them, and then update the current block
+        # I also need to check if the currently resolved contact has the new min. Basically, if "#Physics.MinSeparatingVelocityTotal Physics" holds the min.
 
     # Object-object contacts
     # ...
