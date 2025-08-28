@@ -1,12 +1,11 @@
 #say start
-
+#tellraw @p ["",{nbt:"Object",storage:"physics:resolution"}]
 # Calculate DeltaVelocity (Desired velocity change along the contact normal)
 # (Important): -(1 + RestitutionCoefficient) * SeparatingVelocity
 # (Important): DeltaVelocity is scaled up by 1,000x * 100x = 100,000x. I scale it up to 100,000,000x at the end so it has the same scaling as EffectiveMass. It should not overflow.
     # Set restitution coefficient to 0 if squared magnitude of contact velocity is too low
-    #tellraw @p ["",{score:{name:"#Physics.MinSeparatingVelocityTotal",objective:"Physics"}}]
     scoreboard players operation #Physics.Maths.SquaredMagnitude Physics = #Physics.MinSeparatingVelocityTotal Physics
-    execute store result score #Physics.Maths.ContactVelocityBackup.y Physics store result score #Physics.Maths.Value1 Physics store result score #Physics.Maths.ContactVelocity.y Physics run data get storage physics:resolution Contact.ContactVelocity[1]
+    execute store result score #Physics.Maths.ContactVelocityBackup.x Physics store result score #Physics.Maths.Value1 Physics store result score #Physics.Maths.ContactVelocity.x Physics run data get storage physics:resolution Contact.ContactVelocity[0]
     execute store result score #Physics.Maths.ContactVelocityBackup.z Physics store result score #Physics.Maths.Value2 Physics store result score #Physics.Maths.ContactVelocity.z Physics run data get storage physics:resolution Contact.ContactVelocity[2]
 
     scoreboard players operation #Physics.Maths.SquaredMagnitude Physics *= #Physics.Maths.SquaredMagnitude Physics
@@ -27,7 +26,7 @@ scoreboard players operation #Physics.Maths.DeltaVelocity Physics *= #Physics.Co
 
 # Calculate orthonormal basis
 # (Important): The orthonormal basis is a 3x3 matrix. The first column is the contact normal, the 2nd and 3rd columns are tangents.
-# (Important): For axis-aligned contact normals like here, this is trivial, so I just directly incorporate it into subsequent formulas for performance reasons. Here, it's: [[±1.0, 0.0, 0.0],[0.0, 1.0, 0.0],[0.0, 0.0, 1.0]]
+# (Important): For axis-aligned contact normals like here, this is trivial, so I just directly incorporate it into subsequent formulas for performance reasons. Here, it's: [[1.0, 0.0, 0.0],[0.0, ±1.0, 0.0],[0.0, 0.0, 1.0]]
 
 # Transform ContactVelocity from world space to contact space
 # (Important): To avoid matrix multiplication, I instead do: ContactVelocityContactSpace.<x/y/z> = ContactVelocity * <respective column of orthonormal basis> (Dot product)
@@ -36,7 +35,7 @@ scoreboard players operation #Physics.Maths.DeltaVelocity Physics *= #Physics.Co
 # Calculate effective mass along the 3 contact axes (3 columns of the orthonormal basis)
 # (Important): Because the effective mass stays the same if the contact normal doesn't change, I only calculate it once per tick for each contact.
 execute store result score #Physics.Check Physics if data storage physics:resolution Contact.EffectiveMass
-execute if score #Physics.Check Physics matches 0 run function physics:zprivate/resolution/velocity/world/world_axis_x/calculate_effective_mass
+execute if score #Physics.Check Physics matches 0 run function physics:zprivate/resolution/velocity/world/world_axis_y/calculate_effective_mass
 execute if score #Physics.Check Physics matches 1 store result score #Physics.Maths.a1.y Physics run data get storage physics:resolution Contact.EffectiveMass[0]
 execute if score #Physics.Check Physics matches 1 store result score #Physics.Maths.a2.x Physics run data get storage physics:resolution Contact.EffectiveMass[1]
 execute if score #Physics.Check Physics matches 1 store result score #Physics.Maths.a3.x Physics run data get storage physics:resolution Contact.EffectiveMass[2]
@@ -44,10 +43,8 @@ execute if score #Physics.Check Physics matches 1 store result score #Physics.Ma
 # Calculate required impulse for desired velocity change
 # (Important): I overwrite DeltaVelocity and ContactVelocity to avoid having to copy over scores for performance reasons.
 # (Important): Due to the dividend and divisor having the same scaling, the resulting values are scaled 1x. This is okay though.
-#tellraw @p ["",{score:{name:"#Physics.Maths.DeltaVelocity",objective:"Physics"}}]
-scoreboard players operation #Physics.Maths.DeltaVelocity Physics /= #Physics.Maths.a1.y Physics
-#tellraw @p ["",{score:{name:"#Physics.Maths.DeltaVelocity",objective:"Physics"}}]
-execute store result score #Physics.Maths.PlanarImpulse Physics run scoreboard players operation #Physics.Maths.ContactVelocity.y Physics /= #Physics.Maths.a2.x Physics
+execute store result score #Physics.Maths.PlanarImpulse Physics run scoreboard players operation #Physics.Maths.ContactVelocity.x Physics /= #Physics.Maths.a1.y Physics
+scoreboard players operation #Physics.Maths.DeltaVelocity Physics /= #Physics.Maths.a2.x Physics
 execute store result score #Physics.Maths.ImpulseCopy.z Physics run scoreboard players operation #Physics.Maths.ContactVelocity.z Physics /= #Physics.Maths.a3.x Physics
 
 # Apply friction to the impulse
@@ -65,33 +62,24 @@ execute store result score #Physics.Maths.ImpulseCopy.z Physics run scoreboard p
 
     # If PlanarImpulseSquared is greater than MaxFrictionSquared, apply dynamic friction
     execute store result score #Physics.Check Physics if score #Physics.Maths.PlanarImpulse Physics > #Physics.Maths.MaxFrictionSquared Physics
-    execute if score #Physics.Check Physics matches 0 run function physics:zprivate/resolution/velocity/world/world_axis_x/static_friction
-    execute if score #Physics.Check Physics matches 1 run function physics:zprivate/resolution/velocity/world/world_axis_x/dynamic_friction
+    execute if score #Physics.Check Physics matches 0 run function physics:zprivate/resolution/velocity/world/world_axis_y/static_friction
+    execute if score #Physics.Check Physics matches 1 run function physics:zprivate/resolution/velocity/world/world_axis_y/dynamic_friction
 
 # Transform impulse from contact space to world space
 # (Important): To avoid matrix multiplication, I calculate: ImpulseWorldSpace = (ImpulseContactSpace.x * ContactNormal) + (ImpulseContactSpace.y * Tangent1) + (ImpulseContactSpace.z * Tangent2)
-execute if score #Physics.FeatureB Physics matches 10 run scoreboard players operation #Physics.Maths.DeltaVelocity Physics *= #Physics.Constants.-1 Physics
-
-
-
-
-
-# NOTE: The overflow happens BEFORE this. DeltaVelocity is already too high by this point
-
-
-
+execute if score #Physics.FeatureB Physics matches 12 run scoreboard players operation #Physics.Maths.DeltaVelocity Physics *= #Physics.Constants.-1 Physics
 
 # Apply the impulse
 # (Important): The backups for the tangential impulses are set in dynamic_friction or static_friction.
-scoreboard players operation #Physics.Maths.Impulse.x Physics = #Physics.Maths.DeltaVelocity Physics
+scoreboard players operation #Physics.Maths.Impulse.y Physics = #Physics.Maths.DeltaVelocity Physics
 
     # LinearVelocityChange = Impulse * InverseMass
     # (Important): The tangential impulses are still scaled 1,000x from the friction calculations (I manually scaled them up if friction calculations didn't happen) so they keep more precision. No overflow should occur.
-    scoreboard players operation #Physics.Maths.DeltaVelocity Physics *= @s Physics.Object.InverseMassScaled
-    execute store result score #Physics.LinearVelocityChange.x Physics run scoreboard players operation #Physics.Maths.DeltaVelocity Physics /= #Physics.Constants.100 Physics
+    scoreboard players operation #Physics.Maths.ContactVelocity.x Physics *= @s Physics.Object.InverseMassScaled
+    execute store result score #Physics.LinearVelocityChange.x Physics run scoreboard players operation #Physics.Maths.ContactVelocity.x Physics /= #Physics.Constants.100000 Physics
 
-    scoreboard players operation #Physics.Maths.ContactVelocity.y Physics *= @s Physics.Object.InverseMassScaled
-    execute store result score #Physics.LinearVelocityChange.y Physics run scoreboard players operation #Physics.Maths.ContactVelocity.y Physics /= #Physics.Constants.100000 Physics
+    scoreboard players operation #Physics.Maths.DeltaVelocity Physics *= @s Physics.Object.InverseMassScaled
+    execute store result score #Physics.LinearVelocityChange.y Physics run scoreboard players operation #Physics.Maths.DeltaVelocity Physics /= #Physics.Constants.100 Physics
 
     scoreboard players operation #Physics.Maths.ContactVelocity.z Physics *= @s Physics.Object.InverseMassScaled
     execute store result score #Physics.LinearVelocityChange.z Physics run scoreboard players operation #Physics.Maths.ContactVelocity.z Physics /= #Physics.Constants.100000 Physics
@@ -99,6 +87,9 @@ scoreboard players operation #Physics.Maths.Impulse.x Physics = #Physics.Maths.D
     scoreboard players operation @s Physics.Object.Velocity.x += #Physics.LinearVelocityChange.x Physics
     scoreboard players operation @s Physics.Object.Velocity.y += #Physics.LinearVelocityChange.y Physics
     scoreboard players operation @s Physics.Object.Velocity.z += #Physics.LinearVelocityChange.z Physics
+#tellraw @p ["",{score:{name:"#Physics.LinearVelocityChange.y",objective:"Physics"}}]
+#tellraw @p ["",{score:{name:"@s",objective:"Physics.Object.Velocity.y"}}]
+#tellraw @p ["",{nbt:"Contact",storage:"physics:resolution"}]
 
     # ImpulsiveTorque = RelativeContactPos x Impulse
     execute store result score #Physics.Maths.Torque.z Physics run data get storage physics:resolution Contact.ContactPoint[0]
@@ -167,9 +158,9 @@ scoreboard players operation #Physics.ContactVelocityChange.x Physics += #Physic
 scoreboard players operation #Physics.ContactVelocityChange.y Physics += #Physics.LinearVelocityChange.y Physics
 scoreboard players operation #Physics.ContactVelocityChange.z Physics += #Physics.LinearVelocityChange.z Physics
 
-execute if score #Physics.FeatureB Physics matches 10 store result storage physics:resolution Contact.SeparatingVelocity short 1 store result storage physics:resolution Contact.ContactVelocity[0] int -1 run scoreboard players operation #Physics.MinSeparatingVelocityTotal Physics -= #Physics.ContactVelocityChange.x Physics
-execute if score #Physics.FeatureB Physics matches 11 store result storage physics:resolution Contact.SeparatingVelocity short 1 store result storage physics:resolution Contact.ContactVelocity[0] int 1 run scoreboard players operation #Physics.MinSeparatingVelocityTotal Physics += #Physics.ContactVelocityChange.x Physics
-execute store result storage physics:resolution Contact.ContactVelocity[1] int 1 run scoreboard players operation #Physics.Maths.ContactVelocityBackup.y Physics += #Physics.ContactVelocityChange.y Physics
+execute store result storage physics:resolution Contact.ContactVelocity[0] int 1 run scoreboard players operation #Physics.Maths.ContactVelocityBackup.x Physics += #Physics.ContactVelocityChange.x Physics
+execute if score #Physics.FeatureB Physics matches 12 store result storage physics:resolution Contact.SeparatingVelocity short 1 store result storage physics:resolution Contact.ContactVelocity[1] int -1 run scoreboard players operation #Physics.MinSeparatingVelocityTotal Physics -= #Physics.ContactVelocityChange.y Physics
+execute if score #Physics.FeatureB Physics matches 13 store result storage physics:resolution Contact.SeparatingVelocity short 1 store result storage physics:resolution Contact.ContactVelocity[1] int 1 run scoreboard players operation #Physics.MinSeparatingVelocityTotal Physics += #Physics.ContactVelocityChange.y Physics
 execute store result storage physics:resolution Contact.ContactVelocity[2] int 1 run scoreboard players operation #Physics.Maths.ContactVelocityBackup.z Physics += #Physics.ContactVelocityChange.z Physics
 
 # Update other contacts' ContactVelocity & SeparatingVelocity
@@ -200,28 +191,8 @@ scoreboard players set @s Physics.Object.MinSeparatingVelocity 2147483647
 
     # Object-object contacts
     # ...
+#tellraw @p ["",{nbt:"Object",storage:"physics:resolution"}]
 
     # Add the object data back to the final storage
     data modify storage physics:zprivate ContactGroups append from storage physics:resolution Object
-#tellraw @p ["",{score:{name:"#Physics.LinearVelocityChange.x",objective:"Physics"}}]
-#tellraw @p ["",{score:{name:"#Physics.MinSeparatingVelocityTotal",objective:"Physics"}}]
-#tellraw @p [{nbt:"Contact",storage:"physics:resolution"}]
 #say stop
-
-# 200,000,000 DeltaVelocity after the original calculation with restitution stuff, and the outcome LinearVelocityChange is -703 somehow.
-
-# Maybe the issue is a calculation error when updating the separatingvelocity or contactvelocity?
-# Yep, seems like that's it.
-# Start
-# 55000000
-# 55000000
-# 27
-# -27
-# -1000
-# Stop
-# => These numbers have been a single resolution. So for some reason, the SeparatingVelocity is -1000 after resolution. Maybe I messed up the scale here and it should be -1?
-
-
-# Siehe Screenshot von 17:47 -> ContactVelocity war leer, EffectiveMass war VIEL zu hoch
-# Siehe Screenshot von 17:49 -> SeparatingVelocity war komplett normal und "fine", aber beim nächsten ist MinSeparatingVelocityTotal einfach VIEL zu tief (also zu negativ). Das ist der gleiche Kontakt, der auch kein ContactVelocity mehr hatte???
-# => WAIT. Ist es ein inaktiver Kontakt (invalid), der geupdated wurde? Und weil "data get" gefailed ist, hat es die Zahlen von vorher genommen, was die RelativeContactPos durcheinandergebracht hat oder so??
