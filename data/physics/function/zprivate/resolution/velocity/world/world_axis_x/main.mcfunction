@@ -162,8 +162,8 @@ scoreboard players set @s Physics.Object.MinSeparatingVelocity 2147483647
 
     # World contacts
         # Update the contacts from the remaining blocks (Blocks that don't contain the newly resolved contact)
-        execute store result score #Physics.BlockCount Physics if data storage physics:resolution Object.Objects[0].Blocks[]
-        execute if score #Physics.BlockCount Physics matches 1.. run data modify storage physics:temp data.UpdateBlocks set from storage physics:resolution Object.Objects[0].Blocks
+        data modify storage physics:temp data.UpdateBlocks set from storage physics:resolution Object.Objects[0].Blocks
+        execute store result score #Physics.BlockCount Physics if data storage physics:temp data.UpdateBlocks[]
         execute if score #Physics.BlockCount Physics matches 1.. run data modify storage physics:resolution Object.Objects[0].Blocks set value []
         execute if score #Physics.BlockCount Physics matches 1.. run function physics:zprivate/resolution/velocity/world/update_separating_velocity/main
 
