@@ -14,6 +14,7 @@
 
 # Maybe store the relativeContactPos in the data alongside effective mass (after being resolved once, ofc)? Would avoid calculating it twice when it's already calculated for the effective mass stuff. For world contacts, maybe I can overwrite "ContactPoint"? For object-object, that wouldn't work though
 
+# Maybe optimize "update separating velocity for other contacts" by updating the 1st hitbox of each block and the 1st contact of each hitbox directly (More hardcoding, but avoids function calls)
 
 
 
