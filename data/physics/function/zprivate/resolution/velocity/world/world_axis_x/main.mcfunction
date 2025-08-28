@@ -190,10 +190,10 @@ scoreboard players set @s Physics.Object.MinSeparatingVelocity 2147483647
         data modify storage physics:resolution Object.Objects[0].Blocks append from storage physics:temp data.UpdateBlocks[-1]
 
         # Tag the newly resolved contact if necessary and add it to the hitbox
-        execute if score #Physics.MinSeparatingVelocityTotal Physics > @s Physics.Object.MinSeparatingVelocity run data remove storage physics:resolution Contact.HasMinSeparatingVelocity
+        execute if score #Physics.MinSeparatingVelocityTotal Physics >= @s Physics.Object.MinSeparatingVelocity run data remove storage physics:resolution Contact.HasMinSeparatingVelocity
         execute if score #Physics.MinSeparatingVelocityTotal Physics < @s Physics.Object.MinSeparatingVelocity run data remove storage physics:resolution Object.Objects[0].Blocks[].Hitboxes[].Contacts[].HasMinSeparatingVelocity
         execute if score #Physics.MinSeparatingVelocityTotal Physics < @s Physics.Object.MinSeparatingVelocity run scoreboard players operation @s Physics.Object.MinSeparatingVelocity = #Physics.MinSeparatingVelocityTotal Physics
-        data modify storage physics:resolution Object.Objects[0].Blocks[-1].Hitboxes[-1] append from storage physics:resolution Contact
+        data modify storage physics:resolution Object.Objects[0].Blocks[-1].Hitboxes[-1].Contacts append from storage physics:resolution Contact
 
         # Set the MinSeparatingVelocity.World
         scoreboard players operation @s Physics.Object.MinSeparatingVelocity.World = @s Physics.Object.MinSeparatingVelocity

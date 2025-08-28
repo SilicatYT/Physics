@@ -8,4 +8,4 @@ data remove storage physics:resolution Object.R
 # Select the type of contact that needs to be resolved (World or object-object)
 execute store result score #Physics.ContactType Physics if data storage physics:resolution Object.Objects[0].Blocks[].Hitboxes[].Contacts[{HasMinSeparatingVelocity:0b}]
 execute if score #Physics.ContactType Physics matches 1 run return run function physics:zprivate/resolution/velocity/world/main
-execute if score #Physics.ContactType Physics matches 0 run function physics:zprivate/resolution/velocity/object/main
+function physics:zprivate/resolution/velocity/object/main

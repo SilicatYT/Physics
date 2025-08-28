@@ -21,7 +21,8 @@
 
 
 
-
+# TODO (Penetration resolution): Make contacts invalid if PenetrationDepth becomes positive but the ContactPoint is in an invalid location.
+# => Also, check if I still need Invalid:1b in some invalid contacts. I just check if the contact has PenetrationDepth. If not, I just don't update it anymore.
 
 
 
@@ -487,6 +488,75 @@ execute store result storage physics:zprivate ContactGroups[-1].Objects[0].Block
 execute store result storage physics:zprivate ContactGroups[-1].Objects[0].Blocks[-1].Hitboxes[-1].BoundingBox[0] int 1 run scoreboard players get #Physics.Projection.Block.WorldAxis.x.Min Physics
 execute store result storage physics:zprivate ContactGroups[-1].Objects[0].Blocks[-1].Hitboxes[-1].BoundingBox[1] int 1 run scoreboard players get #Physics.Projection.Block.WorldAxis.y.Min Physics
 execute store result storage physics:zprivate ContactGroups[-1].Objects[0].Blocks[-1].Hitboxes[-1].BoundingBox[2] int 1 run scoreboard players get #Physics.Projection.Block.WorldAxis.z.Min Physics
+
+# Get how much each axis is overlapping & get the least overlap
+# (Important): If two axes are exactly parallel to each other (Like if the objects are resting ontop of each other), their cross product is [0,0,0]. I'm unsure if discarding cross products with an overlap of 0 or with a value of [0,0,0] is more stable, so I'll revisit it once the resolver is done. For now, I discard cross products with an overlap of 0.
+    # x_block
+    #scoreboard players operation #Physics.Overlap.WorldAxis.x Physics = #Physics.ThisObject Physics.Object.BoundingBoxGlobalMax.x
+    #scoreboard players operation #Physics.Overlap.WorldAxis.x Physics -= #Physics.Projection.Block.WorldAxis.x.Min Physics
+    #execute store result storage physics:zprivate ContactGroups[-1].Objects[0].Blocks[-1].Hitboxes[-1].BoundingBox[3] int 1 run scoreboard players operation #Physics.Maths.Value1 Physics = #Physics.Projection.Block.WorldAxis.x.Max Physics
+    #scoreboard players operation #Physics.Maths.Value1 Physics -= #Physics.ThisObject Physics.Object.BoundingBoxGlobalMin.x
+    #execute if score #Physics.Overlap.WorldAxis.x Physics > #Physics.Maths.Value1 Physics run scoreboard players operation #Physics.Overlap.WorldAxis.x Physics = #Physics.Maths.Value1 Physics
+
+    #scoreboard players operation #Physics.MinOverlap Physics = #Physics.Overlap.WorldAxis.x Physics
+
+
+
+
+
+    # y_block
+    scoreboard players operation #Physics.Overlap.WorldAxis.y Physics = #Physics.ThisObject Physics.Object.BoundingBoxGlobalMax.y
+    scoreboard players operation #Physics.Overlap.WorldAxis.y Physics -= #Physics.Projection.Block.WorldAxis.y.Min Physics
+    execute store result storage physics:zprivate ContactGroups[-1].Objects[0].Blocks[-1].Hitboxes[-1].BoundingBox[4] int 1 run scoreboard players operation #Physics.Maths.Value1 Physics = #Physics.Projection.Block.WorldAxis.y.Max Physics
+    scoreboard players operation #Physics.Maths.Value1 Physics -= #Physics.ThisObject Physics.Object.BoundingBoxGlobalMin.y
+    execute if score #Physics.Overlap.WorldAxis.y Physics > #Physics.Maths.Value1 Physics run scoreboard players operation #Physics.Overlap.WorldAxis.y Physics = #Physics.Maths.Value1 Physics
+
+    #execute if score #Physics.MinOverlap Physics > #Physics.Overlap.WorldAxis.y Physics run scoreboard players operation #Physics.MinOverlap Physics = #Physics.Overlap.WorldAxis.y Physics
+    scoreboard players operation #Physics.MinOverlap Physics = #Physics.Overlap.WorldAxis.y Physics
+
+# Get the involved features of both objects
+execute if score #Physics.MinOverlap Physics = #Physics.Overlap.WorldAxis.y Physics run return run function physics:zprivate/contact_generation/new_contact/world/world_axis_y/main
+execute if score #Physics.MinOverlap Physics = #Physics.Overlap.WorldAxis.x Physics run return run function physics:zprivate/contact_generation/new_contact/world/world_axis_x/main
+execute if score #Physics.MinOverlap Physics = #Physics.Overlap.WorldAxis.z Physics run return run function physics:zprivate/contact_generation/new_contact/world/world_axis_z/main
+execute if score #Physics.MinOverlap Physics = #Physics.Overlap.ObjectAxis.x Physics run return run function physics:zprivate/contact_generation/new_contact/world/object_axis/main {ObjectAxis:"x"}
+execute if score #Physics.MinOverlap Physics = #Physics.Overlap.ObjectAxis.y Physics run return run function physics:zprivate/contact_generation/new_contact/world/object_axis/main {ObjectAxis:"y"}
+execute if score #Physics.MinOverlap Physics = #Physics.Overlap.ObjectAxis.z Physics run return run function physics:zprivate/contact_generation/new_contact/world/object_axis/main {ObjectAxis:"z"}
+execute if score #Physics.MinOverlap Physics = #Physics.Overlap.CrossProductAxis.xx Physics run return run function physics:zprivate/contact_generation/new_contact/world/edge_edge/world_axis_x/main {ObjectAxis:"x",StartCorner0:0b,StartCorner1:1b,StartCorner2:4b,StartCorner3:5b}
+execute if score #Physics.MinOverlap Physics = #Physics.Overlap.CrossProductAxis.xy Physics run return run function physics:zprivate/contact_generation/new_contact/world/edge_edge/world_axis_x/main {ObjectAxis:"y",StartCorner0:0b,StartCorner1:1b,StartCorner2:2b,StartCorner3:3b}
+execute if score #Physics.MinOverlap Physics = #Physics.Overlap.CrossProductAxis.xz Physics run return run function physics:zprivate/contact_generation/new_contact/world/edge_edge/world_axis_x/main {ObjectAxis:"z",StartCorner0:0b,StartCorner1:2b,StartCorner2:4b,StartCorner3:6b}
+execute if score #Physics.MinOverlap Physics = #Physics.Overlap.CrossProductAxis.yx Physics run return run function physics:zprivate/contact_generation/new_contact/world/edge_edge/world_axis_y/main {ObjectAxis:"x",StartCorner0:0b,StartCorner1:1b,StartCorner2:4b,StartCorner3:5b}
+execute if score #Physics.MinOverlap Physics = #Physics.Overlap.CrossProductAxis.yy Physics run return run function physics:zprivate/contact_generation/new_contact/world/edge_edge/world_axis_y/main {ObjectAxis:"y",StartCorner0:0b,StartCorner1:1b,StartCorner2:2b,StartCorner3:3b}
+execute if score #Physics.MinOverlap Physics = #Physics.Overlap.CrossProductAxis.yz Physics run return run function physics:zprivate/contact_generation/new_contact/world/edge_edge/world_axis_y/main {ObjectAxis:"z",StartCorner0:0b,StartCorner1:2b,StartCorner2:4b,StartCorner3:6b}
+execute if score #Physics.MinOverlap Physics = #Physics.Overlap.CrossProductAxis.zx Physics run return run function physics:zprivate/contact_generation/new_contact/world/edge_edge/world_axis_z/main {ObjectAxis:"x",StartCorner0:0b,StartCorner1:1b,StartCorner2:4b,StartCorner3:5b}
+function physics:zprivate/contact_generation/new_contact/world/edge_edge/world_axis_z/main {ObjectAxis:"y",StartCorner0:0b,StartCorner1:1b,StartCorner2:2b,StartCorner3:3b}
+
+
+
+
+return 0
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
 
 # Get how much each axis is overlapping & get the least overlap
 # (Important): If two axes are exactly parallel to each other (Like if the objects are resting ontop of each other), their cross product is [0,0,0]. I'm unsure if discarding cross products with an overlap of 0 or with a value of [0,0,0] is more stable, so I'll revisit it once the resolver is done. For now, I discard cross products with an overlap of 0.
