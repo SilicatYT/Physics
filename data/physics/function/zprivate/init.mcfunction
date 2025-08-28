@@ -215,6 +215,7 @@ data modify storage physics:temp data.BlockCorner set value [{x:"Min",y:"Min",z:
 data modify storage physics:temp data.BlockEdge set value {20:{StartCorner:0b},21:{StartCorner:1b},22:{StartCorner:4b},23:{StartCorner:5b},24:{StartCorner:0b},25:{StartCorner:1b},26:{StartCorner:2b},27:{StartCorner:3b},28:{StartCorner:0b},29:{StartCorner:2b},30:{StartCorner:4b},31:{StartCorner:6b}}
 data modify storage physics:temp data.ObjectEdge set value {x:[{Edge:20b,StartCorner:0b},{Edge:21b,StartCorner:1b},{Edge:22b,StartCorner:4b},{Edge:23b,StartCorner:5b}],y:[{Edge:24b,StartCorner:0b},{Edge:25b,StartCorner:1b},{Edge:26b,StartCorner:2b},{Edge:27b,StartCorner:3b}],z:[{Edge:28b,StartCorner:0b},{Edge:29b,StartCorner:2b},{Edge:30b,StartCorner:4b},{Edge:31b,StartCorner:6b}]}
 data modify storage physics:temp data.EdgeData set value {x:{Axis:"x",StartCorner0:0b,StartCorner1:1b,StartCorner2:4b,StartCorner3:5b},y:{Axis:"y",StartCorner0:0b,StartCorner1:1b,StartCorner2:2b,StartCorner3:3b},z:{Axis:"z",StartCorner0:0b,StartCorner1:2b,StartCorner2:4b,StartCorner3:6b}}
+data modify storage physics:temp data.UpdateBlocks set value []
 
 # Set gamerules
 gamerule maxCommandChainLength 2147483647

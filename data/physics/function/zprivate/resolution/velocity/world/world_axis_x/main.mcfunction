@@ -158,37 +158,33 @@ execute store result storage physics:resolution Contact.ContactVelocity[1] int 1
 execute store result storage physics:resolution Contact.ContactVelocity[2] int 1 run scoreboard players operation #Physics.Maths.ContactVelocityBackup.z Physics += #Physics.ContactVelocityChange.z Physics
 
 # Update other contacts' ContactVelocity & SeparatingVelocity
+scoreboard players set @s Physics.Object.MinSeparatingVelocity 2147483647
+
     # World contacts
         # Update the contacts from the remaining blocks (Blocks that don't contain the newly resolved contact)
         execute store result score #Physics.BlockCount Physics if data storage physics:resolution Object.Objects[0].Blocks[]
-        execute if score #Physics.BlockCount Physics matches 1.. run data modify storage physics:temp UpdateBlocks set from storage physics:resolution Object.Objects[0].Blocks
+        execute if score #Physics.BlockCount Physics matches 1.. run data modify storage physics:temp data.UpdateBlocks set from storage physics:resolution Object.Objects[0].Blocks
         execute if score #Physics.BlockCount Physics matches 1.. run data modify storage physics:resolution Object.Objects[0].Blocks set value []
         execute if score #Physics.BlockCount Physics matches 1.. run function physics:zprivate/resolution/velocity/world/update_separating_velocity/main
 
-        # Update the contacts from the current hitbox
+        # Update the contacts from the current block & hitbox
+        # (Important): I can't add the current block & hitbox to the previous step because I have to recursively iterate over the blocks, which means the order of entries will not necessarily stay the same. So I wouldn't be able to find the correct hitbox without tagging it. And tagging it might be slower than doing this separately.
+        data modify storage physics:temp data.UpdateBlocks append from storage physics:resolution Block
+        data modify storage physics:temp data.UpdateBlocks[-1].Hitboxes append from storage physics:resolution Hitbox
+        function physics:zprivate/resolution/velocity/world/update_separating_velocity/update_block
+        data modify storage physics:resolution Object.Objects[0].Blocks append from storage physics:temp data.UpdateBlocks[-1]
 
         # Tag the newly resolved contact if necessary and add it to the hitbox
+        execute if score #Physics.MinSeparatingVelocityTotal Physics > @s Physics.Object.MinSeparatingVelocity run data remove storage physics:resolution Contact.HasMinSeparatingVelocity
+        execute if score #Physics.MinSeparatingVelocityTotal Physics < @s Physics.Object.MinSeparatingVelocity run data remove storage physics:resolution Object.Objects[0].Blocks[].Hitboxes[].Contacts[].HasMinSeparatingVelocity
+        execute if score #Physics.MinSeparatingVelocityTotal Physics < @s Physics.Object.MinSeparatingVelocity run scoreboard players operation @s Physics.Object.MinSeparatingVelocity = #Physics.MinSeparatingVelocityTotal Physics
+        data modify storage physics:resolution Object.Objects[0].Blocks[-1].Hitboxes[-1] append from storage physics:resolution Contact
 
-        # Update the contacts from the current block
-
-
-
-        # NOTE: The current hitbox still has the "HasMinSeparatingVelocity:0b". It should be removed and then only re-given if updating the contacts for the current block or hitbox surpasses the min again. So basically: Start from a clean slate, update the other blocks' contacts first and tag them, and then update the current block
-        # I also need to check if the currently resolved contact has the new min. Basically, if "#Physics.MinSeparatingVelocityTotal Physics" holds the min.
+        # Set the MinSeparatingVelocity.World
+        scoreboard players operation @s Physics.Object.MinSeparatingVelocity.World = @s Physics.Object.MinSeparatingVelocity
 
     # Object-object contacts
     # ...
 
-
-
-
-
-
-
-
-    # Order: 1. Update this contact's separatingvelocity and contactvelocity, and set the object's MinSeparatingVelocity to it. (DONE)
-    #        2. Update the other contacts from this hitbox
-    #        3. Update the other contacts from this block
-    #        4. Update the other blocks (Will code that one first because maybe I can re-use the same functions for 2 and 3)
-    #        5. Append the current contact to the hitbox, then append the hitbox to the block, then append the block to the other blocks in the final storage
-    #        6. Don't forget to set the MinSeparatingVelocityTotal.World score to MinSeparatingVelocityTotal after updating every world contact! Because afterwards, object-object contacts would be updated
+    # Add the object data back to the final storage
+    data modify storage physics:zprivate ContactGroups append from storage physics:resolution Object

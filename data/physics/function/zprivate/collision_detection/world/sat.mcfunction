@@ -16,6 +16,15 @@
 
 # Maybe optimize "update separating velocity for other contacts" by updating the 1st hitbox of each block and the 1st contact of each hitbox directly (More hardcoding, but avoids function calls)
 
+# Check whether the following comment in world_axis_x resolution is correct. Maybe tagging the block & hitbox *is* the fastest way. Would save a function call and copying over entire block data a few times.
+    # (Important): I can't add the current block & hitbox to the previous step because I have to recursively iterate over the blocks, which means the order of entries will not necessarily stay the same. So I wouldn't be able to find the correct hitbox without tagging it. And tagging it might be slower than doing this separately.
+
+
+
+
+
+
+
 
 
 # Note: All axis-vectors need to be normalized, including the cross product axes
